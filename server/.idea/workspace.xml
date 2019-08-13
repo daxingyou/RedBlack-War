@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3c9afdff-253a-49cb-a98b-ad8c890a28f5" name="默认更改列表" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/game/internal/player_handle.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="39" column="22" selection-start-line="39" selection-start-column="22" selection-end-line="39" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/game/internal/handler.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="901">
+              <caret line="58" column="10" selection-start-line="58" selection-start-column="10" selection-end-line="58" selection-end-column="10" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/game/internal/player_config.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="276">
+              <caret line="34" column="27" lean-forward="true" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
+              <folding>
+                <element signature="e#18#61#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/game/internal/room.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="273">
+              <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/game/internal/room_handle.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="188">
+              <caret line="49" column="26" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/game/internal/gameHall_config.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/game/internal/room_config.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="239">
+              <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/game/card/cards.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="16" column="21" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/conf/server.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/websocket.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="697">
+              <caret line="51" column="18" selection-start-line="51" selection-start-column="18" selection-end-line="51" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>conf/server</find>
+      <find>CardType</find>
+      <find>删除用户</find>
+      <find>join</find>
+    </findStrings>
+    <dirStrings>
+      <dir>C:\Users\tomas\go\src\server</dir>
+    </dirStrings>
+  </component>
+  <component name="GOROOT" path="C:\Go" />
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/game/player_handle.go" />
+        <option value="$PROJECT_DIR$/game/player_handle/Player.go" />
+        <option value="$PROJECT_DIR$/model/player.go" />
+        <option value="$PROJECT_DIR$/model/room.go" />
+        <option value="$PROJECT_DIR$/game/room_handle/room.go" />
+        <option value="$PROJECT_DIR$/game/msgCodeData/msgData.go" />
+        <option value="$PROJECT_DIR$/game/room_handle/room_config.go" />
+        <option value="$PROJECT_DIR$/game/handleData/player_config.go" />
+        <option value="$PROJECT_DIR$/game/handleData/Player.go" />
+        <option value="$PROJECT_DIR$/game/handleData/room_config.go" />
+        <option value="$PROJECT_DIR$/game/handleData/gameHall.go" />
+        <option value="$PROJECT_DIR$/game/handleData/gameHall_config.go" />
+        <option value="$PROJECT_DIR$/game/internal/handleData/gameHall.go" />
+        <option value="$PROJECT_DIR$/game/configData/room_config.go" />
+        <option value="$PROJECT_DIR$/game/logicHandle/gameHall.go" />
+        <option value="$PROJECT_DIR$/game/logicHandle/room.go" />
+        <option value="$PROJECT_DIR$/game/logicHandle/Player.go" />
+        <option value="$PROJECT_DIR$/game/internal/module.go" />
+        <option value="$PROJECT_DIR$/game/internal/Player_test.go" />
+        <option value="$PROJECT_DIR$/game/internal/handler_test.go" />
+        <option value="$PROJECT_DIR$/game/test/server.json" />
+        <option value="$PROJECT_DIR$/conf/json.go" />
+        <option value="$PROJECT_DIR$/game/algorithm/pk.go" />
+        <option value="$PROJECT_DIR$/card/pk.go" />
+        <option value="$PROJECT_DIR$/algorithm/pk.go" />
+        <option value="$PROJECT_DIR$/algorithm/cards_defint.go" />
+        <option value="$PROJECT_DIR$/algorithm/card_shuffle.go" />
+        <option value="$PROJECT_DIR$/algorithm/tostring.go" />
+        <option value="$PROJECT_DIR$/algorithm/cards_test.go" />
+        <option value="$PROJECT_DIR$/algorithm/cards_shuffle_test.go" />
+        <option value="$PROJECT_DIR$/algorithm/tostring_test.go" />
+        <option value="$PROJECT_DIR$/algorithm/cards.go" />
+        <option value="$PROJECT_DIR$/base/algorithm/cards.go" />
+        <option value="$PROJECT_DIR$/game/errCode/msgData.go" />
+        <option value="$PROJECT_DIR$/msg/msg.go" />
+        <option value="$PROJECT_DIR$/gate/router.go" />
+        <option value="$PROJECT_DIR$/game/internal/gameHall_config.go" />
+        <option value="$PROJECT_DIR$/game/internal/room_test.go" />
+        <option value="$PROJECT_DIR$/msg/Protocal/pb_msg.proto" />
+        <option value="$PROJECT_DIR$/game/internal/gameHall.go" />
+        <option value="$PROJECT_DIR$/websocket.go" />
+        <option value="$PROJECT_DIR$/game/internal/chanrpc.go" />
+        <option value="$PROJECT_DIR$/conf/server.json" />
+        <option value="$PROJECT_DIR$/game/internal/handler.go" />
+        <option value="$PROJECT_DIR$/game/internal/room.go" />
+        <option value="$PROJECT_DIR$/game/internal/room_handle.go" />
+        <option value="$PROJECT_DIR$/game/internal/Player.go" />
+        <option value="$PROJECT_DIR$/game/internal/room_config.go" />
+        <option value="$PROJECT_DIR$/game/internal/player_config.go" />
+        <option value="$PROJECT_DIR$/game/card/cards.go" />
+        <option value="$PROJECT_DIR$/game/internal/player_handle.go" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-11" />
+    <option name="y" value="-11" />
+    <option name="width" value="1943" />
+    <option name="height" value="1043" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="game" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="game" type="462c0819:PsiDirectoryNode" />
+              <item name="internal" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="configurable.Global.GOPATH.is.expanded" value="true" />
+    <property name="configurable.Module.GOPATH.is.expanded" value="false" />
+    <property name="configurable.Project.GOPATH.is.expanded" value="true" />
+    <property name="go.gopath.indexing.explicitly.defined" value="true" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.general" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\tomas\go\src\server" />
+      <recent name="C:\Users\tomas\go\src\server\base" />
+      <recent name="C:\Users\tomas\go\src\server\game" />
+      <recent name="C:\Users\tomas\go\src\server\game\internal" />
+      <recent name="C:\Users\tomas\go\src\server\game\test" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\tomas\go\src\new-server" />
+      <recent name="C:\Users\tomas\go\src\server" />
+      <recent name="C:\Users\tomas\go\src\server\game\test" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Go Build.go build main.go">
+    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="server" />
+      <working_directory value="$PROJECT_DIR$/" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/main.go" />
+      <package value="server" />
+      <directory value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestCards_HexInt in server/algorithm" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="server" />
+      <working_directory value="$PROJECT_DIR$/algorithm" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="server/algorithm" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestCards_HexInt$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestCards_Take in server/algorithm" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="server" />
+      <working_directory value="$PROJECT_DIR$/algorithm" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="server/algorithm" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestCards_Take$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestNum2String in server/algorithm" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="server" />
+      <working_directory value="$PROJECT_DIR$/algorithm" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="server/algorithm" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestNum2String$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestRoom_PlayerListSort in server/game/internal" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="server" />
+      <working_directory value="$PROJECT_DIR$/game/internal" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="server/game/internal" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestRoom_PlayerListSort$" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Build.go build main.go" />
+      <item itemvalue="Go Test.TestNum2String in server/algorithm" />
+      <item itemvalue="Go Test.TestCards_HexInt in server/algorithm" />
+      <item itemvalue="Go Test.TestCards_Take in server/algorithm" />
+      <item itemvalue="Go Test.TestRoom_PlayerListSort in server/game/internal" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build main.go" />
+        <item itemvalue="Go Test.TestRoom_PlayerListSort in server/game/internal" />
+        <item itemvalue="Go Test.TestCards_Take in server/algorithm" />
+        <item itemvalue="Go Test.TestCards_HexInt in server/algorithm" />
+        <item itemvalue="Go Test.TestNum2String in server/algorithm" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TestHistory">
+    <history-entry file="TestString4Num_in_server_algorithm - 2019.08.06 at 09h 10m 55s.xml">
+      <configuration name="TestString4Num in server/algorithm" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestString4Num_in_server_algorithm - 2019.08.06 at 09h 11m 30s.xml">
+      <configuration name="TestString4Num in server/algorithm" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestString4Num_in_server_algorithm - 2019.08.06 at 09h 11m 44s.xml">
+      <configuration name="TestString4Num in server/algorithm" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestCards_Shuffle_in_server_algorithm - 2019.08.06 at 09h 12m 12s.xml">
+      <configuration name="TestCards_Shuffle in server/algorithm" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestColor_in_server_algorithm - 2019.08.06 at 09h 16m 42s.xml">
+      <configuration name="TestColor in server/algorithm" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestString2Num_in_server_algorithm - 2019.08.06 at 09h 16m 54s.xml">
+      <configuration name="TestString2Num in server/algorithm" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestNum2String_in_server_algorithm - 2019.08.06 at 09h 17m 03s.xml">
+      <configuration name="TestNum2String in server/algorithm" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestCards_HexInt_in_server_algorithm - 2019.08.06 at 09h 19m 18s.xml">
+      <configuration name="TestCards_HexInt in server/algorithm" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestCards_Take_in_server_algorithm - 2019.08.06 at 09h 36m 41s.xml">
+      <configuration name="TestCards_Take in server/algorithm" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestRoom_PlayerListSort_in_server_game_internal - 2019.08.12 at 16h 49m 57s.xml">
+      <configuration name="TestRoom_PlayerListSort in server/game/internal" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+  </component>
+  <component name="TodoView" selected-index="2">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22150365" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.41666666" />
+      <window_info anchor="bottom" x="-1445" y="263" width="833" height="386" id="Run" order="2" sideWeight="0.4987874" type="FLOATING" weight="0.572695" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Docker" order="6" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Database Changes" order="8" />
+      <window_info anchor="bottom" id="TODO" order="9" weight="0.56914896" />
+      <window_info anchor="bottom" x="-1397" y="158" width="1123" height="623" id="Terminal" order="10" sideWeight="0.497979" type="FLOATING" weight="0.54787236" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.502021" side_tool="true" weight="0.47453955" />
+      <window_info anchor="bottom" id="调试" order="12" weight="0.6187943" />
+      <window_info anchor="bottom" id="Statistic" order="13" sideWeight="0.4995958" weight="0.71276593" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16653194" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32978722" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4987874" weight="0.3280142" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Docker" order="6" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Database Changes" order="8" />
+      <window_info anchor="bottom" id="TODO" order="9" weight="0.32978722" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.497979" weight="0.47517732" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.502021" side_tool="true" weight="0.47517732" />
+      <window_info anchor="bottom" id="调试" order="12" weight="0.45212767" />
+      <window_info anchor="bottom" id="Statistic" order="13" sideWeight="0.4995958" weight="0.714539" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.proto" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/game/internal/handler.go</url>
+          <line>54</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/game/test/room_test.go" />
+    <entry file="file://$PROJECT_DIR$/game/internal/server.json" />
+    <entry file="file://C:/Go/src/io/ioutil/ioutil.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="850">
+          <caret line="56" column="19" lean-forward="true" selection-start-line="56" selection-start-column="19" selection-end-line="56" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/conf/json.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="21" column="29" selection-start-line="21" selection-start-column="29" selection-end-line="21" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/msg/Protocal/gen_msg_go.cmd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="30" selection-start-column="30" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/algorithm/sort_test.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/cards_config_test.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/sort.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/pk_test.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/cards_shuffle_test.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/tostring.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/tostring_test.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/cards_shuffle.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/cards_test.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/flush_test.go" />
+    <entry file="file://$PROJECT_DIR$/game/external.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/algorithm/pk.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/cards_config.go" />
+    <entry file="file://$PROJECT_DIR$/algorithm/cards.go" />
+    <entry file="file://$PROJECT_DIR$/game/errCode/msgData.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="26" column="27" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gate/router.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Go/src/math/rand/rand.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="43" column="8" lean-forward="true" selection-start-line="43" selection-start-column="8" selection-end-line="43" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/room_test.go" />
+    <entry file="file://$PROJECT_DIR$/conf/conf.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://C:/Go/src/encoding/binary/binary.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="104" selection-start-line="104" selection-end-line="104" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/msg/Protocal/pb_msg.pb.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/20190813_11_15_56.log" />
+    <entry file="file://$PROJECT_DIR$/20190813_11_16_52.log" />
+    <entry file="file://$PROJECT_DIR$/../github.com/name5566/leaf/gate/agent.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="13" column="4" selection-start-line="13" selection-start-column="4" selection-end-line="13" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Z-logFile/20190813_11_20_13.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="40" selection-start-line="2" selection-start-column="40" selection-end-line="2" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Z-logFile/20190813_11_21_39.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/websocket2.go" />
+    <entry file="file://$PROJECT_DIR$/main.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/msg/msg.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="19" column="43" selection-start-line="19" selection-start-column="43" selection-end-line="19" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/gameHall.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="14" column="42" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/module.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="16" column="20" selection-start-line="16" selection-start-column="20" selection-end-line="16" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../github.com/name5566/leaf/chanrpc/chanrpc.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="55">
+          <caret line="130" selection-start-line="130" selection-end-line="130" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../github.com/name5566/leaf/module/skeleton.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="55">
+          <caret line="57" selection-start-line="57" selection-end-line="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/msg/Protocal/pb_msg.proto">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/chanrpc.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="27" column="57" selection-start-line="27" selection-start-column="57" selection-end-line="27" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/Player.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/handler.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="901">
+          <caret line="58" column="10" selection-start-line="58" selection-start-column="10" selection-end-line="58" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/conf/server.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/websocket.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="51" column="18" selection-start-line="51" selection-start-column="18" selection-end-line="51" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/card/cards.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="21" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/gameHall_config.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/room_handle.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="188">
+          <caret line="49" column="26" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/room.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/room_config.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/player_config.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="34" column="27" lean-forward="true" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
+          <folding>
+            <element signature="e#18#61#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/internal/player_handle.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="39" column="22" selection-start-line="39" selection-start-column="22" selection-end-line="39" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

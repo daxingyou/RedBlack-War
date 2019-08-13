@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package pb_msg;
+
+//--0
+message Ping {
+}
+
+//--1
+message Pong {
+    int64 serverTime = 1; // 服务器时间戳
+}
+
+//--2
+message ErrMsg_S2C {
+    string error = 1; // 错误消息
+    string data = 2; // 消息参数
+}
+
+//--3
+message LoginInfo_C2S {
+    string Id = 1;
+    string gameId = 2;
+    string serverUrl = 3;
+}
+
+message LoginData {
+    string Id = 1;
+    string nickName = 2;
+    string headImg = 3;
+    double account = 4;
+}
+
+//--4
+message LoginInfo_S2C {
+    LoginData loginData = 1;
+}
+
+//--5
+message JoinRoom_C2S {
+    string roomId = 1;
+}
+
+message RoomData {
+    string roomId = 1;
+}
+
+//--6
+message JoinRoom_S2C {
+    RoomData roomData = 1;
+}
+
+//--7
+message LeaveRoom_C2S {
+
+}
+
+//--8
+message LeaveRoom_S2C {
+    LoginData loginData = 1;
+}
+
+//--9
+message PlayerAction_C2S {
+    double bet = 1; // 下注金额
+    int32 pot = 2; // 下注注池
+}
+
+//--10
+message PlayerAction_S2C {
+    RoomData roomData = 1;
+}
+
+message PlayerData {
+    LoginData loginData = 1;
+    double continueVot = 2; //续投，记录玩家上局的下注金额。
+    bool IsGodGambling = 3; //玩家是否是赌神
+    int32 winCount = 4; //玩家当前房间Win的局数
+    double resultWinMoney = 5; //本局游戏结束赢的钱
+    double resultLoseMoney = 6; //本局游戏结束输的钱
+}
+
+//--11
+message MaintainList_S2C {
+    repeated PlayerData playerList = 1;
+}
+//--12
+message OpenCardResult_S2C {
+    //开牌结果
+    //牌型类型
+    //注池Win类型
+}
+
+//--13
+message AmountResult_S2C {
+}
