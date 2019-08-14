@@ -1,6 +1,9 @@
 package internal
 
-import "server/game/card"
+import (
+	"server/game/card"
+	"time"
+)
 
 type RoomStatus int32
 
@@ -17,6 +20,11 @@ type GameStatus int32
 const (
 	DownBet GameStatus = 1 //下注阶段
 	Settle  GameStatus = 2 //比牌结算阶段
+)
+
+const (
+	DownBetTime = 15 //下注阶段时间 15秒
+	SettleTime  = 10 //比牌结算阶段时间 10秒
 )
 
 const (
@@ -39,16 +47,17 @@ type RoomPoolCount struct {
 }
 
 type Room struct {
-	RoomId      string    //房间号
-	PlayerList  []*Player //玩家列表
-	PlayerCount int32     //房间当前人数
+	RoomId     string    //房间号
+	PlayerList []*Player //玩家列表
 
-	RoomStat      RoomStatus //房间状态
-	GameStat      GameStatus //游戏状态
-	GodGambleName string     //赌神id
+	GodGambleName string       //赌神id
+	RoomStat      RoomStatus   //房间状态
+	GameStat      GameStatus   //游戏状态
+	clock         *time.Ticker //定时器
+	counter       int32        //计时数
 
-	PoolMoneyCount *RoomPoolCount
+	PoolMoneyCount *RoomPoolCount //房间注池数量
 	CardTypeList   []int32        //卡牌类型的总集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
 	RPotWinList    []*GameWinList //红黑Win、Luck、比牌类型的总集合
-	TotalCount     int32          //房间游戏的总局数
+	GameTotalCount int32          //房间游戏的总局数
 }

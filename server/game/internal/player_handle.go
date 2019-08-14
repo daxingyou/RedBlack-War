@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"douniu/douniu_svr/log"
 	"github.com/name5566/leaf/gate"
 	"server/game/card"
 	pb_msg "server/msg/Protocal"
@@ -33,6 +34,12 @@ func (p *Player) PlayerMoneyHandler() {
 	if p.Account < RoomLimitMoney {
 		//玩家观战状态不能进行投注
 		p.Status = WatchGame
+
+		errMsg := &pb_msg.ErrMsg_S2C{}
+		errMsg.Msg = recodeText[RECODE_MONEYNOTFULL]
+		p.ConnAgent.WriteMsg(errMsg)
+
+		log.Debug("玩家金额不足,设为观战~")
 		return
 	}
 }

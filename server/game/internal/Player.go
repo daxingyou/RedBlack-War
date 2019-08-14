@@ -2,6 +2,7 @@ package internal
 
 import (
 	"github.com/name5566/leaf/log"
+	pb_msg "server/msg/Protocal"
 )
 
 func (p *Player) Init() {
@@ -55,6 +56,12 @@ func RegisterPlayer(p *Player) {
 	// 如果有相同的ID，则断开和删除当前的用户链接，让新用户登录
 	if ok {
 		log.Debug("Have the same Player ID Login :%v", up.Id)
+
+		errMsg := pb_msg.ErrMsg_S2C{}
+		errMsg.Msg = recodeText[RECODE_PLAYERDESTORY]
+		p.ConnAgent.WriteMsg(errMsg)
+		log.Debug("用户已在其他地方登录~")
+
 		up.ConnAgent.Destroy()
 		up.ConnAgent.Close()
 		DeletePlayer(up)
