@@ -20,9 +20,8 @@ const (
 )
 
 const (
-	RoomLimitMoney = 50  //房间限定金额50,负责处于观战状态
-	RoomCordCount  = 40  //玩家进入房间获取房间的战绩数量。
-	MaxNumber      = 200 //设定房间玩家最大人数
+	RoomCordCount  = 40 //玩家进入房间获取房间的战绩数量。
+	RoomLimitMoney = 50 //房间限定金额50,否则处于观战状态
 )
 
 type GameWinList struct {
@@ -32,17 +31,24 @@ type GameWinList struct {
 	CardTypes card.CardsType //比牌类型  1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
 }
 
+//房间注池数量
+type RoomPoolCount struct {
+	ReadMoneyCount  int32 //红池金额数量
+	BlackMoneyCount int32 //黑池金额数量
+	LuckMoneyCount  int32 //Luck金额数量
+}
+
 type Room struct {
 	RoomId      string    //房间号
 	PlayerList  []*Player //玩家列表
 	PlayerCount int32     //房间当前人数
-	LimitAmount float64   //开始游戏的限制金额
 
 	RoomStat      RoomStatus //房间状态
 	GameStat      GameStatus //游戏状态
 	GodGambleName string     //赌神id
 
-	CardTypeList []int32        //卡牌类型的总集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
-	RPotWinList  []*GameWinList //红黑Win、Luck的总集合
-	TotalCount   int32          //房间游戏的总局数
+	PoolMoneyCount *RoomPoolCount
+	CardTypeList   []int32        //卡牌类型的总集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
+	RPotWinList    []*GameWinList //红黑Win、Luck、比牌类型的总集合
+	TotalCount     int32          //房间游戏的总局数
 }

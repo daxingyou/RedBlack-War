@@ -26,11 +26,12 @@ type Player struct {
 	HeadImg  string
 	Account  float64 // 玩家金额
 
-	Status         PlayerStatus
-	room           *Room
-	IsGodGambling  bool           //玩家是否是赌神
-	ContinueVot    float64        //续投，记录玩家上局的下注金额。
-	WinCount       int32          //玩家当前房间Win的局数
+	Status        PlayerStatus
+	room          *Room
+	IsGodGambling bool    //玩家是否是赌神
+	ContinueVot   float64 //续投，记录玩家上局的下注金额。
+
+	WinTotalCount  int32          //玩家房间获胜Win总次数
 	CardTypeList   []int32        //卡牌类型列表
 	PotWinList     []*GameWinList //底池每局Win总列表
 	ReadBlackList  []int32        //每局红黑Win总顺序列表  红为 1,黑为 2

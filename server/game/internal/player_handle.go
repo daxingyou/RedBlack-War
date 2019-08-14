@@ -52,6 +52,7 @@ func (p *Player) GetRoomCordData(r *Room) {
 		//大于40局则截取最新40局数据
 		num := roomGCount - RoomCordCount
 		p.PotWinList = append(p.PotWinList, r.RPotWinList[num:]...)
+		//TODO 这里 r.CardTypeList 每局游戏摊完牌追加 牌局类型
 		p.CardTypeList = append(p.CardTypeList, r.CardTypeList[num:]...)
 		for _, v := range p.PotWinList {
 			if v.ReadWin == 1 {

@@ -9,6 +9,13 @@ import (
 func (r *Room) RoomInit() {
 
 	r.RoomId = r.GetRoomNumber()
+	r.PlayerList = nil
+	r.PlayerCount = 0
+
+	r.GodGambleName = ""
+	r.CardTypeList = nil
+	r.RPotWinList = nil
+	r.TotalCount = 0
 }
 
 func (r *Room) GetRoomNumber() string {
@@ -60,8 +67,27 @@ func (r *Room) FindUsableSeat() int32 {
 	panic("The Room logic was Wrong, don't find able seat, panic err!")
 }
 
+//GetGodGableId 获取赌神ID
+func (r *Room) GetGodGableId() {
+	var GodSlice []*Player
+	GodSlice = append(GodSlice, r.PlayerList...)
+
+	for i := 0; i < len(GodSlice); i++ {
+		for j := 1; j < len(GodSlice)-i; j++ {
+			if GodSlice[j].WinTotalCount > GodSlice[j-1].WinTotalCount {
+				//交换
+				GodSlice[j], GodSlice[j-1] = GodSlice[j-1], GodSlice[j]
+			}
+		}
+	}
+	r.GodGambleName = GodSlice[0].Id
+}
+
 //PlayerListSort 玩家列表排序(进入房间、退出房间、重新开始)
 func (r *Room) UpdatePlayerList() {
+	//先更新获取赌神ID
+	r.GetGodGableId()
+
 	//先将玩家信息列表置为空
 	var PlayerSort []*Player
 	var playerSlice []*Player
@@ -120,4 +146,13 @@ func (r *Room) UpdatePlayerList() {
 	//将房间列表置为空,将更新的数据追加到房间列表
 	r.PlayerList = nil
 	r.PlayerList = append(r.PlayerList, PlayerSort...)
+}
+
+//GatherRCardType 房间所有卡牌类型集合  ( 这里可以直接每局游戏摊牌 追加牌型类型
+func (r *Room) GatherRCardType() {
+	for _, v := range r.RPotWinList {
+		if v != nil {
+			r.CardTypeList = append(r.CardTypeList, int32(v.CardTypes))
+		}
+	}
 }

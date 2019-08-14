@@ -15,7 +15,7 @@ func (p *Player) Init() {
 	p.PotWinList = nil
 	p.ContinueVot = 0
 	p.IsGodGambling = false
-	p.WinCount = 0
+	p.WinTotalCount = 0
 	p.TotalAmountBet = 0
 
 	p.room = nil
@@ -77,4 +77,3 @@ func DeletePlayer(p *Player) {
 		log.Debug("DeletePlayer come to nothing ~ : %v", p.Id)
 	}
 }
-

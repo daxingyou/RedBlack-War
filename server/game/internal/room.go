@@ -17,13 +17,14 @@ func (r *Room) JoinGameRoom(p *Player) {
 	p.room.PlayerCount++
 	p.room = r
 
-	//进入房间玩家金额处理，是否大于 50金币，否则处于观战状态
+	//进入房间玩家是否大于 50金币，否则处于观战状态
 	p.PlayerMoneyHandler()
 
 	//获取最新40局游戏数据(小于40局则全部显示出来)
 	p.GetRoomCordData(r)
 
 	//更新房间列表
+	//TODO 是否必要发送前端更新玩家列表
 	r.UpdatePlayerList()
 
 	//游戏开始
@@ -38,6 +39,8 @@ func (r *Room) GameStartRun() {
 		return
 	}
 	log.Debug("Game Start Running ~")
+
+	//下注阶段,玩家开始下注 15秒
 
 }
 
@@ -62,11 +65,13 @@ func (r *Room) ExitFromRoom(p *Player) {
 			r.PlayerList = append(r.PlayerList[:k], r.PlayerList[k+1:]...)
 		}
 	}
-	r.UpdatePlayerList()
 
-	//维护房间列表
-	maintain := pb_msg.MaintainList_S2C{}
-	r.BroadCastExcept(maintain, p)
+	r.UpdatePlayerList()
+	//TODO 维护房间列表  ( 这里暂且有误
+	//maintain := pb_msg.MaintainList_S2C{}
+	//var ListSlice []*Player
+	//maintain.PlayerList = append(maintain.PlayerList,r.PlayerList...)
+	//r.BroadCastExcept(maintain.PlayerList, p)
 
 	//广播其他玩家该玩家退出房间
 	leave := pb_msg.LeaveRoom_S2C{}
