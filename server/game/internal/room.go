@@ -25,90 +25,61 @@ func (r *Room) JoinGameRoom(p *Player) {
 	//更新房间列表  TODO 是否必要发送前端更新玩家列表
 	r.UpdatePlayerList()
 
-	//房间游戏开始事件
-	r.RoomEvent(p)
-}
-
-//RoomEvent 房间小于两人，则不能开始游戏
-func (r *Room) RoomEvent(p *Player) {
 	//判断房间人数是否小于两人，否则不能开始运行
 	if r.PlayerLength() < 2 {
 		//房间游戏不能开始,房间设为等待状态
 		r.RoomStat = RoomStatusNone
 
-		errMsg := pb_msg.ErrMsg_S2C{}
+		errMsg := pb_msg.MsgInfo_S2C{}
 		errMsg.Msg = recodeText[RECODE_PEOPLENOTFULL]
 		p.ConnAgent.WriteMsg(errMsg)
 		log.Debug("房间人数不够，不能开始游戏~")
 
-		//TODO 返回前端房间信息
+		//返回前端房间信息
+		msg := pb_msg.JoinRoom_S2C{}
+		p.ConnAgent.WriteMsg(msg)
+
 		return
 	}
 
-	r.StartGameRun(p)
-}
-
-//GameStart 游戏开始运行
-func (r *Room) StartGameRun(p *Player) {
-	log.Debug("~~~~~~~~~~~~ Room Game Start Running ~~~~~~~~~~~~")
-
-	//记录房间游戏总局数
-	r.GameTotalCount++
+	//只要不小于两人,就属于游戏状态
+	p.Status = PlayGame
 
 	//开始游戏，两种情况：
 	//1、玩家开始进入游戏开始，15秒倒计时下注
 	//2、玩家中途加入游戏，截取当前下注倒计时时间
-	if r.RoomStat == RoomStatusRun {
-		if r.GameStat == DownBet {
-			//TODO 截取下注当前倒计时时间
+	if r.RoomStat != RoomStatusRun {
+		// None和Over状态都直接开始运行游戏
+		r.StartGameRun()
+	} else {
+		if r.GameStat == DownBet {  //这里给前端发送消息 做处理
 
 		} else {
 
 		}
-
-	} else { //TODO 首次开始None游戏和重新Over开始游戏,都重新设置房间表时间
-		r.RoomStat = RoomStatusRun
-		r.GameStat = DownBet
-		//设置下注表时间
-		r.SetClockTime()
-
 	}
+}
+
+//GameStart 游戏开始运行
+func (r *Room) StartGameRun() {
+	//重新开始也要判断房间是否小于两人
+	if r.PlayerLength() < 2 {
+		//房间游戏不能开始,房间设为等待状态
+		r.RoomStat = RoomStatusNone
+
+		log.Debug("房间人数不够，不能重新开始游戏~")
+		return
+	}
+
+	log.Debug("~~~~~~~~~~~~ Room Game Start Running ~~~~~~~~~~~~")
+
+	//记录房间游戏总局数
+	r.GameTotalCount++
+	r.RoomStat = RoomStatusRun
+	r.GameStat = DownBet
 
 	//玩家开始下注
 	r.PlayerAction()
-}
-
-//SetClockTime 设置表时间
-func (r *Room) SetClockTime() {
-	//房间倒计时
-	defer r.clock.Stop()
-	defer func() { r.counter = 0 }()
-
-	for t := range r.clock.C {
-		log.Debug("时间流动 : %v", t)
-		r.counter++
-		if r.counter == DownBetTime {
-			//下注倒计时结束就做比牌结算
-			r.CompareSettlement()
-			break
-		}
-	}
-}
-
-//CompareSettlement 开始比牌结算
-func (r *Room) CompareSettlement() {
-
-}
-
-//PlayerAction 玩家下注行动
-func (r *Room) PlayerAction() {
-	//遍历所有用户开始下注信息，观战用户也不能进行下注
-	//TODO 存在一个问题，用户行动怎么对应 和 遍历获取玩家行动是否会阻塞
-	for _, v := range r.PlayerList {
-		if v != nil && v.Status != WatchGame {
-
-		}
-	}
 }
 
 //PlayerExitRoom 玩家退出房间
@@ -149,5 +120,3 @@ func (r *Room) ExitFromRoom(p *Player) {
 	r.BroadCastExcept(leave, p)
 	log.Debug("Player Exit from the Room SUCCESS ~")
 }
-
-//TODO 处理获取玩家行动

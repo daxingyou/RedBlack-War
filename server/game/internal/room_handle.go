@@ -12,8 +12,7 @@ func (r *Room) RoomInit() {
 	r.PlayerList = nil
 
 	r.RoomStat = RoomStatusNone
-	r.clock = time.NewTicker(time.Second)
-	r.counter = 0
+	//r.clock = time.NewTicker(time.Second)
 
 	r.GodGambleName = ""
 	r.CardTypeList = nil
@@ -153,7 +152,24 @@ func (r *Room) GetGodGableId() {
 func (r *Room) GatherRCardType() {
 	for _, v := range r.RPotWinList {
 		if v != nil {
+			//TODO 这里存在一个问题,卡牌类型是房间的，不是用户的，用户只是截取 40局类型
 			r.CardTypeList = append(r.CardTypeList, int32(v.CardTypes))
+		}
+	}
+}
+
+//DisposeGamesNum 处理玩家局数
+func (r *Room) UpdateGamesNum() {
+	for _, v := range r.PlayerList {
+		//玩家局数达到72局，就清空一次玩家房间数据
+		if v != nil && v.GetPotWinCount() == GamesNumLimit {
+			v.ReadWinCount = 0
+			v.BlackWinCount = 0
+			v.LuckWinCount = 0
+			v.ReadBlackList = nil
+
+			//游戏结束玩家金额不足设为观战
+			v.PlayerMoneyHandler()
 		}
 	}
 }

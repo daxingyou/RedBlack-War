@@ -35,7 +35,7 @@ func (p *Player) PlayerMoneyHandler() {
 		//玩家观战状态不能进行投注
 		p.Status = WatchGame
 
-		errMsg := &pb_msg.ErrMsg_S2C{}
+		errMsg := &pb_msg.MsgInfo_S2C{}
 		errMsg.Msg = recodeText[RECODE_MONEYNOTFULL]
 		p.ConnAgent.WriteMsg(errMsg)
 

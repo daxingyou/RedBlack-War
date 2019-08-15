@@ -2,7 +2,6 @@ package internal
 
 import (
 	"server/game/card"
-	"time"
 )
 
 type RoomStatus int32
@@ -50,11 +49,9 @@ type Room struct {
 	RoomId     string    //房间号
 	PlayerList []*Player //玩家列表
 
-	GodGambleName string       //赌神id
-	RoomStat      RoomStatus   //房间状态
-	GameStat      GameStatus   //游戏状态
-	clock         *time.Ticker //定时器
-	counter       int32        //计时数
+	GodGambleName string         //赌神id
+	RoomStat      RoomStatus     //房间状态
+	GameStat      GameStatus     //游戏状态
 
 	PoolMoneyCount *RoomPoolCount //房间注池数量
 	CardTypeList   []int32        //卡牌类型的总集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子

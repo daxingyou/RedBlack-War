@@ -86,7 +86,7 @@ func findMsgID(t string) uint16 {
 	msgType2ID := map[string]uint16{
 		"*pb_msg.Ping":          0,
 		"*pb_msg.Pong":          1,
-		"*pb_msg.ErrMsg_S2C":    2,
+		"*pb_msg.MsgInfo_S2C":    2,
 		"*pb_msg.LoginInfo_C2S": 3,
 		"*pb_msg.LoginInfo_S2C": 4,
 	}

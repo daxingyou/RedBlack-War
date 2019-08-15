@@ -57,7 +57,7 @@ func RegisterPlayer(p *Player) {
 	if ok {
 		log.Debug("Have the same Player ID Login :%v", up.Id)
 
-		errMsg := pb_msg.ErrMsg_S2C{}
+		errMsg := pb_msg.MsgInfo_S2C{}
 		errMsg.Msg = recodeText[RECODE_PLAYERDESTORY]
 		p.ConnAgent.WriteMsg(errMsg)
 		log.Debug("用户已在其他地方登录~")

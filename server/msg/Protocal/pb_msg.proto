@@ -12,7 +12,7 @@ message Pong {
 }
 
 //--2
-message ErrMsg_S2C {
+message MsgInfo_S2C {
     string msg = 1; // 普通消息
     string error = 2; // 错误消息
     string data = 3; // 消息参数
@@ -42,8 +42,56 @@ message JoinRoom_C2S {
     string roomId = 1;
 }
 
+message PlayerData {
+    LoginData loginData = 1;
+    double continueVot = 2; //续投，记录玩家上局的下注金额。
+    bool IsGodGambling = 3; //玩家是否是赌神
+    int32 winCount = 4; //玩家当前房间Win的局数
+    double resultWinMoney = 5; //本局游戏结束赢的钱
+    double resultLoseMoney = 6; //本局游戏结束输的钱
+}
+
+//游戏阶段
+enum GameStage {
+    XXX = 0; //枚举第一个为0
+    DownBet = 1;
+    Settle = 2;
+}
+
+//卡牌类型
+enum CardsType {
+    XXX_Card = 0;
+    Leaflet = 1; //单张
+    Pair = 2; //对子
+    Straight = 3; //顺子
+    Golden = 4; //金花
+    ShunJin = 5; //顺金
+    Leopard = 6; //豹子
+}
+
+//房间注池金额总数量
+message PotMoneyCount {
+    int32 ReadMoneyCount = 1;
+    int32 BlackMoneyCount = 2;
+    int32 LuckMoneyCount = 3;
+}
+
+//游戏输赢的数据
+message GameWinList {
+    int32 ReadWin = 1; //红Win为 1
+    int32 BlackWin = 2; //黑Win为 1
+    int32 LuckWin = 3; //幸运luck为 1
+    CardsType cardType = 4; //比牌类型
+}
+
 message RoomData {
     string roomId = 1;
+    repeated PlayerData playerList = 2; //玩家列表
+    string godGableName = 3; //赌神ID
+    GameStage gameStage = 4; //游戏阶段
+    PotMoneyCount potMoneyCount = 5; //房间注池金额总数量集合
+    repeated int32 cardTypes = 6; //卡牌类型集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
+    repeated GameWinList rPotWinList = 7; //红黑Win、Luck、比牌类型的总集合
 }
 
 //--6
@@ -61,10 +109,17 @@ message LeaveRoom_S2C {
     LoginData loginData = 1;
 }
 
-//--9
+enum PotType {
+    XXX_Pot = 0;
+    ReadPot = 1;
+    BlackPot = 2;
+    LuckPot = 3;
+}
+
+//--9  玩家行动
 message PlayerAction_C2S {
     double bet = 1; // 下注金额
-    int32 pot = 2; // 下注注池
+    PotType pot = 2; // 下注注池类型
 }
 
 //--10
@@ -72,26 +127,22 @@ message PlayerAction_S2C {
     RoomData roomData = 1;
 }
 
-message PlayerData {
-    LoginData loginData = 1;
-    double continueVot = 2; //续投，记录玩家上局的下注金额。
-    bool IsGodGambling = 3; //玩家是否是赌神
-    int32 winCount = 4; //玩家当前房间Win的局数
-    double resultWinMoney = 5; //本局游戏结束赢的钱
-    double resultLoseMoney = 6; //本局游戏结束输的钱
-}
-
-//--11
+//--11  更新房间列表
 message MaintainList_S2C {
     repeated PlayerData playerList = 1;
 }
-//--12
+
+//--12  开牌结果
 message OpenCardResult_S2C {
-    //开牌结果
-    //牌型类型
-    //注池Win类型
+    //1、卡牌数据
+    repeated int32 cardData = 1;
+    //2、比牌类型
+    CardsType cardType = 2;
+    //3、注池Win类型
+    PotType potType = 3;
 }
 
-//--13
-message AmountResult_S2C {
+//--13  房间结算数据
+message RoomSettleData_S2C {
+    RoomData roomData = 1;
 }

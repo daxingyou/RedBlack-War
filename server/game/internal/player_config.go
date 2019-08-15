@@ -13,6 +13,10 @@ const (
 	WatchGame PlayerStatus = 2 //观战状态
 )
 
+const (
+	GamesNumLimit = 72 //玩家获取房间游戏数据上限
+)
+
 //定义全局用户房间
 var userRoomMap map[string]*Room
 
@@ -26,14 +30,16 @@ type Player struct {
 	HeadImg  string
 	Account  float64 // 玩家金额
 
-	Status        PlayerStatus
-	room          *Room
-	IsGodGambling bool    //玩家是否是赌神
-	ContinueVot   float64 //续投，记录玩家上局的下注金额。
+	DownBetMoney  int32        //玩家本局下注金额
+	DownPotType   int32        //玩家本局下注注池  红为 1,黑为 2,幸运为 3
+	Status        PlayerStatus //玩家状态
+	room          *Room        //玩家房间信息
+	IsGodGambling bool         //玩家是否是赌神
+	ContinueVot   float64      //续投，记录玩家上局的下注金额。
 
 	WinTotalCount  int32          //玩家房间获胜Win总次数
-	CardTypeList   []int32        //卡牌类型列表
 	PotWinList     []*GameWinList //底池每局Win总列表
+	CardTypeList   []int32        //卡牌类型列表
 	ReadBlackList  []int32        //每局红黑Win总顺序列表  红为 1,黑为 2
 	ReadWinCount   int32          //Win总列表红Win的局数
 	BlackWinCount  int32          //Win总列表黑Win的局数
