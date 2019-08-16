@@ -46,11 +46,11 @@ func handleLoginInfo(args []interface{}) {
 	}
 
 	msg := &pb_msg.LoginInfo_S2C{}
-	msg.LoginData = new(pb_msg.LoginData)
-	msg.LoginData.Id = p.Id
-	msg.LoginData.NickName = p.NickName
-	msg.LoginData.HeadImg = p.HeadImg
-	msg.LoginData.Account = p.Account
+	msg.PlayerInfo = new(pb_msg.PlayerInfo)
+	msg.PlayerInfo.Id = p.Id
+	msg.PlayerInfo.NickName = p.NickName
+	msg.PlayerInfo.HeadImg = p.HeadImg
+	msg.PlayerInfo.Account = p.Account
 
 	a.WriteMsg(msg)
 
@@ -83,13 +83,13 @@ func handleLeaveRoom(args []interface{}) {
 }
 
 func handlePlayerAction(args []interface{}) {
-	//m := args[0].(*pb_msg.PlayerAction_C2S)
+	m := args[0].(*pb_msg.PlayerAction_C2S)
 	a := args[1].(gate.Agent)
 
 	p, ok := a.UserData().(*Player)
 	log.Debug("handlePlayerAction 玩家开始行动~ : %v", p.Id)
 
 	if ok {
-		p.SetPlayerAction()
+		p.SetPlayerAction(m)
 	}
 }

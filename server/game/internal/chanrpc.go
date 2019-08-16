@@ -3,6 +3,7 @@ package internal
 import (
 	"github.com/name5566/leaf/gate"
 	"github.com/name5566/leaf/log"
+	pb_msg "server/msg/Protocal"
 )
 
 func init() {
@@ -18,6 +19,9 @@ func rpcNewAgent(args []interface{}) {
 	//将用户信息塞到链接上
 	p.ConnAgent = a
 	p.ConnAgent.SetUserData(p)
+
+	//开始呼吸
+	p.StartBreathe()
 }
 
 func rpcCloseAgent(args []interface{}) {
@@ -26,6 +30,12 @@ func rpcCloseAgent(args []interface{}) {
 	p, ok := a.UserData().(*Player)
 	if ok {
 		log.Debug("Player Close Websocket address ~ : %v ", p.Id)
+
+		errMsg := &pb_msg.MsgInfo_S2C{}
+		errMsg.Msg = recodeText[RECODE_PLAYERBREAKLINE]
+		p.ConnAgent.WriteMsg(errMsg)
+
+		log.Debug("玩家已掉线,断开连接~")
 		DeletePlayer(p)
 	}
 	a.SetUserData(nil)

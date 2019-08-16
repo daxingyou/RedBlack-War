@@ -20,25 +20,53 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+type PlayerStatus int32
+
+const (
+	PlayerStatus_XXX_PStatus PlayerStatus = 0
+	PlayerStatus_PlayGame    PlayerStatus = 1
+	PlayerStatus_WatchGame   PlayerStatus = 2
+)
+
+var PlayerStatus_name = map[int32]string{
+	0: "XXX_PStatus",
+	1: "PlayGame",
+	2: "WatchGame",
+}
+
+var PlayerStatus_value = map[string]int32{
+	"XXX_PStatus": 0,
+	"PlayGame":    1,
+	"WatchGame":   2,
+}
+
+func (x PlayerStatus) String() string {
+	return proto.EnumName(PlayerStatus_name, int32(x))
+}
+
+func (PlayerStatus) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_bd13c7201b21be60, []int{0}
+}
+
 //游戏阶段
 type GameStage int32
 
 const (
-	GameStage_XXX     GameStage = 0
-	GameStage_DownBet GameStage = 1
-	GameStage_Settle  GameStage = 2
+	GameStage_XXX_Stage GameStage = 0
+	GameStage_DownBet   GameStage = 1
+	GameStage_Settle    GameStage = 2
 )
 
 var GameStage_name = map[int32]string{
-	0: "XXX",
+	0: "XXX_Stage",
 	1: "DownBet",
 	2: "Settle",
 }
 
 var GameStage_value = map[string]int32{
-	"XXX":     0,
-	"DownBet": 1,
-	"Settle":  2,
+	"XXX_Stage": 0,
+	"DownBet":   1,
+	"Settle":    2,
 }
 
 func (x GameStage) String() string {
@@ -46,7 +74,7 @@ func (x GameStage) String() string {
 }
 
 func (GameStage) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{0}
+	return fileDescriptor_bd13c7201b21be60, []int{1}
 }
 
 //卡牌类型
@@ -87,9 +115,10 @@ func (x CardsType) String() string {
 }
 
 func (CardsType) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{1}
+	return fileDescriptor_bd13c7201b21be60, []int{2}
 }
 
+//注池类型
 type PotType int32
 
 const (
@@ -118,7 +147,7 @@ func (x PotType) String() string {
 }
 
 func (PotType) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{2}
+	return fileDescriptor_bd13c7201b21be60, []int{3}
 }
 
 //--0
@@ -305,7 +334,7 @@ func (m *LoginInfo_C2S) GetServerUrl() string {
 	return ""
 }
 
-type LoginData struct {
+type PlayerInfo struct {
 	Id                   string   `protobuf:"bytes,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	NickName             string   `protobuf:"bytes,2,opt,name=nickName,proto3" json:"nickName,omitempty"`
 	HeadImg              string   `protobuf:"bytes,3,opt,name=headImg,proto3" json:"headImg,omitempty"`
@@ -315,53 +344,53 @@ type LoginData struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *LoginData) Reset()         { *m = LoginData{} }
-func (m *LoginData) String() string { return proto.CompactTextString(m) }
-func (*LoginData) ProtoMessage()    {}
-func (*LoginData) Descriptor() ([]byte, []int) {
+func (m *PlayerInfo) Reset()         { *m = PlayerInfo{} }
+func (m *PlayerInfo) String() string { return proto.CompactTextString(m) }
+func (*PlayerInfo) ProtoMessage()    {}
+func (*PlayerInfo) Descriptor() ([]byte, []int) {
 	return fileDescriptor_bd13c7201b21be60, []int{4}
 }
 
-func (m *LoginData) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_LoginData.Unmarshal(m, b)
+func (m *PlayerInfo) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PlayerInfo.Unmarshal(m, b)
 }
-func (m *LoginData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_LoginData.Marshal(b, m, deterministic)
+func (m *PlayerInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PlayerInfo.Marshal(b, m, deterministic)
 }
-func (m *LoginData) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_LoginData.Merge(m, src)
+func (m *PlayerInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PlayerInfo.Merge(m, src)
 }
-func (m *LoginData) XXX_Size() int {
-	return xxx_messageInfo_LoginData.Size(m)
+func (m *PlayerInfo) XXX_Size() int {
+	return xxx_messageInfo_PlayerInfo.Size(m)
 }
-func (m *LoginData) XXX_DiscardUnknown() {
-	xxx_messageInfo_LoginData.DiscardUnknown(m)
+func (m *PlayerInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_PlayerInfo.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_LoginData proto.InternalMessageInfo
+var xxx_messageInfo_PlayerInfo proto.InternalMessageInfo
 
-func (m *LoginData) GetId() string {
+func (m *PlayerInfo) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
-func (m *LoginData) GetNickName() string {
+func (m *PlayerInfo) GetNickName() string {
 	if m != nil {
 		return m.NickName
 	}
 	return ""
 }
 
-func (m *LoginData) GetHeadImg() string {
+func (m *PlayerInfo) GetHeadImg() string {
 	if m != nil {
 		return m.HeadImg
 	}
 	return ""
 }
 
-func (m *LoginData) GetAccount() float64 {
+func (m *PlayerInfo) GetAccount() float64 {
 	if m != nil {
 		return m.Account
 	}
@@ -370,10 +399,10 @@ func (m *LoginData) GetAccount() float64 {
 
 //--4
 type LoginInfo_S2C struct {
-	LoginData            *LoginData `protobuf:"bytes,1,opt,name=loginData,proto3" json:"loginData,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
-	XXX_unrecognized     []byte     `json:"-"`
-	XXX_sizecache        int32      `json:"-"`
+	PlayerInfo           *PlayerInfo `protobuf:"bytes,1,opt,name=playerInfo,proto3" json:"playerInfo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
 }
 
 func (m *LoginInfo_S2C) Reset()         { *m = LoginInfo_S2C{} }
@@ -401,9 +430,9 @@ func (m *LoginInfo_S2C) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_LoginInfo_S2C proto.InternalMessageInfo
 
-func (m *LoginInfo_S2C) GetLoginData() *LoginData {
+func (m *LoginInfo_S2C) GetPlayerInfo() *PlayerInfo {
 	if m != nil {
-		return m.LoginData
+		return m.PlayerInfo
 	}
 	return nil
 }
@@ -448,23 +477,258 @@ func (m *JoinRoom_C2S) GetRoomId() string {
 	return ""
 }
 
+//玩家各注池下注的金额
+type DownBetMoney struct {
+	ReadDownBet          int32    `protobuf:"varint,1,opt,name=ReadDownBet,proto3" json:"ReadDownBet,omitempty"`
+	BlackDownBet         int32    `protobuf:"varint,2,opt,name=BlackDownBet,proto3" json:"BlackDownBet,omitempty"`
+	LuckDownBet          int32    `protobuf:"varint,3,opt,name=LuckDownBet,proto3" json:"LuckDownBet,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DownBetMoney) Reset()         { *m = DownBetMoney{} }
+func (m *DownBetMoney) String() string { return proto.CompactTextString(m) }
+func (*DownBetMoney) ProtoMessage()    {}
+func (*DownBetMoney) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bd13c7201b21be60, []int{7}
+}
+
+func (m *DownBetMoney) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DownBetMoney.Unmarshal(m, b)
+}
+func (m *DownBetMoney) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DownBetMoney.Marshal(b, m, deterministic)
+}
+func (m *DownBetMoney) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DownBetMoney.Merge(m, src)
+}
+func (m *DownBetMoney) XXX_Size() int {
+	return xxx_messageInfo_DownBetMoney.Size(m)
+}
+func (m *DownBetMoney) XXX_DiscardUnknown() {
+	xxx_messageInfo_DownBetMoney.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DownBetMoney proto.InternalMessageInfo
+
+func (m *DownBetMoney) GetReadDownBet() int32 {
+	if m != nil {
+		return m.ReadDownBet
+	}
+	return 0
+}
+
+func (m *DownBetMoney) GetBlackDownBet() int32 {
+	if m != nil {
+		return m.BlackDownBet
+	}
+	return 0
+}
+
+func (m *DownBetMoney) GetLuckDownBet() int32 {
+	if m != nil {
+		return m.LuckDownBet
+	}
+	return 0
+}
+
+//玩家各注池下注的金额
+type DownPotType struct {
+	ReadDownPot          bool     `protobuf:"varint,1,opt,name=ReadDownPot,proto3" json:"ReadDownPot,omitempty"`
+	BlackDownPot         bool     `protobuf:"varint,2,opt,name=BlackDownPot,proto3" json:"BlackDownPot,omitempty"`
+	LuckDownPot          bool     `protobuf:"varint,3,opt,name=LuckDownPot,proto3" json:"LuckDownPot,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DownPotType) Reset()         { *m = DownPotType{} }
+func (m *DownPotType) String() string { return proto.CompactTextString(m) }
+func (*DownPotType) ProtoMessage()    {}
+func (*DownPotType) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bd13c7201b21be60, []int{8}
+}
+
+func (m *DownPotType) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DownPotType.Unmarshal(m, b)
+}
+func (m *DownPotType) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DownPotType.Marshal(b, m, deterministic)
+}
+func (m *DownPotType) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DownPotType.Merge(m, src)
+}
+func (m *DownPotType) XXX_Size() int {
+	return xxx_messageInfo_DownPotType.Size(m)
+}
+func (m *DownPotType) XXX_DiscardUnknown() {
+	xxx_messageInfo_DownPotType.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DownPotType proto.InternalMessageInfo
+
+func (m *DownPotType) GetReadDownPot() bool {
+	if m != nil {
+		return m.ReadDownPot
+	}
+	return false
+}
+
+func (m *DownPotType) GetBlackDownPot() bool {
+	if m != nil {
+		return m.BlackDownPot
+	}
+	return false
+}
+
+func (m *DownPotType) GetLuckDownPot() bool {
+	if m != nil {
+		return m.LuckDownPot
+	}
+	return false
+}
+
+//续投
+type ContinueBet struct {
+	DownBetMoneys        *DownBetMoney `protobuf:"bytes,1,opt,name=downBetMoneys,proto3" json:"downBetMoneys,omitempty"`
+	TotalMoneyBet        int32         `protobuf:"varint,4,opt,name=TotalMoneyBet,proto3" json:"TotalMoneyBet,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
+}
+
+func (m *ContinueBet) Reset()         { *m = ContinueBet{} }
+func (m *ContinueBet) String() string { return proto.CompactTextString(m) }
+func (*ContinueBet) ProtoMessage()    {}
+func (*ContinueBet) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bd13c7201b21be60, []int{9}
+}
+
+func (m *ContinueBet) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ContinueBet.Unmarshal(m, b)
+}
+func (m *ContinueBet) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ContinueBet.Marshal(b, m, deterministic)
+}
+func (m *ContinueBet) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ContinueBet.Merge(m, src)
+}
+func (m *ContinueBet) XXX_Size() int {
+	return xxx_messageInfo_ContinueBet.Size(m)
+}
+func (m *ContinueBet) XXX_DiscardUnknown() {
+	xxx_messageInfo_ContinueBet.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ContinueBet proto.InternalMessageInfo
+
+func (m *ContinueBet) GetDownBetMoneys() *DownBetMoney {
+	if m != nil {
+		return m.DownBetMoneys
+	}
+	return nil
+}
+
+func (m *ContinueBet) GetTotalMoneyBet() int32 {
+	if m != nil {
+		return m.TotalMoneyBet
+	}
+	return 0
+}
+
+//游戏输赢的数据
+type PotWinList struct {
+	ReadWin              int32     `protobuf:"varint,1,opt,name=ReadWin,proto3" json:"ReadWin,omitempty"`
+	BlackWin             int32     `protobuf:"varint,2,opt,name=BlackWin,proto3" json:"BlackWin,omitempty"`
+	LuckWin              int32     `protobuf:"varint,3,opt,name=LuckWin,proto3" json:"LuckWin,omitempty"`
+	CardType             CardsType `protobuf:"varint,4,opt,name=cardType,proto3,enum=pb_msg.CardsType" json:"cardType,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *PotWinList) Reset()         { *m = PotWinList{} }
+func (m *PotWinList) String() string { return proto.CompactTextString(m) }
+func (*PotWinList) ProtoMessage()    {}
+func (*PotWinList) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bd13c7201b21be60, []int{10}
+}
+
+func (m *PotWinList) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PotWinList.Unmarshal(m, b)
+}
+func (m *PotWinList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PotWinList.Marshal(b, m, deterministic)
+}
+func (m *PotWinList) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PotWinList.Merge(m, src)
+}
+func (m *PotWinList) XXX_Size() int {
+	return xxx_messageInfo_PotWinList.Size(m)
+}
+func (m *PotWinList) XXX_DiscardUnknown() {
+	xxx_messageInfo_PotWinList.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PotWinList proto.InternalMessageInfo
+
+func (m *PotWinList) GetReadWin() int32 {
+	if m != nil {
+		return m.ReadWin
+	}
+	return 0
+}
+
+func (m *PotWinList) GetBlackWin() int32 {
+	if m != nil {
+		return m.BlackWin
+	}
+	return 0
+}
+
+func (m *PotWinList) GetLuckWin() int32 {
+	if m != nil {
+		return m.LuckWin
+	}
+	return 0
+}
+
+func (m *PotWinList) GetCardType() CardsType {
+	if m != nil {
+		return m.CardType
+	}
+	return CardsType_XXX_Card
+}
+
 type PlayerData struct {
-	LoginData            *LoginData `protobuf:"bytes,1,opt,name=loginData,proto3" json:"loginData,omitempty"`
-	ContinueVot          float64    `protobuf:"fixed64,2,opt,name=continueVot,proto3" json:"continueVot,omitempty"`
-	IsGodGambling        bool       `protobuf:"varint,3,opt,name=IsGodGambling,proto3" json:"IsGodGambling,omitempty"`
-	WinCount             int32      `protobuf:"varint,4,opt,name=winCount,proto3" json:"winCount,omitempty"`
-	ResultWinMoney       float64    `protobuf:"fixed64,5,opt,name=resultWinMoney,proto3" json:"resultWinMoney,omitempty"`
-	ResultLoseMoney      float64    `protobuf:"fixed64,6,opt,name=resultLoseMoney,proto3" json:"resultLoseMoney,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
-	XXX_unrecognized     []byte     `json:"-"`
-	XXX_sizecache        int32      `json:"-"`
+	PlayerInfo           *PlayerInfo   `protobuf:"bytes,1,opt,name=playerInfo,proto3" json:"playerInfo,omitempty"`
+	DownBetMoneys        *DownBetMoney `protobuf:"bytes,2,opt,name=downBetMoneys,proto3" json:"downBetMoneys,omitempty"`
+	DownPotTypes         *DownPotType  `protobuf:"bytes,3,opt,name=downPotTypes,proto3" json:"downPotTypes,omitempty"`
+	TotalAmountBet       int32         `protobuf:"varint,4,opt,name=TotalAmountBet,proto3" json:"TotalAmountBet,omitempty"`
+	Status               PlayerStatus  `protobuf:"varint,5,opt,name=status,proto3,enum=pb_msg.PlayerStatus" json:"status,omitempty"`
+	IsGodGambling        bool          `protobuf:"varint,6,opt,name=IsGodGambling,proto3" json:"IsGodGambling,omitempty"`
+	ContinueVot          *ContinueBet  `protobuf:"bytes,7,opt,name=continueVot,proto3" json:"continueVot,omitempty"`
+	ResultWinMoney       float64       `protobuf:"fixed64,8,opt,name=resultWinMoney,proto3" json:"resultWinMoney,omitempty"`
+	ResultLoseMoney      float64       `protobuf:"fixed64,9,opt,name=resultLoseMoney,proto3" json:"resultLoseMoney,omitempty"`
+	WinTotalCount        int32         `protobuf:"varint,10,opt,name=winTotalCount,proto3" json:"winTotalCount,omitempty"`
+	CardTypeList         []int32       `protobuf:"varint,11,rep,packed,name=cardTypeList,proto3" json:"cardTypeList,omitempty"`
+	PotWinList           []*PotWinList `protobuf:"bytes,12,rep,name=potWinList,proto3" json:"potWinList,omitempty"`
+	ReadBlackList        []int32       `protobuf:"varint,13,rep,packed,name=readBlackList,proto3" json:"readBlackList,omitempty"`
+	ReadWinCount         int32         `protobuf:"varint,14,opt,name=readWinCount,proto3" json:"readWinCount,omitempty"`
+	BlackWinCount        int32         `protobuf:"varint,15,opt,name=blackWinCount,proto3" json:"blackWinCount,omitempty"`
+	LuckWinCount         int32         `protobuf:"varint,16,opt,name=luckWinCount,proto3" json:"luckWinCount,omitempty"`
+	IsOnline             bool          `protobuf:"varint,17,opt,name=IsOnline,proto3" json:"IsOnline,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
 }
 
 func (m *PlayerData) Reset()         { *m = PlayerData{} }
 func (m *PlayerData) String() string { return proto.CompactTextString(m) }
 func (*PlayerData) ProtoMessage()    {}
 func (*PlayerData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{7}
+	return fileDescriptor_bd13c7201b21be60, []int{11}
 }
 
 func (m *PlayerData) XXX_Unmarshal(b []byte) error {
@@ -485,18 +749,39 @@ func (m *PlayerData) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PlayerData proto.InternalMessageInfo
 
-func (m *PlayerData) GetLoginData() *LoginData {
+func (m *PlayerData) GetPlayerInfo() *PlayerInfo {
 	if m != nil {
-		return m.LoginData
+		return m.PlayerInfo
 	}
 	return nil
 }
 
-func (m *PlayerData) GetContinueVot() float64 {
+func (m *PlayerData) GetDownBetMoneys() *DownBetMoney {
 	if m != nil {
-		return m.ContinueVot
+		return m.DownBetMoneys
+	}
+	return nil
+}
+
+func (m *PlayerData) GetDownPotTypes() *DownPotType {
+	if m != nil {
+		return m.DownPotTypes
+	}
+	return nil
+}
+
+func (m *PlayerData) GetTotalAmountBet() int32 {
+	if m != nil {
+		return m.TotalAmountBet
 	}
 	return 0
+}
+
+func (m *PlayerData) GetStatus() PlayerStatus {
+	if m != nil {
+		return m.Status
+	}
+	return PlayerStatus_XXX_PStatus
 }
 
 func (m *PlayerData) GetIsGodGambling() bool {
@@ -506,11 +791,11 @@ func (m *PlayerData) GetIsGodGambling() bool {
 	return false
 }
 
-func (m *PlayerData) GetWinCount() int32 {
+func (m *PlayerData) GetContinueVot() *ContinueBet {
 	if m != nil {
-		return m.WinCount
+		return m.ContinueVot
 	}
-	return 0
+	return nil
 }
 
 func (m *PlayerData) GetResultWinMoney() float64 {
@@ -527,6 +812,62 @@ func (m *PlayerData) GetResultLoseMoney() float64 {
 	return 0
 }
 
+func (m *PlayerData) GetWinTotalCount() int32 {
+	if m != nil {
+		return m.WinTotalCount
+	}
+	return 0
+}
+
+func (m *PlayerData) GetCardTypeList() []int32 {
+	if m != nil {
+		return m.CardTypeList
+	}
+	return nil
+}
+
+func (m *PlayerData) GetPotWinList() []*PotWinList {
+	if m != nil {
+		return m.PotWinList
+	}
+	return nil
+}
+
+func (m *PlayerData) GetReadBlackList() []int32 {
+	if m != nil {
+		return m.ReadBlackList
+	}
+	return nil
+}
+
+func (m *PlayerData) GetReadWinCount() int32 {
+	if m != nil {
+		return m.ReadWinCount
+	}
+	return 0
+}
+
+func (m *PlayerData) GetBlackWinCount() int32 {
+	if m != nil {
+		return m.BlackWinCount
+	}
+	return 0
+}
+
+func (m *PlayerData) GetLuckWinCount() int32 {
+	if m != nil {
+		return m.LuckWinCount
+	}
+	return 0
+}
+
+func (m *PlayerData) GetIsOnline() bool {
+	if m != nil {
+		return m.IsOnline
+	}
+	return false
+}
+
 //房间注池金额总数量
 type PotMoneyCount struct {
 	ReadMoneyCount       int32    `protobuf:"varint,1,opt,name=ReadMoneyCount,proto3" json:"ReadMoneyCount,omitempty"`
@@ -541,7 +882,7 @@ func (m *PotMoneyCount) Reset()         { *m = PotMoneyCount{} }
 func (m *PotMoneyCount) String() string { return proto.CompactTextString(m) }
 func (*PotMoneyCount) ProtoMessage()    {}
 func (*PotMoneyCount) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{8}
+	return fileDescriptor_bd13c7201b21be60, []int{12}
 }
 
 func (m *PotMoneyCount) XXX_Unmarshal(b []byte) error {
@@ -583,78 +924,14 @@ func (m *PotMoneyCount) GetLuckMoneyCount() int32 {
 	return 0
 }
 
-//游戏输赢的数据
-type GameWinList struct {
-	ReadWin              int32     `protobuf:"varint,1,opt,name=ReadWin,proto3" json:"ReadWin,omitempty"`
-	BlackWin             int32     `protobuf:"varint,2,opt,name=BlackWin,proto3" json:"BlackWin,omitempty"`
-	LuckWin              int32     `protobuf:"varint,3,opt,name=LuckWin,proto3" json:"LuckWin,omitempty"`
-	CardType             CardsType `protobuf:"varint,4,opt,name=cardType,proto3,enum=pb_msg.CardsType" json:"cardType,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
-	XXX_unrecognized     []byte    `json:"-"`
-	XXX_sizecache        int32     `json:"-"`
-}
-
-func (m *GameWinList) Reset()         { *m = GameWinList{} }
-func (m *GameWinList) String() string { return proto.CompactTextString(m) }
-func (*GameWinList) ProtoMessage()    {}
-func (*GameWinList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{9}
-}
-
-func (m *GameWinList) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GameWinList.Unmarshal(m, b)
-}
-func (m *GameWinList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GameWinList.Marshal(b, m, deterministic)
-}
-func (m *GameWinList) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GameWinList.Merge(m, src)
-}
-func (m *GameWinList) XXX_Size() int {
-	return xxx_messageInfo_GameWinList.Size(m)
-}
-func (m *GameWinList) XXX_DiscardUnknown() {
-	xxx_messageInfo_GameWinList.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GameWinList proto.InternalMessageInfo
-
-func (m *GameWinList) GetReadWin() int32 {
-	if m != nil {
-		return m.ReadWin
-	}
-	return 0
-}
-
-func (m *GameWinList) GetBlackWin() int32 {
-	if m != nil {
-		return m.BlackWin
-	}
-	return 0
-}
-
-func (m *GameWinList) GetLuckWin() int32 {
-	if m != nil {
-		return m.LuckWin
-	}
-	return 0
-}
-
-func (m *GameWinList) GetCardType() CardsType {
-	if m != nil {
-		return m.CardType
-	}
-	return CardsType_XXX_Card
-}
-
 type RoomData struct {
 	RoomId               string         `protobuf:"bytes,1,opt,name=roomId,proto3" json:"roomId,omitempty"`
 	PlayerList           []*PlayerData  `protobuf:"bytes,2,rep,name=playerList,proto3" json:"playerList,omitempty"`
 	GodGableName         string         `protobuf:"bytes,3,opt,name=godGableName,proto3" json:"godGableName,omitempty"`
 	GameStage            GameStage      `protobuf:"varint,4,opt,name=gameStage,proto3,enum=pb_msg.GameStage" json:"gameStage,omitempty"`
 	PotMoneyCount        *PotMoneyCount `protobuf:"bytes,5,opt,name=potMoneyCount,proto3" json:"potMoneyCount,omitempty"`
-	CardTypes            []int32        `protobuf:"varint,6,rep,packed,name=cardTypes,proto3" json:"cardTypes,omitempty"`
-	RPotWinList          []*GameWinList `protobuf:"bytes,7,rep,name=rPotWinList,proto3" json:"rPotWinList,omitempty"`
+	CardTypeList         []int32        `protobuf:"varint,6,rep,packed,name=cardTypeList,proto3" json:"cardTypeList,omitempty"`
+	RPotWinList          []*PotWinList  `protobuf:"bytes,7,rep,name=rPotWinList,proto3" json:"rPotWinList,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
 	XXX_unrecognized     []byte         `json:"-"`
 	XXX_sizecache        int32          `json:"-"`
@@ -664,7 +941,7 @@ func (m *RoomData) Reset()         { *m = RoomData{} }
 func (m *RoomData) String() string { return proto.CompactTextString(m) }
 func (*RoomData) ProtoMessage()    {}
 func (*RoomData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{10}
+	return fileDescriptor_bd13c7201b21be60, []int{13}
 }
 
 func (m *RoomData) XXX_Unmarshal(b []byte) error {
@@ -710,7 +987,7 @@ func (m *RoomData) GetGameStage() GameStage {
 	if m != nil {
 		return m.GameStage
 	}
-	return GameStage_XXX
+	return GameStage_XXX_Stage
 }
 
 func (m *RoomData) GetPotMoneyCount() *PotMoneyCount {
@@ -720,14 +997,14 @@ func (m *RoomData) GetPotMoneyCount() *PotMoneyCount {
 	return nil
 }
 
-func (m *RoomData) GetCardTypes() []int32 {
+func (m *RoomData) GetCardTypeList() []int32 {
 	if m != nil {
-		return m.CardTypes
+		return m.CardTypeList
 	}
 	return nil
 }
 
-func (m *RoomData) GetRPotWinList() []*GameWinList {
+func (m *RoomData) GetRPotWinList() []*PotWinList {
 	if m != nil {
 		return m.RPotWinList
 	}
@@ -746,7 +1023,7 @@ func (m *JoinRoom_S2C) Reset()         { *m = JoinRoom_S2C{} }
 func (m *JoinRoom_S2C) String() string { return proto.CompactTextString(m) }
 func (*JoinRoom_S2C) ProtoMessage()    {}
 func (*JoinRoom_S2C) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{11}
+	return fileDescriptor_bd13c7201b21be60, []int{14}
 }
 
 func (m *JoinRoom_S2C) XXX_Unmarshal(b []byte) error {
@@ -785,7 +1062,7 @@ func (m *LeaveRoom_C2S) Reset()         { *m = LeaveRoom_C2S{} }
 func (m *LeaveRoom_C2S) String() string { return proto.CompactTextString(m) }
 func (*LeaveRoom_C2S) ProtoMessage()    {}
 func (*LeaveRoom_C2S) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{12}
+	return fileDescriptor_bd13c7201b21be60, []int{15}
 }
 
 func (m *LeaveRoom_C2S) XXX_Unmarshal(b []byte) error {
@@ -808,17 +1085,17 @@ var xxx_messageInfo_LeaveRoom_C2S proto.InternalMessageInfo
 
 //--8
 type LeaveRoom_S2C struct {
-	LoginData            *LoginData `protobuf:"bytes,1,opt,name=loginData,proto3" json:"loginData,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
-	XXX_unrecognized     []byte     `json:"-"`
-	XXX_sizecache        int32      `json:"-"`
+	PlayerInfo           *PlayerInfo `protobuf:"bytes,1,opt,name=playerInfo,proto3" json:"playerInfo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
 }
 
 func (m *LeaveRoom_S2C) Reset()         { *m = LeaveRoom_S2C{} }
 func (m *LeaveRoom_S2C) String() string { return proto.CompactTextString(m) }
 func (*LeaveRoom_S2C) ProtoMessage()    {}
 func (*LeaveRoom_S2C) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{13}
+	return fileDescriptor_bd13c7201b21be60, []int{16}
 }
 
 func (m *LeaveRoom_S2C) XXX_Unmarshal(b []byte) error {
@@ -839,27 +1116,148 @@ func (m *LeaveRoom_S2C) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_LeaveRoom_S2C proto.InternalMessageInfo
 
-func (m *LeaveRoom_S2C) GetLoginData() *LoginData {
+func (m *LeaveRoom_S2C) GetPlayerInfo() *PlayerInfo {
 	if m != nil {
-		return m.LoginData
+		return m.PlayerInfo
 	}
 	return nil
 }
 
-//--9  玩家行动
-type PlayerAction_C2S struct {
-	Bet                  float64  `protobuf:"fixed64,1,opt,name=bet,proto3" json:"bet,omitempty"`
-	Pot                  PotType  `protobuf:"varint,2,opt,name=pot,proto3,enum=pb_msg.PotType" json:"pot,omitempty"`
+//--9 进入房间
+type EnterRoom_S2C struct {
+	RoomData             *RoomData `protobuf:"bytes,1,opt,name=roomData,proto3" json:"roomData,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *EnterRoom_S2C) Reset()         { *m = EnterRoom_S2C{} }
+func (m *EnterRoom_S2C) String() string { return proto.CompactTextString(m) }
+func (*EnterRoom_S2C) ProtoMessage()    {}
+func (*EnterRoom_S2C) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bd13c7201b21be60, []int{17}
+}
+
+func (m *EnterRoom_S2C) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EnterRoom_S2C.Unmarshal(m, b)
+}
+func (m *EnterRoom_S2C) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EnterRoom_S2C.Marshal(b, m, deterministic)
+}
+func (m *EnterRoom_S2C) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EnterRoom_S2C.Merge(m, src)
+}
+func (m *EnterRoom_S2C) XXX_Size() int {
+	return xxx_messageInfo_EnterRoom_S2C.Size(m)
+}
+func (m *EnterRoom_S2C) XXX_DiscardUnknown() {
+	xxx_messageInfo_EnterRoom_S2C.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EnterRoom_S2C proto.InternalMessageInfo
+
+func (m *EnterRoom_S2C) GetRoomData() *RoomData {
+	if m != nil {
+		return m.RoomData
+	}
+	return nil
+}
+
+//--10 下注阶段倒计时
+type DownBetTime_S2C struct {
+	StartTime            int32    `protobuf:"varint,1,opt,name=startTime,proto3" json:"startTime,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DownBetTime_S2C) Reset()         { *m = DownBetTime_S2C{} }
+func (m *DownBetTime_S2C) String() string { return proto.CompactTextString(m) }
+func (*DownBetTime_S2C) ProtoMessage()    {}
+func (*DownBetTime_S2C) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bd13c7201b21be60, []int{18}
+}
+
+func (m *DownBetTime_S2C) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DownBetTime_S2C.Unmarshal(m, b)
+}
+func (m *DownBetTime_S2C) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DownBetTime_S2C.Marshal(b, m, deterministic)
+}
+func (m *DownBetTime_S2C) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DownBetTime_S2C.Merge(m, src)
+}
+func (m *DownBetTime_S2C) XXX_Size() int {
+	return xxx_messageInfo_DownBetTime_S2C.Size(m)
+}
+func (m *DownBetTime_S2C) XXX_DiscardUnknown() {
+	xxx_messageInfo_DownBetTime_S2C.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DownBetTime_S2C proto.InternalMessageInfo
+
+func (m *DownBetTime_S2C) GetStartTime() int32 {
+	if m != nil {
+		return m.StartTime
+	}
+	return 0
+}
+
+//--11 结算结算倒计时
+type SettlerTime_S2C struct {
+	StartTime            int32    `protobuf:"varint,1,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SettlerTime_S2C) Reset()         { *m = SettlerTime_S2C{} }
+func (m *SettlerTime_S2C) String() string { return proto.CompactTextString(m) }
+func (*SettlerTime_S2C) ProtoMessage()    {}
+func (*SettlerTime_S2C) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bd13c7201b21be60, []int{19}
+}
+
+func (m *SettlerTime_S2C) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SettlerTime_S2C.Unmarshal(m, b)
+}
+func (m *SettlerTime_S2C) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SettlerTime_S2C.Marshal(b, m, deterministic)
+}
+func (m *SettlerTime_S2C) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SettlerTime_S2C.Merge(m, src)
+}
+func (m *SettlerTime_S2C) XXX_Size() int {
+	return xxx_messageInfo_SettlerTime_S2C.Size(m)
+}
+func (m *SettlerTime_S2C) XXX_DiscardUnknown() {
+	xxx_messageInfo_SettlerTime_S2C.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SettlerTime_S2C proto.InternalMessageInfo
+
+func (m *SettlerTime_S2C) GetStartTime() int32 {
+	if m != nil {
+		return m.StartTime
+	}
+	return 0
+}
+
+//--12  玩家行动
+type PlayerAction_C2S struct {
+	DownBetMoneys        *DownBetMoney `protobuf:"bytes,1,opt,name=downBetMoneys,proto3" json:"downBetMoneys,omitempty"`
+	DownPotTypes         *DownPotType  `protobuf:"bytes,2,opt,name=downPotTypes,proto3" json:"downPotTypes,omitempty"`
+	IsAction             bool          `protobuf:"varint,3,opt,name=IsAction,proto3" json:"IsAction,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
 }
 
 func (m *PlayerAction_C2S) Reset()         { *m = PlayerAction_C2S{} }
 func (m *PlayerAction_C2S) String() string { return proto.CompactTextString(m) }
 func (*PlayerAction_C2S) ProtoMessage()    {}
 func (*PlayerAction_C2S) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{14}
+	return fileDescriptor_bd13c7201b21be60, []int{20}
 }
 
 func (m *PlayerAction_C2S) XXX_Unmarshal(b []byte) error {
@@ -880,21 +1278,28 @@ func (m *PlayerAction_C2S) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PlayerAction_C2S proto.InternalMessageInfo
 
-func (m *PlayerAction_C2S) GetBet() float64 {
+func (m *PlayerAction_C2S) GetDownBetMoneys() *DownBetMoney {
 	if m != nil {
-		return m.Bet
+		return m.DownBetMoneys
 	}
-	return 0
+	return nil
 }
 
-func (m *PlayerAction_C2S) GetPot() PotType {
+func (m *PlayerAction_C2S) GetDownPotTypes() *DownPotType {
 	if m != nil {
-		return m.Pot
+		return m.DownPotTypes
 	}
-	return PotType_XXX_Pot
+	return nil
 }
 
-//--10
+func (m *PlayerAction_C2S) GetIsAction() bool {
+	if m != nil {
+		return m.IsAction
+	}
+	return false
+}
+
+//--13
 type PlayerAction_S2C struct {
 	RoomData             *RoomData `protobuf:"bytes,1,opt,name=roomData,proto3" json:"roomData,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
@@ -906,7 +1311,7 @@ func (m *PlayerAction_S2C) Reset()         { *m = PlayerAction_S2C{} }
 func (m *PlayerAction_S2C) String() string { return proto.CompactTextString(m) }
 func (*PlayerAction_S2C) ProtoMessage()    {}
 func (*PlayerAction_S2C) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{15}
+	return fileDescriptor_bd13c7201b21be60, []int{21}
 }
 
 func (m *PlayerAction_S2C) XXX_Unmarshal(b []byte) error {
@@ -934,7 +1339,7 @@ func (m *PlayerAction_S2C) GetRoomData() *RoomData {
 	return nil
 }
 
-//--11  更新房间列表
+//--14  更新房间列表
 type MaintainList_S2C struct {
 	PlayerList           []*PlayerData `protobuf:"bytes,1,rep,name=playerList,proto3" json:"playerList,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
@@ -946,7 +1351,7 @@ func (m *MaintainList_S2C) Reset()         { *m = MaintainList_S2C{} }
 func (m *MaintainList_S2C) String() string { return proto.CompactTextString(m) }
 func (*MaintainList_S2C) ProtoMessage()    {}
 func (*MaintainList_S2C) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{16}
+	return fileDescriptor_bd13c7201b21be60, []int{22}
 }
 
 func (m *MaintainList_S2C) XXX_Unmarshal(b []byte) error {
@@ -974,24 +1379,24 @@ func (m *MaintainList_S2C) GetPlayerList() []*PlayerData {
 	return nil
 }
 
-//--12  开牌结果
+//--15  开牌结果
 type OpenCardResult_S2C struct {
 	//1、卡牌数据
 	CardData []int32 `protobuf:"varint,1,rep,packed,name=cardData,proto3" json:"cardData,omitempty"`
 	//2、比牌类型
 	CardType CardsType `protobuf:"varint,2,opt,name=cardType,proto3,enum=pb_msg.CardsType" json:"cardType,omitempty"`
-	//3、注池Win类型
-	PotType              PotType  `protobuf:"varint,3,opt,name=potType,proto3,enum=pb_msg.PotType" json:"potType,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	//3、注池Win类型, True为 Win,False为 Lose
+	PotWinTypes          *DownPotType `protobuf:"bytes,3,opt,name=PotWinTypes,proto3" json:"PotWinTypes,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
+	XXX_unrecognized     []byte       `json:"-"`
+	XXX_sizecache        int32        `json:"-"`
 }
 
 func (m *OpenCardResult_S2C) Reset()         { *m = OpenCardResult_S2C{} }
 func (m *OpenCardResult_S2C) String() string { return proto.CompactTextString(m) }
 func (*OpenCardResult_S2C) ProtoMessage()    {}
 func (*OpenCardResult_S2C) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{17}
+	return fileDescriptor_bd13c7201b21be60, []int{23}
 }
 
 func (m *OpenCardResult_S2C) XXX_Unmarshal(b []byte) error {
@@ -1026,14 +1431,14 @@ func (m *OpenCardResult_S2C) GetCardType() CardsType {
 	return CardsType_XXX_Card
 }
 
-func (m *OpenCardResult_S2C) GetPotType() PotType {
+func (m *OpenCardResult_S2C) GetPotWinTypes() *DownPotType {
 	if m != nil {
-		return m.PotType
+		return m.PotWinTypes
 	}
-	return PotType_XXX_Pot
+	return nil
 }
 
-//--13  房间结算数据
+//--16  房间结算数据
 type RoomSettleData_S2C struct {
 	RoomData             *RoomData `protobuf:"bytes,1,opt,name=roomData,proto3" json:"roomData,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
@@ -1045,7 +1450,7 @@ func (m *RoomSettleData_S2C) Reset()         { *m = RoomSettleData_S2C{} }
 func (m *RoomSettleData_S2C) String() string { return proto.CompactTextString(m) }
 func (*RoomSettleData_S2C) ProtoMessage()    {}
 func (*RoomSettleData_S2C) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bd13c7201b21be60, []int{18}
+	return fileDescriptor_bd13c7201b21be60, []int{24}
 }
 
 func (m *RoomSettleData_S2C) XXX_Unmarshal(b []byte) error {
@@ -1074,6 +1479,7 @@ func (m *RoomSettleData_S2C) GetRoomData() *RoomData {
 }
 
 func init() {
+	proto.RegisterEnum("pb_msg.PlayerStatus", PlayerStatus_name, PlayerStatus_value)
 	proto.RegisterEnum("pb_msg.GameStage", GameStage_name, GameStage_value)
 	proto.RegisterEnum("pb_msg.CardsType", CardsType_name, CardsType_value)
 	proto.RegisterEnum("pb_msg.PotType", PotType_name, PotType_value)
@@ -1081,16 +1487,22 @@ func init() {
 	proto.RegisterType((*Pong)(nil), "pb_msg.Pong")
 	proto.RegisterType((*MsgInfo_S2C)(nil), "pb_msg.MsgInfo_S2C")
 	proto.RegisterType((*LoginInfo_C2S)(nil), "pb_msg.LoginInfo_C2S")
-	proto.RegisterType((*LoginData)(nil), "pb_msg.LoginData")
+	proto.RegisterType((*PlayerInfo)(nil), "pb_msg.PlayerInfo")
 	proto.RegisterType((*LoginInfo_S2C)(nil), "pb_msg.LoginInfo_S2C")
 	proto.RegisterType((*JoinRoom_C2S)(nil), "pb_msg.JoinRoom_C2S")
+	proto.RegisterType((*DownBetMoney)(nil), "pb_msg.DownBetMoney")
+	proto.RegisterType((*DownPotType)(nil), "pb_msg.DownPotType")
+	proto.RegisterType((*ContinueBet)(nil), "pb_msg.ContinueBet")
+	proto.RegisterType((*PotWinList)(nil), "pb_msg.PotWinList")
 	proto.RegisterType((*PlayerData)(nil), "pb_msg.PlayerData")
 	proto.RegisterType((*PotMoneyCount)(nil), "pb_msg.PotMoneyCount")
-	proto.RegisterType((*GameWinList)(nil), "pb_msg.GameWinList")
 	proto.RegisterType((*RoomData)(nil), "pb_msg.RoomData")
 	proto.RegisterType((*JoinRoom_S2C)(nil), "pb_msg.JoinRoom_S2C")
 	proto.RegisterType((*LeaveRoom_C2S)(nil), "pb_msg.LeaveRoom_C2S")
 	proto.RegisterType((*LeaveRoom_S2C)(nil), "pb_msg.LeaveRoom_S2C")
+	proto.RegisterType((*EnterRoom_S2C)(nil), "pb_msg.EnterRoom_S2C")
+	proto.RegisterType((*DownBetTime_S2C)(nil), "pb_msg.DownBetTime_S2C")
+	proto.RegisterType((*SettlerTime_S2C)(nil), "pb_msg.SettlerTime_S2C")
 	proto.RegisterType((*PlayerAction_C2S)(nil), "pb_msg.PlayerAction_C2S")
 	proto.RegisterType((*PlayerAction_S2C)(nil), "pb_msg.PlayerAction_S2C")
 	proto.RegisterType((*MaintainList_S2C)(nil), "pb_msg.MaintainList_S2C")
@@ -1101,61 +1513,79 @@ func init() {
 func init() { proto.RegisterFile("pb_msg.proto", fileDescriptor_bd13c7201b21be60) }
 
 var fileDescriptor_bd13c7201b21be60 = []byte{
-	// 882 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x56, 0x6d, 0x8f, 0xdb, 0x44,
-	0x10, 0xc6, 0x76, 0xe2, 0x24, 0x93, 0x7b, 0x31, 0x0b, 0x54, 0x56, 0x85, 0x50, 0xb0, 0xd0, 0x29,
-	0x9c, 0x68, 0x91, 0x82, 0xf8, 0x04, 0x42, 0xe5, 0xae, 0x22, 0x4a, 0x95, 0x83, 0x68, 0xd3, 0x72,
-	0xf9, 0x76, 0xda, 0xc4, 0x5b, 0xdf, 0xea, 0xec, 0x5d, 0xcb, 0xde, 0xb4, 0xba, 0x9f, 0x00, 0xe2,
-	0x2f, 0xf1, 0xab, 0xf8, 0x03, 0x68, 0x76, 0x6d, 0xc7, 0x49, 0x41, 0x70, 0xfd, 0xe6, 0xe7, 0x99,
-	0xd9, 0x67, 0x5e, 0x76, 0x66, 0x65, 0x38, 0xca, 0xd7, 0x37, 0x59, 0x99, 0x3c, 0xcd, 0x0b, 0xa5,
-	0x15, 0xf1, 0x2d, 0x8a, 0x7c, 0xe8, 0x2c, 0x84, 0x4c, 0xa2, 0x33, 0xe8, 0x2c, 0x94, 0x4c, 0xc8,
-	0x67, 0x00, 0x25, 0x2f, 0xde, 0xf0, 0xe2, 0xa5, 0xc8, 0x78, 0xe8, 0x8c, 0x9c, 0xb1, 0x47, 0x5b,
-	0x4c, 0x34, 0x83, 0xe1, 0x55, 0x99, 0xcc, 0xe4, 0x6b, 0x75, 0xb3, 0x9c, 0x5c, 0x92, 0x00, 0xbc,
-	0xac, 0x4c, 0x8c, 0xdf, 0x80, 0xe2, 0x27, 0xf9, 0x18, 0xba, 0xbc, 0x28, 0x54, 0x11, 0xba, 0x86,
-	0xb3, 0x80, 0x10, 0xe8, 0xc4, 0x4c, 0xb3, 0xd0, 0x33, 0xa4, 0xf9, 0x8e, 0x5e, 0xc1, 0xf1, 0x5c,
-	0x25, 0x42, 0x1a, 0xb1, 0xcb, 0xc9, 0x92, 0x9c, 0x80, 0x3b, 0x8b, 0x2b, 0x2d, 0x77, 0x16, 0x93,
-	0x47, 0xe0, 0x27, 0x2c, 0xe3, 0xb3, 0xb8, 0xd2, 0xaa, 0x10, 0xf9, 0x14, 0x06, 0x36, 0xa3, 0x57,
-	0x45, 0x5a, 0x29, 0xee, 0x88, 0xe8, 0x0e, 0x06, 0x46, 0xf6, 0x39, 0xd3, 0xec, 0x1d, 0xc9, 0xc7,
-	0xd0, 0x97, 0x62, 0x73, 0xf7, 0x33, 0xcb, 0x78, 0x25, 0xda, 0x60, 0x12, 0x42, 0xef, 0x96, 0xb3,
-	0x78, 0x96, 0x25, 0x95, 0x68, 0x0d, 0xd1, 0xc2, 0x36, 0x1b, 0xb5, 0x95, 0x3a, 0xec, 0x8c, 0x9c,
-	0xb1, 0x43, 0x6b, 0x18, 0x3d, 0x6b, 0xd7, 0x80, 0x0d, 0xf9, 0x1a, 0x06, 0x69, 0x1d, 0xdd, 0xc4,
-	0x1d, 0x4e, 0x3e, 0x7c, 0x5a, 0x75, 0xbe, 0x49, 0x8b, 0xee, 0x7c, 0xa2, 0x33, 0x38, 0x7a, 0xa1,
-	0x84, 0xa4, 0x4a, 0x65, 0xa6, 0x09, 0x8f, 0xc0, 0x2f, 0x94, 0xca, 0x9a, 0xac, 0x2b, 0x14, 0xfd,
-	0xe5, 0x00, 0x2c, 0x52, 0x76, 0xcf, 0x0b, 0x53, 0xd8, 0x43, 0xe3, 0x90, 0x11, 0x0c, 0x37, 0x4a,
-	0x6a, 0x21, 0xb7, 0xfc, 0x57, 0xa5, 0x4d, 0xf1, 0x0e, 0x6d, 0x53, 0xe4, 0x0b, 0x38, 0x9e, 0x95,
-	0x53, 0x15, 0x4f, 0x59, 0xb6, 0x4e, 0x85, 0xb4, 0x5d, 0xe8, 0xd3, 0x7d, 0x12, 0x3b, 0xf8, 0x56,
-	0xc8, 0xcb, 0xa6, 0x19, 0x5d, 0xda, 0x60, 0x72, 0x06, 0x27, 0x05, 0x2f, 0xb7, 0xa9, 0xbe, 0x16,
-	0xf2, 0x4a, 0x49, 0x7e, 0x1f, 0x76, 0x4d, 0x98, 0x03, 0x96, 0x8c, 0xe1, 0xd4, 0x32, 0x73, 0x55,
-	0x72, 0xeb, 0xe8, 0x1b, 0xc7, 0x43, 0x3a, 0xfa, 0xcd, 0x81, 0xe3, 0x85, 0xd2, 0x06, 0x34, 0x31,
-	0x28, 0x67, 0xf1, 0x8e, 0x31, 0xd5, 0x77, 0xe9, 0x01, 0x8b, 0x31, 0x2e, 0x52, 0xb6, 0xb9, 0x6b,
-	0x39, 0xba, 0xc6, 0xf1, 0x90, 0x46, 0xc5, 0xf9, 0x76, 0xcf, 0xd1, 0xb3, 0x8a, 0xfb, 0x6c, 0xf4,
-	0x87, 0x03, 0xc3, 0x29, 0xcb, 0xf8, 0xb5, 0x90, 0x73, 0x51, 0x6a, 0x9c, 0x0a, 0x8c, 0x79, 0x2d,
-	0x64, 0x95, 0x42, 0x0d, 0xb1, 0x47, 0x26, 0x08, 0x9a, 0x6c, 0xd0, 0x06, 0xe3, 0x29, 0xd4, 0x45,
-	0x93, 0x0d, 0x53, 0x43, 0xf2, 0x04, 0xfa, 0x1b, 0x56, 0xc4, 0x2f, 0xef, 0x73, 0x6e, 0x3a, 0x7b,
-	0xb2, 0xbb, 0xd1, 0x4b, 0x56, 0xc4, 0x25, 0x1a, 0x68, 0xe3, 0x12, 0xfd, 0xe9, 0x42, 0x1f, 0xa7,
-	0xc6, 0xdc, 0xee, 0xbf, 0x4c, 0x0d, 0x99, 0x00, 0xe4, 0x66, 0x68, 0x30, 0xe3, 0xd0, 0x1d, 0x79,
-	0xe3, 0xe1, 0x84, 0xd4, 0xaa, 0xbb, 0x71, 0xa2, 0x2d, 0x2f, 0x12, 0xc1, 0x51, 0x82, 0x17, 0xbe,
-	0x4e, 0xb9, 0xd9, 0x13, 0xbb, 0x0c, 0x7b, 0x1c, 0x8e, 0x1f, 0x2e, 0xe3, 0x52, 0xb3, 0xe4, 0x9d,
-	0x64, 0xa7, 0xb5, 0x81, 0xee, 0x7c, 0xc8, 0x77, 0x70, 0x9c, 0xb7, 0xef, 0xd1, 0x4c, 0xc6, 0x70,
-	0xf2, 0x49, 0x93, 0x4b, 0xdb, 0x48, 0xf7, 0x7d, 0x71, 0xe1, 0xeb, 0xb2, 0xcb, 0xd0, 0x1f, 0x79,
-	0xe3, 0x2e, 0xdd, 0x11, 0xe4, 0x5b, 0x18, 0x16, 0x0b, 0xa5, 0xab, 0x6b, 0x09, 0x7b, 0xa6, 0xc8,
-	0x8f, 0xda, 0xd9, 0x54, 0x26, 0xda, 0xf6, 0x8b, 0xbe, 0x6f, 0x2d, 0x1e, 0x6e, 0xee, 0x57, 0xd0,
-	0x2f, 0xaa, 0x76, 0x56, 0x0b, 0x15, 0xd4, 0x1a, 0x75, 0x9b, 0x69, 0xe3, 0x11, 0x9d, 0xc2, 0xf1,
-	0x9c, 0xb3, 0x37, 0xbc, 0xde, 0x5b, 0xf3, 0x12, 0x34, 0xc4, 0x7b, 0xbd, 0x04, 0x53, 0x08, 0xec,
-	0x8d, 0xfc, 0xb8, 0xd1, 0x42, 0x49, 0xf3, 0x1a, 0x04, 0xe0, 0xad, 0xb9, 0x1d, 0x71, 0x87, 0xe2,
-	0x27, 0xf9, 0x1c, 0xbc, 0xbc, 0xda, 0xdf, 0x93, 0xc9, 0x69, 0xab, 0x7d, 0x66, 0x3c, 0xd0, 0x16,
-	0x3d, 0x3b, 0x10, 0x7a, 0x78, 0x75, 0x3f, 0x41, 0x70, 0xc5, 0x84, 0xd4, 0xcc, 0xf6, 0xca, 0x28,
-	0xec, 0x8f, 0x92, 0xf3, 0x7f, 0x46, 0x29, 0xfa, 0xdd, 0x01, 0xf2, 0x4b, 0xce, 0x25, 0xce, 0x2f,
-	0x35, 0xab, 0x6d, 0xa4, 0x1e, 0xdb, 0x49, 0xaf, 0x92, 0xc1, 0xeb, 0x6c, 0xf0, 0xde, 0x16, 0xb8,
-	0xff, 0xb9, 0x05, 0xe4, 0x4b, 0xe8, 0xe5, 0xb6, 0x76, 0x33, 0xa7, 0xff, 0xd0, 0x92, 0xda, 0x1e,
-	0x5d, 0x00, 0xc1, 0x52, 0x97, 0x5c, 0xeb, 0x94, 0x63, 0xac, 0x87, 0x37, 0xe6, 0xfc, 0x09, 0x0c,
-	0x9a, 0xf1, 0x26, 0x3d, 0xf0, 0x56, 0xab, 0x55, 0xf0, 0x01, 0x19, 0x42, 0xef, 0xb9, 0x7a, 0x2b,
-	0x2f, 0xb8, 0x0e, 0x1c, 0x02, 0xe0, 0xdb, 0x10, 0x81, 0x7b, 0x1e, 0xc3, 0xa0, 0x49, 0x9a, 0x1c,
-	0x41, 0x7f, 0xb5, 0x5a, 0xdd, 0x20, 0x61, 0xcf, 0xcc, 0x39, 0x7b, 0x9d, 0x9a, 0x33, 0x7d, 0xe8,
-	0x2c, 0x98, 0x28, 0x02, 0x17, 0x9d, 0x96, 0xba, 0x60, 0x22, 0xb9, 0xd5, 0x81, 0x87, 0x5a, 0x53,
-	0x95, 0xc6, 0x5c, 0x06, 0x1d, 0x3c, 0xb0, 0xbc, 0xdd, 0xca, 0x17, 0x42, 0x06, 0x5d, 0x7b, 0x5a,
-	0xe5, 0x28, 0xe5, 0x9f, 0xff, 0x00, 0xbd, 0xaa, 0x58, 0xe4, 0x31, 0xc6, 0x42, 0x69, 0x1b, 0x02,
-	0x5f, 0x24, 0x04, 0x0e, 0x0a, 0x9b, 0x37, 0x08, 0x91, 0x6b, 0xce, 0x6f, 0x2d, 0xf0, 0xd6, 0xbe,
-	0xf9, 0x25, 0xf8, 0xe6, 0xef, 0x00, 0x00, 0x00, 0xff, 0xff, 0xce, 0x68, 0xdc, 0x37, 0x22, 0x08,
-	0x00, 0x00,
+	// 1184 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x57, 0xed, 0x8e, 0xd3, 0x46,
+	0x17, 0xc6, 0xce, 0xf7, 0x71, 0xb2, 0x6b, 0xe6, 0xe5, 0x45, 0x16, 0xaa, 0xaa, 0x95, 0x55, 0xad,
+	0xd0, 0x8a, 0x82, 0x14, 0x5a, 0x55, 0x6a, 0x69, 0x55, 0x08, 0xed, 0x2a, 0x28, 0x94, 0xc8, 0x81,
+	0xc2, 0xbf, 0xd5, 0x6c, 0x3c, 0x78, 0x2d, 0x9c, 0x99, 0xc8, 0x9e, 0x2c, 0xda, 0x4b, 0xa8, 0xfa,
+	0xbf, 0x37, 0xd0, 0x3b, 0xe9, 0xd5, 0xf4, 0x32, 0xaa, 0x73, 0xc6, 0x76, 0xc6, 0xd9, 0x22, 0x96,
+	0xed, 0xbf, 0x9c, 0x67, 0x9e, 0x39, 0x73, 0xbe, 0x8f, 0x03, 0xc3, 0xf5, 0xe9, 0xc9, 0xaa, 0x48,
+	0xee, 0xaf, 0x73, 0xa5, 0x15, 0xeb, 0x1a, 0x29, 0xec, 0x42, 0x7b, 0x9e, 0xca, 0x24, 0x3c, 0x84,
+	0xf6, 0x5c, 0xc9, 0x84, 0x7d, 0x0e, 0x50, 0x88, 0xfc, 0x5c, 0xe4, 0x2f, 0xd3, 0x95, 0x08, 0x9c,
+	0x03, 0xe7, 0x6e, 0x2b, 0xb2, 0x90, 0x70, 0x0a, 0xde, 0xf3, 0x22, 0x99, 0xca, 0xb7, 0xea, 0x64,
+	0x31, 0x9e, 0x30, 0x1f, 0x5a, 0xab, 0x22, 0x21, 0xde, 0x20, 0xc2, 0x9f, 0xec, 0x16, 0x74, 0x44,
+	0x9e, 0xab, 0x3c, 0x70, 0x09, 0x33, 0x02, 0x63, 0xd0, 0x8e, 0xb9, 0xe6, 0x41, 0x8b, 0x40, 0xfa,
+	0x1d, 0xbe, 0x82, 0xd1, 0x4c, 0x25, 0xa9, 0x24, 0x65, 0x93, 0xf1, 0x82, 0xed, 0x81, 0x3b, 0x8d,
+	0x4b, 0x5d, 0xee, 0x34, 0x66, 0xb7, 0xa1, 0x9b, 0xf0, 0x95, 0x98, 0xc6, 0xa5, 0xae, 0x52, 0x62,
+	0x9f, 0xc1, 0xc0, 0x58, 0xf4, 0x2a, 0xcf, 0x4a, 0x8d, 0x5b, 0x20, 0xcc, 0x00, 0xe6, 0x19, 0xbf,
+	0x10, 0x39, 0xea, 0xbd, 0xa4, 0xf3, 0x0e, 0xf4, 0x65, 0xba, 0x7c, 0xf7, 0x0b, 0x5f, 0x89, 0x52,
+	0x6b, 0x2d, 0xb3, 0x00, 0x7a, 0x67, 0x82, 0xc7, 0xd3, 0x55, 0x52, 0x6a, 0xad, 0x44, 0x3c, 0xe1,
+	0xcb, 0xa5, 0xda, 0x48, 0x1d, 0xb4, 0x0f, 0x9c, 0xbb, 0x4e, 0x54, 0x89, 0xe1, 0xc4, 0x76, 0x02,
+	0x23, 0x32, 0x06, 0x58, 0xd7, 0xcf, 0xd3, 0xc3, 0xde, 0x98, 0xdd, 0x2f, 0x63, 0xbf, 0x35, 0x2c,
+	0xb2, 0x58, 0xe1, 0x21, 0x0c, 0x9f, 0xa9, 0x54, 0x46, 0x4a, 0xad, 0x28, 0x10, 0xb7, 0xa1, 0x9b,
+	0x2b, 0xb5, 0xaa, 0x0d, 0x2f, 0xa5, 0xf0, 0x1c, 0x86, 0x4f, 0xd5, 0x7b, 0xf9, 0x44, 0xe8, 0xe7,
+	0x4a, 0x8a, 0x0b, 0x76, 0x00, 0x5e, 0x24, 0x78, 0x5c, 0x62, 0x44, 0xee, 0x44, 0x36, 0xc4, 0x42,
+	0x18, 0x3e, 0xc9, 0xf8, 0xf2, 0x5d, 0x45, 0x71, 0x89, 0xd2, 0xc0, 0x50, 0xcb, 0x6c, 0xb3, 0xa5,
+	0xb4, 0x8c, 0x16, 0x0b, 0x0a, 0x37, 0xe0, 0xe1, 0xcf, 0xb9, 0xd2, 0x2f, 0x2f, 0xd6, 0xc2, 0x7e,
+	0x76, 0xae, 0xcc, 0xb3, 0xfd, 0xc8, 0x86, 0x1a, 0xcf, 0x22, 0xc5, 0x25, 0x4a, 0x03, 0xb3, 0x9f,
+	0x45, 0x4a, 0xcb, 0x68, 0xb1, 0xa0, 0x50, 0x81, 0x37, 0x51, 0x52, 0xa7, 0x72, 0x23, 0xd0, 0xce,
+	0x6f, 0x61, 0x14, 0x5b, 0xde, 0x17, 0x65, 0x70, 0x6f, 0x55, 0xc1, 0xb5, 0x43, 0x13, 0x35, 0xa9,
+	0xec, 0x0b, 0x18, 0xbd, 0x54, 0x9a, 0x67, 0x24, 0xa2, 0x97, 0x6d, 0xf2, 0xb2, 0x09, 0x86, 0xbf,
+	0x3b, 0x00, 0x73, 0xa5, 0x5f, 0xa7, 0x72, 0x96, 0x16, 0x1a, 0xb3, 0x8e, 0x4e, 0xbd, 0x4e, 0x65,
+	0x19, 0xda, 0x4a, 0xc4, 0x2a, 0x22, 0x5f, 0xf0, 0xc8, 0x84, 0xb4, 0x96, 0xf1, 0x16, 0x3a, 0x81,
+	0x47, 0x26, 0x94, 0x95, 0xc8, 0xbe, 0x84, 0xfe, 0x92, 0xe7, 0x31, 0xc6, 0x90, 0xde, 0xdf, 0x1b,
+	0xdf, 0xac, 0x6c, 0x9f, 0xf0, 0x3c, 0x2e, 0xf0, 0x20, 0xaa, 0x29, 0xe1, 0xdf, 0x9d, 0xaa, 0x92,
+	0x9f, 0x72, 0xcd, 0xaf, 0x53, 0x58, 0x97, 0x43, 0xe6, 0x5e, 0x3d, 0x64, 0xdf, 0xc0, 0x30, 0xde,
+	0x26, 0xbd, 0x20, 0x67, 0xbc, 0xf1, 0xff, 0xec, 0xab, 0xe5, 0x59, 0xd4, 0x20, 0xb2, 0x43, 0xd8,
+	0xa3, 0xb0, 0x3e, 0x5e, 0x61, 0x87, 0x6c, 0x83, 0xbd, 0x83, 0xb2, 0x7b, 0xd0, 0x2d, 0x34, 0xd7,
+	0x9b, 0x22, 0xe8, 0x50, 0x30, 0x6e, 0x35, 0x9d, 0x59, 0xd0, 0x59, 0x54, 0x72, 0x30, 0x83, 0xd3,
+	0xe2, 0x58, 0xc5, 0xc7, 0x7c, 0x75, 0x9a, 0xa5, 0x32, 0x09, 0xba, 0x54, 0x30, 0x4d, 0x90, 0x7d,
+	0x0d, 0xde, 0xb2, 0x2c, 0x99, 0x5f, 0x95, 0x0e, 0x7a, 0x4d, 0x9b, 0xad, 0x6a, 0x8a, 0x6c, 0x1e,
+	0x9a, 0x9c, 0x8b, 0x62, 0x93, 0x61, 0xea, 0xc9, 0xfd, 0xa0, 0x4f, 0x6d, 0xbe, 0x83, 0xb2, 0xbb,
+	0xb0, 0x6f, 0x90, 0x99, 0x2a, 0x84, 0x21, 0x0e, 0x88, 0xb8, 0x0b, 0xa3, 0xb9, 0xef, 0x53, 0x49,
+	0x1e, 0x4f, 0x68, 0x6e, 0x80, 0x29, 0xb8, 0x06, 0x88, 0x7d, 0x52, 0xa5, 0x1b, 0x2b, 0x2e, 0xf0,
+	0x0e, 0x5a, 0xd8, 0x9e, 0x36, 0x46, 0x79, 0xaf, 0x6b, 0x32, 0x18, 0x1e, 0xb4, 0x1a, 0x79, 0xaf,
+	0x4f, 0x22, 0x8b, 0x85, 0xaf, 0xe7, 0x82, 0xc7, 0x54, 0x93, 0x74, 0x6d, 0x44, 0x8a, 0x9b, 0x20,
+	0xbe, 0x9e, 0x9b, 0x82, 0x36, 0x26, 0xee, 0x99, 0xe1, 0x60, 0x63, 0xa8, 0xe9, 0xb4, 0xac, 0x6c,
+	0x43, 0xda, 0x37, 0x7e, 0x34, 0x40, 0xd4, 0x94, 0x6d, 0x2c, 0x92, 0x6f, 0x34, 0xd9, 0x18, 0xf6,
+	0xcc, 0xb4, 0x78, 0x21, 0xb3, 0x54, 0x8a, 0xe0, 0x26, 0xe5, 0xae, 0x96, 0xc3, 0xdf, 0x1c, 0x18,
+	0xcd, 0x95, 0xa9, 0x3c, 0xc3, 0x3e, 0x84, 0x3d, 0x6c, 0xb6, 0x2d, 0x52, 0xb6, 0xe0, 0x0e, 0x8a,
+	0x19, 0x21, 0x87, 0x2c, 0xa2, 0x69, 0xc8, 0x5d, 0x18, 0x35, 0x62, 0x23, 0x5a, 0x44, 0xd3, 0x9e,
+	0x3b, 0x68, 0xf8, 0x97, 0x0b, 0x7d, 0x9c, 0xc4, 0xd4, 0x74, 0x1f, 0x98, 0xc4, 0xdb, 0x66, 0xa4,
+	0xe8, 0xba, 0x3b, 0x49, 0xa9, 0x9b, 0x36, 0xb2, 0x58, 0x18, 0xa4, 0x04, 0x4b, 0xf5, 0x34, 0x13,
+	0xb4, 0x7e, 0xcc, 0x8e, 0x69, 0x60, 0xec, 0x01, 0x0c, 0x70, 0xc9, 0x2d, 0x34, 0x4f, 0x2e, 0xcd,
+	0x88, 0xe3, 0xea, 0x20, 0xda, 0x72, 0xd8, 0x77, 0x30, 0x5a, 0xdb, 0x81, 0xa3, 0x5e, 0xf2, 0xc6,
+	0xff, 0xb7, 0x0a, 0x64, 0x7b, 0x18, 0x35, 0xb9, 0x97, 0xca, 0xaf, 0xfb, 0x2f, 0xe5, 0xf7, 0x15,
+	0x78, 0xf9, 0xb6, 0xca, 0x82, 0xde, 0x07, 0xeb, 0xcf, 0xa6, 0x85, 0x8f, 0xac, 0x8d, 0x86, 0x5b,
+	0xf1, 0x1e, 0xf4, 0xf3, 0x32, 0xa6, 0xe5, 0xe8, 0xf2, 0x2b, 0x15, 0x55, 0xac, 0xa3, 0x9a, 0x11,
+	0xee, 0xc3, 0x68, 0x26, 0xf8, 0xb9, 0xa8, 0x16, 0x22, 0x6d, 0xd9, 0x1a, 0xb8, 0xee, 0x96, 0xfd,
+	0x1e, 0x46, 0x3f, 0x49, 0x2d, 0xf2, 0x6b, 0x1a, 0xf5, 0x00, 0xf6, 0xcb, 0x71, 0x89, 0x1f, 0x42,
+	0xa4, 0x00, 0x3f, 0x44, 0x34, 0xcf, 0x75, 0xfd, 0xad, 0xd4, 0x89, 0xb6, 0x00, 0x5e, 0x58, 0x08,
+	0xad, 0x33, 0xf3, 0xe5, 0x74, 0x85, 0x0b, 0x7f, 0x3a, 0xe0, 0x1b, 0xdb, 0x1f, 0x2f, 0x75, 0xaa,
+	0x24, 0x7d, 0x0b, 0xfc, 0x97, 0xad, 0xb7, 0x3b, 0xc2, 0xdd, 0xab, 0x8e, 0x70, 0xea, 0x55, 0x63,
+	0x44, 0xb9, 0x98, 0x6b, 0x39, 0xfc, 0x71, 0xc7, 0xc8, 0x4f, 0x8f, 0xe4, 0xcf, 0xe0, 0x3f, 0xe7,
+	0xa9, 0xd4, 0xdc, 0x14, 0x4b, 0x33, 0xa1, 0x54, 0x65, 0xce, 0x55, 0x1a, 0x2a, 0xfc, 0xc3, 0x01,
+	0xf6, 0x62, 0x2d, 0x24, 0x2e, 0xcf, 0x88, 0xe6, 0x2f, 0xa9, 0xba, 0x63, 0xd6, 0x6c, 0x69, 0x0c,
+	0x56, 0x74, 0x2d, 0x37, 0x56, 0xb0, 0xfb, 0xd1, 0x15, 0x8c, 0xeb, 0xc4, 0x14, 0xf5, 0x47, 0x57,
+	0xa0, 0xcd, 0x0b, 0x9f, 0x00, 0x43, 0xb7, 0x4d, 0xf6, 0xf1, 0xdd, 0x4f, 0x0f, 0xd2, 0xd1, 0x23,
+	0x18, 0xda, 0x7b, 0x90, 0xed, 0x83, 0xf7, 0xe6, 0xcd, 0x9b, 0x93, 0xb9, 0x11, 0xfd, 0x1b, 0x6c,
+	0x08, 0x7d, 0x24, 0xe0, 0x54, 0xf0, 0x1d, 0x36, 0x82, 0xc1, 0x6b, 0xae, 0x97, 0x67, 0x24, 0xba,
+	0x47, 0x0f, 0x61, 0x50, 0x8f, 0x0b, 0x3c, 0xc3, 0xab, 0x24, 0xf8, 0x37, 0x98, 0x07, 0xbd, 0xb2,
+	0x68, 0x7c, 0x87, 0x01, 0x74, 0x8d, 0x99, 0xbe, 0x7b, 0x14, 0xc3, 0xa0, 0x0e, 0x02, 0xaa, 0xc7,
+	0x4b, 0x08, 0x98, 0x3b, 0x33, 0xc1, 0xdf, 0x66, 0x74, 0xa7, 0x0f, 0xed, 0x39, 0x4f, 0x73, 0xdf,
+	0x45, 0xd2, 0x42, 0xe7, 0x3c, 0x4d, 0xce, 0xb4, 0xdf, 0x42, 0x5d, 0xc7, 0x2a, 0x8b, 0x85, 0xf4,
+	0xdb, 0x78, 0x61, 0x71, 0xb6, 0x91, 0xcf, 0x52, 0xe9, 0x77, 0xcc, 0x6d, 0xb5, 0x46, 0x55, 0xdd,
+	0xa3, 0x1f, 0xa0, 0x57, 0x7d, 0x48, 0x7a, 0xd0, 0x23, 0x9f, 0x94, 0x36, 0x4f, 0xe0, 0x6c, 0x47,
+	0xc1, 0x41, 0xc5, 0x34, 0xbf, 0x51, 0x72, 0xe9, 0xfe, 0xc6, 0x08, 0xad, 0xd3, 0x2e, 0xfd, 0x81,
+	0x79, 0xf8, 0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x94, 0x55, 0xc8, 0xbb, 0xd0, 0x0c, 0x00, 0x00,
 }

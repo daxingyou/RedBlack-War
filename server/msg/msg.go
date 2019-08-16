@@ -22,9 +22,12 @@ func init() {
 	Processor.Register(&pb_msg.JoinRoom_S2C{})       //--6
 	Processor.Register(&pb_msg.LeaveRoom_C2S{})      //--7
 	Processor.Register(&pb_msg.LeaveRoom_S2C{})      //--8
-	Processor.Register(&pb_msg.PlayerAction_C2S{})   //--9
-	Processor.Register(&pb_msg.PlayerAction_S2C{})   //--10
-	Processor.Register(&pb_msg.MaintainList_S2C{})   //--11
-	Processor.Register(&pb_msg.OpenCardResult_S2C{}) //--12
-	Processor.Register(&pb_msg.RoomSettleData_S2C{}) //--13
+	Processor.Register(&pb_msg.EnterRoom_S2C{})      //--9
+	Processor.Register(&pb_msg.DownBetTime_S2C{})    //--10
+	Processor.Register(&pb_msg.SettlerTime_S2C{})    //--11
+	Processor.Register(&pb_msg.PlayerAction_C2S{})   //--12
+	Processor.Register(&pb_msg.PlayerAction_S2C{})   //--13
+	Processor.Register(&pb_msg.MaintainList_S2C{})   //--14
+	Processor.Register(&pb_msg.OpenCardResult_S2C{}) //--15
+	Processor.Register(&pb_msg.RoomSettleData_S2C{}) //--16
 }

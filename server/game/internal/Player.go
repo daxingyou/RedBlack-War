@@ -3,23 +3,35 @@ package internal
 import (
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
+	"time"
 )
 
 func (p *Player) Init() {
 	p.ConnAgent = nil
+	p.uClientDelay = 0
 	p.Index = 0
 
 	p.HeadImg = "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2873269578,797009742&fm=26&gp=0.jpg"
 	p.Account = 4000
 
-	p.CardTypeList = nil
-	p.PotWinList = nil
-	p.ContinueVot = 0
-	p.IsGodGambling = false
-	p.WinTotalCount = 0
+	p.DownBetMoneys = nil
+	p.DownPotTypes = nil
 	p.TotalAmountBet = 0
+	p.IsAction = false
+	p.IsGodGambling = false
+	p.ContinueVot = nil
+	p.ResultWinMoney = 0
+	p.ResultLoseMoney = 0
 
 	p.room = nil
+
+	p.WinTotalCount = 0
+	p.PotWinList = nil
+	p.CardTypeList = nil
+	p.ReadBlackList = nil
+	p.ReadWinCount = 0
+	p.BlackWinCount = 0
+	p.LuckWinCount = 0
 	p.IsOnline = true
 }
 
@@ -57,7 +69,7 @@ func RegisterPlayer(p *Player) {
 	if ok {
 		log.Debug("Have the same Player ID Login :%v", up.Id)
 
-		errMsg := pb_msg.MsgInfo_S2C{}
+		errMsg := &pb_msg.MsgInfo_S2C{}
 		errMsg.Msg = recodeText[RECODE_PLAYERDESTORY]
 		p.ConnAgent.WriteMsg(errMsg)
 		log.Debug("用户已在其他地方登录~")
@@ -82,5 +94,37 @@ func DeletePlayer(p *Player) {
 		log.Debug("DeletePlayer SUCCESS ~ : %v", p.Id)
 	} else {
 		log.Debug("DeletePlayer come to nothing ~ : %v", p.Id)
+	}
+}
+
+//onClientBreathe 客户端呼吸，长时间未执行该函数可能已经断网，将主动踢掉
+func (p *Player) onClientBreathe() {
+	p.uClientDelay = 0
+}
+
+//StartBreathe 开始呼吸
+func (p *Player) StartBreathe() {
+	ticker := time.NewTicker(time.Second * 3)
+	go func() {
+		for { //循环
+			<-ticker.C
+			p.ActiveBreathe()
+		}
+	}()
+}
+
+//ActiveBreathe 主动呼吸
+func (p *Player) ActiveBreathe() {
+	p.uClientDelay++
+	//已经超过9秒没有收到客户端心跳，踢掉好了
+	if p.uClientDelay > 4 {
+		errMsg := &pb_msg.MsgInfo_S2C{}
+		errMsg.Msg = recodeText[RECODE_PLAYERBREAKLINE]
+		p.ConnAgent.WriteMsg(errMsg)
+
+		log.Debug("玩家已掉线,断开连接~")
+		p.ConnAgent.Destroy()
+		p.ConnAgent.Close()
+		return
 	}
 }

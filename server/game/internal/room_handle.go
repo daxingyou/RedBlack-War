@@ -1,175 +1,106 @@
 package internal
 
 import (
-	"fmt"
-	"math/rand"
-	"time"
+	"github.com/name5566/leaf/log"
+	pb_msg "server/msg/Protocal"
 )
 
-func (r *Room) RoomInit() {
+//JoinGameRoom 加入游戏房间
+func (r *Room) JoinGameRoom(p *Player) {
 
-	r.RoomId = r.GetRoomNumber()
-	r.PlayerList = nil
+	//寻找可用的座位号
+	//p.SeatNum = r.FindUsableSeat()
+	//r.PlayerList[p.SeatNum] = p
 
-	r.RoomStat = RoomStatusNone
-	//r.clock = time.NewTicker(time.Second)
+	//将用户添加到用户列表
+	r.PlayerList = append(r.PlayerList, p)
+	p.room = r
 
-	r.GodGambleName = ""
-	r.CardTypeList = nil
-	r.RPotWinList = nil
-	r.GameTotalCount = 0
-}
+	userRoomMap = make(map[string]*Room)
+	userRoomMap[p.Id] = r
 
-func (r *Room) GetRoomNumber() string {
-	roomNumber := fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(1000000))
-	return roomNumber
-}
+	//进入房间玩家是否大于 50金币，否则处于观战状态
+	p.PlayerMoneyHandler()
 
-//BroadCastExcept 向当前玩家之外的玩家广播
-func (r *Room) BroadCastExcept(msg interface{}, p *Player) {
-	for _, v := range r.PlayerList {
-		if v != nil && v != p {
-			v.ConnAgent.WriteMsg(msg)
+	//获取最新40局游戏数据(小于40局则全部显示出来)
+	p.GetRoomCordData(r)
+
+	//更新房间列表	todo 这里可以不需要发前端指令，因为加入房间要返回 roomData
+	r.UpdatePlayerList()
+
+	//判断房间人数是否小于两人，否则不能开始运行
+	if r.PlayerLength() < 2 {
+		//房间游戏不能开始,房间设为等待状态
+		r.RoomStat = RoomStatusNone
+
+		errMsg := &pb_msg.MsgInfo_S2C{}
+		errMsg.Msg = recodeText[RECODE_PEOPLENOTFULL]
+		p.ConnAgent.WriteMsg(errMsg)
+		log.Debug("房间人数不够，不能开始游戏~")
+
+		//返回前端房间信息
+		msg := &pb_msg.JoinRoom_S2C{}
+		roomData := p.RspRoomData()
+		msg.RoomData = roomData
+		p.ConnAgent.WriteMsg(msg)
+
+		return
+	}
+
+	//只要不小于两人,就属于游戏状态
+	p.Status = PlayGame
+
+	//返回前端房间信息
+	msg := &pb_msg.JoinRoom_S2C{}
+	roomData := p.RspRoomData()
+	msg.RoomData = roomData
+	p.ConnAgent.WriteMsg(msg)
+
+	if r.RoomStat != RoomStatusRun {
+		// None和Over状态都直接开始运行游戏
+		r.StartGameRun()
+	} else {
+		if r.GameStat == Settle { //这里给前端发送消息 做处理
+			msg := &pb_msg.MsgInfo_S2C{}
+			msg.Msg = recodeText[RECODE_SELLTENOTDOWNBET]
+			p.ConnAgent.WriteMsg(msg)
+
+			log.Debug("当前结算阶段,不能进行操作~")
 		}
 	}
 }
 
-//BroadCastMsg 进行广播消息
-func (r *Room) BroadCastMsg(msg interface{}) {
-	for _, v := range r.PlayerList {
-		if v != nil {
-			v.ConnAgent.WriteMsg(msg)
-		}
+//PlayerExitRoom 玩家退出房间
+func (r *Room) PlayerReqExit(p *Player) {
+	if p.room != nil {
+		r.ExitFromRoom(p)
+	} else {
+		log.Debug("Player Exit Room, But not found Player Room ~")
 	}
 }
 
-//PlayerLen 房间当前人数
-func (r *Room) PlayerLength() int32 {
-	var num int32
-	for _, v := range r.PlayerList {
-		if v != nil {
-			num++
-		}
-	}
-	return num
-}
+//ExitFromRoom 从房间退出处理
+func (r *Room) ExitFromRoom(p *Player) {
 
-//RoomGameCount 获取房间游戏总数量
-func (r *Room) RoomGameCount() int32 {
-	return r.GameTotalCount
-}
-
-//FindUsableSeat 寻找可用座位
-func (r *Room) FindUsableSeat() int32 {
+	//从房间列表删除玩家信息,更新房间列表
 	for k, v := range r.PlayerList {
-		if v == nil {
-			return int32(k)
-		}
-	}
-	panic("The Room logic was Wrong, don't find able seat, panic err!")
-}
-
-//PlayerListSort 玩家列表排序(进入房间、退出房间、重新开始)
-func (r *Room) UpdatePlayerList() {
-
-	//先将玩家信息列表置为空
-	var PlayerSort []*Player
-	var playerSlice []*Player
-
-	for _, v := range r.PlayerList {
-		if v != nil && v.TotalAmountBet != 0 {
-			playerSlice = append(playerSlice, v)
+		if v != nil && v == p {
+			r.PlayerList = append(r.PlayerList[:k], r.PlayerList[k+1:]...)
 		}
 	}
 
-	var ps []*Player
-	for _, v := range playerSlice {
-		if v != nil && v.Id == r.GodGambleName {
-			PlayerSort = append(PlayerSort, v)
-		} else {
-			ps = append(ps, v)
-		}
-	}
-	for i := 0; i < len(ps); i++ {
-		for j := 1; j < len(ps)-i; j++ {
-			if ps[j].TotalAmountBet > ps[j-1].TotalAmountBet {
-				//交换
-				ps[j], ps[j-1] = ps[j-1], ps[j]
-			}
+	//更新房间列表
+	r.UpdatePlayerList()
+	maintainList := r.PackageRoomInfo()
+	r.BroadCastExcept(maintainList, p)
 
-		}
-	}
+	//广播其他玩家该玩家退出房间
+	leave := &pb_msg.LeaveRoom_S2C{}
+	leave.PlayerInfo.Id = p.Id
+	leave.PlayerInfo.NickName = p.NickName
+	leave.PlayerInfo.HeadImg = p.HeadImg
+	leave.PlayerInfo.Account = p.Account
 
-	var ps2 []*Player
-	for _, v := range r.PlayerList {
-		if v != nil && v.TotalAmountBet == 0 {
-			ps2 = append(ps2, v)
-		}
-	}
-	for i := 0; i < len(ps2); i++ {
-		for j := 1; j < len(ps2)-i; j++ {
-			if ps2[j].TotalAmountBet > ps2[j-1].TotalAmountBet {
-				//交换
-				ps2[j], ps2[j-1] = ps2[j-1], ps2[j]
-			}
-
-		}
-	}
-
-	for _, v := range ps {
-		if v != nil {
-			PlayerSort = append(PlayerSort, v)
-		}
-	}
-	for _, v := range ps2 {
-		if v != nil {
-			PlayerSort = append(PlayerSort, v)
-		}
-	}
-
-	//将房间列表置为空,将更新的数据追加到房间列表
-	r.PlayerList = nil
-	r.PlayerList = append(r.PlayerList, PlayerSort...)
-}
-
-//GetGodGableId 获取赌神ID  TODO 每局游戏结束更新赌神
-func (r *Room) GetGodGableId() {
-	var GodSlice []*Player
-	GodSlice = append(GodSlice, r.PlayerList...)
-
-	for i := 0; i < len(GodSlice); i++ {
-		for j := 1; j < len(GodSlice)-i; j++ {
-			if GodSlice[j].WinTotalCount > GodSlice[j-1].WinTotalCount {
-				//交换
-				GodSlice[j], GodSlice[j-1] = GodSlice[j-1], GodSlice[j]
-			}
-		}
-	}
-	r.GodGambleName = GodSlice[0].Id
-}
-
-//GatherRCardType 房间所有卡牌类型集合  ( 这里可以直接每局游戏摊牌 追加牌型类型
-func (r *Room) GatherRCardType() {
-	for _, v := range r.RPotWinList {
-		if v != nil {
-			//TODO 这里存在一个问题,卡牌类型是房间的，不是用户的，用户只是截取 40局类型
-			r.CardTypeList = append(r.CardTypeList, int32(v.CardTypes))
-		}
-	}
-}
-
-//DisposeGamesNum 处理玩家局数
-func (r *Room) UpdateGamesNum() {
-	for _, v := range r.PlayerList {
-		//玩家局数达到72局，就清空一次玩家房间数据
-		if v != nil && v.GetPotWinCount() == GamesNumLimit {
-			v.ReadWinCount = 0
-			v.BlackWinCount = 0
-			v.LuckWinCount = 0
-			v.ReadBlackList = nil
-
-			//游戏结束玩家金额不足设为观战
-			v.PlayerMoneyHandler()
-		}
-	}
+	r.BroadCastExcept(leave, p)
+	log.Debug("Player Exit from the Room SUCCESS ~")
 }

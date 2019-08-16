@@ -25,7 +25,7 @@ message LoginInfo_C2S {
     string serverUrl = 3;
 }
 
-message LoginData {
+message PlayerInfo {
     string Id = 1;
     string nickName = 2;
     string headImg = 3;
@@ -34,7 +34,7 @@ message LoginData {
 
 //--4
 message LoginInfo_S2C {
-    LoginData loginData = 1;
+    PlayerInfo playerInfo = 1;
 }
 
 //--5
@@ -42,18 +42,63 @@ message JoinRoom_C2S {
     string roomId = 1;
 }
 
+//玩家各注池下注的金额
+message DownBetMoney {
+    int32 ReadDownBet = 1;
+    int32 BlackDownBet = 2;
+    int32 LuckDownBet = 3;
+}
+
+//玩家各注池下注的金额
+message DownPotType {
+    bool ReadDownPot = 1;
+    bool BlackDownPot = 2;
+    bool LuckDownPot = 3;
+}
+
+//续投
+message ContinueBet {
+    DownBetMoney downBetMoneys = 1;
+    int32 TotalMoneyBet = 4; //本局玩家下注总金额,用于 续投。
+}
+
+enum PlayerStatus {
+    XXX_PStatus = 0;
+    PlayGame = 1; //游戏状态
+    WatchGame = 2; //观战状态
+}
+
+//游戏输赢的数据
+message PotWinList {
+    int32 ReadWin = 1; //红Win为 1
+    int32 BlackWin = 2; //黑Win为 1
+    int32 LuckWin = 3; //幸运luck为 1
+    CardsType cardType = 4; //比牌类型
+}
+
 message PlayerData {
-    LoginData loginData = 1;
-    double continueVot = 2; //续投，记录玩家上局的下注金额。
-    bool IsGodGambling = 3; //玩家是否是赌神
-    int32 winCount = 4; //玩家当前房间Win的局数
-    double resultWinMoney = 5; //本局游戏结束赢的钱
-    double resultLoseMoney = 6; //本局游戏结束输的钱
+    PlayerInfo playerInfo = 1;
+    DownBetMoney downBetMoneys = 2; //玩家各注池下注的金额
+    DownPotType downPotTypes = 3; //玩家注池下注类型,1、2、3都可以进行下注
+    int32 TotalAmountBet = 4; //玩家总下注
+    PlayerStatus status = 5; //玩家状态
+    bool IsGodGambling = 6; //玩家是否是赌神
+    ContinueBet continueVot = 7; //续投，记录玩家上局的下注金额。
+    double resultWinMoney = 8; //本局游戏结束赢的钱
+    double resultLoseMoney = 9; //本局游戏结束输的钱
+    int32 winTotalCount = 10; //玩家房间获胜Win总次数
+    repeated int32 cardTypeList = 11; //卡牌类型列表
+    repeated PotWinList potWinList = 12; //底池每局Win总列表
+    repeated int32 readBlackList = 13; //每局红黑Win总顺序列表  红为 1,黑为 2
+    int32 readWinCount = 14; //Win总列表红Win的局数
+    int32 blackWinCount = 15; //Win总列表黑Win的局数
+    int32 luckWinCount = 16; //Win总列表幸运的局数
+    bool IsOnline = 17; //玩家是否在线
 }
 
 //游戏阶段
 enum GameStage {
-    XXX = 0; //枚举第一个为0
+    XXX_Stage = 0; //枚举第一个为0
     DownBet = 1;
     Settle = 2;
 }
@@ -76,22 +121,14 @@ message PotMoneyCount {
     int32 LuckMoneyCount = 3;
 }
 
-//游戏输赢的数据
-message GameWinList {
-    int32 ReadWin = 1; //红Win为 1
-    int32 BlackWin = 2; //黑Win为 1
-    int32 LuckWin = 3; //幸运luck为 1
-    CardsType cardType = 4; //比牌类型
-}
-
 message RoomData {
     string roomId = 1;
     repeated PlayerData playerList = 2; //玩家列表
     string godGableName = 3; //赌神ID
     GameStage gameStage = 4; //游戏阶段
     PotMoneyCount potMoneyCount = 5; //房间注池金额总数量集合
-    repeated int32 cardTypes = 6; //卡牌类型集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
-    repeated GameWinList rPotWinList = 7; //红黑Win、Luck、比牌类型的总集合
+    repeated int32 cardTypeList = 6; //卡牌类型集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
+    repeated PotWinList rPotWinList = 7; //红黑Win、Luck、比牌类型的总集合
 }
 
 //--6
@@ -106,9 +143,25 @@ message LeaveRoom_C2S {
 
 //--8
 message LeaveRoom_S2C {
-    LoginData loginData = 1;
+    PlayerInfo playerInfo = 1;
 }
 
+//--9 进入房间
+message EnterRoom_S2C {
+    RoomData roomData = 1;
+}
+
+//--10 下注阶段倒计时
+message DownBetTime_S2C {
+    int32 startTime = 1;
+}
+
+//--11 结算结算倒计时
+message SettlerTime_S2C {
+    int32 startTime = 1;
+}
+
+//注池类型
 enum PotType {
     XXX_Pot = 0;
     ReadPot = 1;
@@ -116,33 +169,34 @@ enum PotType {
     LuckPot = 3;
 }
 
-//--9  玩家行动
+//--12  玩家行动
 message PlayerAction_C2S {
-    double bet = 1; // 下注金额
-    PotType pot = 2; // 下注注池类型
+    DownBetMoney downBetMoneys = 1; // 下注金额
+    DownPotType downPotTypes = 2; // 下注注池类型
+    bool IsAction = 3; // 玩家是否行动
 }
 
-//--10
+//--13
 message PlayerAction_S2C {
     RoomData roomData = 1;
 }
 
-//--11  更新房间列表
+//--14  更新房间列表
 message MaintainList_S2C {
     repeated PlayerData playerList = 1;
 }
 
-//--12  开牌结果
+//--15  开牌结果
 message OpenCardResult_S2C {
     //1、卡牌数据
     repeated int32 cardData = 1;
     //2、比牌类型
     CardsType cardType = 2;
-    //3、注池Win类型
-    PotType potType = 3;
+    //3、注池Win类型, True为 Win,False为 Lose
+    DownPotType PotWinTypes = 3;
 }
 
-//--13  房间结算数据
+//--16  房间结算数据
 message RoomSettleData_S2C {
     RoomData roomData = 1;
 }

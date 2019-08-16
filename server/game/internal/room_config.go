@@ -38,7 +38,7 @@ type GameWinList struct {
 	CardTypes card.CardsType //比牌类型  1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
 }
 
-//房间注池数量
+//房间注池下注总金额
 type RoomPoolCount struct {
 	ReadMoneyCount  int32 //红池金额数量
 	BlackMoneyCount int32 //黑池金额数量
@@ -53,7 +53,7 @@ type Room struct {
 	RoomStat      RoomStatus     //房间状态
 	GameStat      GameStatus     //游戏状态
 
-	PoolMoneyCount *RoomPoolCount //房间注池数量
+	PotMoneyCount *RoomPoolCount  //房间注池下注总金额
 	CardTypeList   []int32        //卡牌类型的总集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
 	RPotWinList    []*GameWinList //红黑Win、Luck、比牌类型的总集合
 	GameTotalCount int32          //房间游戏的总局数
