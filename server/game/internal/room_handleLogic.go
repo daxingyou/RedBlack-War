@@ -162,6 +162,7 @@ func (r *Room) PackageRoomInfo() *pb_msg.MaintainList_S2C {
 	for _, v := range r.PlayerList {
 		if v != nil {
 			data := &pb_msg.PlayerData{}
+			data.PlayerInfo = new(pb_msg.PlayerInfo)
 			data.PlayerInfo.Id = v.Id
 			data.PlayerInfo.NickName = v.NickName
 			data.PlayerInfo.HeadImg = v.HeadImg
@@ -170,6 +171,8 @@ func (r *Room) PackageRoomInfo() *pb_msg.MaintainList_S2C {
 			data.IsGodGambling = v.IsGodGambling
 			data.ContinueVot = new(pb_msg.ContinueBet)
 			data.ContinueVot.DownBetMoneys = new(pb_msg.DownBetMoney)
+			v.ContinueVot = new(ContinueBet)
+			v.ContinueVot.DownBetMoneys = new(DownBetMoney)
 			data.ContinueVot.DownBetMoneys.ReadDownBet = v.ContinueVot.DownBetMoneys.ReadDownBet
 			data.ContinueVot.DownBetMoneys.BlackDownBet = v.ContinueVot.DownBetMoneys.BlackDownBet
 			data.ContinueVot.DownBetMoneys.LuckDownBet = v.ContinueVot.DownBetMoneys.LuckDownBet
@@ -218,7 +221,7 @@ func (r *Room) StartGameRun() {
 	msg := &pb_msg.DownBetTime_S2C{}
 	msg.StartTime = DownBetTime
 	r.BroadCastMsg(msg)
-	log.Debug("下注阶段开始倒计时~ : %v", time.Now())
+	log.Debug("~~~~~~~~ 下注阶段 Start : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
 
 	//记录房间游戏总局数
 	r.GameTotalCount++
@@ -246,6 +249,7 @@ func (r *Room) PlayerAction() {
 
 	select {
 	case <-timer1.C:
+		log.Debug("~~~~~~~~ 下注阶段 Over : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
 		r.CompareSettlement()
 	}
 }
@@ -256,7 +260,7 @@ func (r *Room) CompareSettlement() {
 	msg := &pb_msg.DownBetTime_S2C{}
 	msg.StartTime = SettleTime
 	r.BroadCastMsg(msg)
-	log.Debug("结算阶段开始倒计时~ : %v", time.Now())
+	log.Debug("~~~~~~~~ 结算阶段 Start : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
 
 	//结算阶段定时器
 	timer2 := time.NewTicker(time.Second * SettleTime)
@@ -284,7 +288,17 @@ func (r *Room) CompareSettlement() {
 
 	select {
 	case <-timer2.C:
+		log.Debug("~~~~~~~~ 结算阶段 Over : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
 		//开始新一轮游戏,重复调用StartGameRun函数
 		r.StartGameRun()
+	}
+}
+
+//看数据用,为了打印房间玩家列表
+func (r *Room) PrintPlayerList() {
+	for _, v := range r.PlayerList {
+		if v != nil {
+			log.Debug("获取房间玩家信息列表 : %v, %v, %v", v.Id, v.Account, v.WinTotalCount)
+		}
 	}
 }

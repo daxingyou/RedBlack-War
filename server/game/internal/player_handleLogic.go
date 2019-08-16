@@ -85,6 +85,8 @@ func (p *Player) RspRoomData() *pb_msg.RoomData {
 			data.IsGodGambling = v.IsGodGambling
 			data.ContinueVot = new(pb_msg.ContinueBet)
 			data.ContinueVot.DownBetMoneys = new(pb_msg.DownBetMoney)
+			v.ContinueVot = new(ContinueBet)
+			v.ContinueVot.DownBetMoneys = new(DownBetMoney)
 			data.ContinueVot.DownBetMoneys.ReadDownBet = v.ContinueVot.DownBetMoneys.ReadDownBet
 			data.ContinueVot.DownBetMoneys.BlackDownBet = v.ContinueVot.DownBetMoneys.BlackDownBet
 			data.ContinueVot.DownBetMoneys.LuckDownBet = v.ContinueVot.DownBetMoneys.LuckDownBet
@@ -113,6 +115,8 @@ func (p *Player) RspRoomData() *pb_msg.RoomData {
 	r.GodGableName = p.room.GodGambleName
 	r.GameStage = pb_msg.GameStage(p.room.GameStat)
 	r.PotMoneyCount = new(pb_msg.PotMoneyCount)
+	p.room = new(Room)
+	p.room.PotMoneyCount = new(PotRoomCount)
 	r.PotMoneyCount.ReadMoneyCount = p.room.PotMoneyCount.ReadMoneyCount
 	r.PotMoneyCount.BlackMoneyCount = p.room.PotMoneyCount.BlackMoneyCount
 	r.PotMoneyCount.LuckMoneyCount = p.room.PotMoneyCount.LuckMoneyCount

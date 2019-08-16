@@ -108,23 +108,20 @@ func (p *Player) StartBreathe() {
 	go func() {
 		for { //循环
 			<-ticker.C
-			p.ActiveBreathe()
+			p.uClientDelay++
+			//已经超过9秒没有收到客户端心跳，踢掉好了
+			if p.uClientDelay > 4 {
+				p.IsOnline = false
+
+				errMsg := &pb_msg.MsgInfo_S2C{}
+				errMsg.Msg = recodeText[RECODE_BREATHSTOP]
+				p.ConnAgent.WriteMsg(errMsg)
+
+				log.Debug("用户长时间未响应心跳,停止心跳~")
+				p.ConnAgent.Destroy()
+				p.ConnAgent.Close()
+				return
+			}
 		}
 	}()
-}
-
-//ActiveBreathe 主动呼吸
-func (p *Player) ActiveBreathe() {
-	p.uClientDelay++
-	//已经超过9秒没有收到客户端心跳，踢掉好了
-	if p.uClientDelay > 4 {
-		errMsg := &pb_msg.MsgInfo_S2C{}
-		errMsg.Msg = recodeText[RECODE_PLAYERBREAKLINE]
-		p.ConnAgent.WriteMsg(errMsg)
-
-		log.Debug("玩家已掉线,断开连接~")
-		p.ConnAgent.Destroy()
-		p.ConnAgent.Close()
-		return
-	}
 }

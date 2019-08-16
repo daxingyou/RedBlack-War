@@ -6,7 +6,7 @@ import (
 )
 
 //JoinGameRoom 加入游戏房间
-func (r *Room) JoinGameRoom(p *Player) {
+func (r *Room) JoinGameRoom(p *Player)  {
 
 	//寻找可用的座位号
 	//p.SeatNum = r.FindUsableSeat()
@@ -24,6 +24,9 @@ func (r *Room) JoinGameRoom(p *Player) {
 
 	//获取最新40局游戏数据(小于40局则全部显示出来)
 	p.GetRoomCordData(r)
+
+	//todo 看数据用,打印玩家列表信息
+	r.PrintPlayerList()
 
 	//更新房间列表	todo 这里可以不需要发前端指令，因为加入房间要返回 roomData
 	r.UpdatePlayerList()

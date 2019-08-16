@@ -8,7 +8,8 @@ import (
 
 func (r *Room) RoomInit() {
 
-	r.RoomId = r.GetRoomNumber()
+	//r.RoomId = r.GetRoomNumber()
+	r.RoomId = "1"
 	r.PlayerList = nil
 
 	r.GodGambleName = ""
@@ -24,5 +25,3 @@ func (r *Room) GetRoomNumber() string {
 	roomNumber := fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(1000000))
 	return roomNumber
 }
-
-

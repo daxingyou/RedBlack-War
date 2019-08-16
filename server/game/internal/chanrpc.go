@@ -31,11 +31,13 @@ func rpcCloseAgent(args []interface{}) {
 	if ok {
 		log.Debug("Player Close Websocket address ~ : %v ", p.Id)
 
+		p.IsOnline = false
+
 		errMsg := &pb_msg.MsgInfo_S2C{}
 		errMsg.Msg = recodeText[RECODE_PLAYERBREAKLINE]
 		p.ConnAgent.WriteMsg(errMsg)
 
-		log.Debug("玩家已掉线,断开连接~")
+		log.Debug("玩家断开服务器连接,关闭链接~")
 		DeletePlayer(p)
 	}
 	a.SetUserData(nil)
