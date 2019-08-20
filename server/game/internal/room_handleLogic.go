@@ -139,7 +139,7 @@ func (r *Room) GatherRCardType() {
 	}
 }
 
-//DisposeGamesNum 处理玩家局数
+//UpdateGamesNum 更新玩家局数
 func (r *Room) UpdateGamesNum() {
 	for _, v := range r.PlayerList {
 		//玩家局数达到72局，就清空一次玩家房间数据
@@ -216,11 +216,11 @@ func (r *Room) StartGameRun() {
 	}
 
 	log.Debug("~~~~~~~~~~~~ Room Game Start Running ~~~~~~~~~~~~")
-
 	//返回下注阶段倒计时
 	msg := &pb_msg.DownBetTime_S2C{}
 	msg.StartTime = DownBetTime
 	r.BroadCastMsg(msg)
+
 	log.Debug("~~~~~~~~ 下注阶段 Start : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
 
 	//记录房间游戏总局数
@@ -231,15 +231,12 @@ func (r *Room) StartGameRun() {
 	//下注阶段定时任务
 	r.DownBetTimerTask()
 
+	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
+	//RBdzPk()
+
 	//结算阶段定时任务
 	r.SettlerTimerTask()
 
-	//select {
-	//case s := <-SettlerChannel:
-	//	log.Debug("进来了了~")
-	//	if s == true {
-	//	}
-	//}
 }
 
 //TimerTask 下注阶段定时器任务
@@ -262,18 +259,9 @@ func (r *Room) SettlerTimerTask() {
 		case t := <-DownBetChannel:
 			if t == true {
 				log.Debug("进来了~")
-				//玩家开始下注  	(:其实不用写玩家行动，直接记录就ok
-				r.PlayerAction()
 
 				//这里测试数据
 				r.PrintPlayerList()
-
-				//返回前端玩家行动
-				action := &pb_msg.PlayerAction_S2C{}
-				roomData := r.RspRoomData()
-				action.RoomData = roomData
-				r.BroadCastMsg(action)
-				log.Debug("玩家行动阶段下注数据 :%v", action.RoomData)
 
 				//开始比牌结算任务
 				r.CompareSettlement()
@@ -282,8 +270,8 @@ func (r *Room) SettlerTimerTask() {
 	}()
 }
 
-//PlayerAction 玩家下注行动
-func (r *Room) PlayerAction() {
+//PlayerAction 玩家游戏结算
+func (r *Room) GameCheckout() {
 	//遍历所有用户开始下注信息，观战用户也不能进行下注
 	for _, v := range r.PlayerList {
 		if v != nil && v.Status != WatchGame {
@@ -295,6 +283,19 @@ func (r *Room) PlayerAction() {
 
 //CompareSettlement 开始比牌结算
 func (r *Room) CompareSettlement() {
+	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
+	RBdzPk()
+
+	//玩家游戏结算
+	r.GameCheckout()
+
+	//返回前端玩家行动
+	action := &pb_msg.PlayerAction_S2C{}
+	roomData := r.RspRoomData()
+	action.RoomData = roomData
+	r.BroadCastMsg(action)
+	log.Debug("玩家行动阶段下注数据 :%v", action.RoomData)
+
 	//返回结算阶段倒计时
 	msg := &pb_msg.DownBetTime_S2C{}
 	msg.StartTime = SettleTime
@@ -307,7 +308,8 @@ func (r *Room) CompareSettlement() {
 
 	r.GameStat = Settle
 
-	// 摊牌
+	// 摊牌,要在摊牌之前发牌,做盈余池计算,可以进行换牌
+
 	// 比牌
 	// Who Win?
 	// 注池结算
@@ -332,7 +334,7 @@ func (r *Room) CompareSettlement() {
 		r.KickOutPlayer()
 
 		//开始新一轮游戏,重复调用StartGameRun函数
-		r.StartGameRun()
+		//r.StartGameRun()
 	}
 }
 

@@ -2,7 +2,6 @@ package internal
 
 import (
 	"github.com/name5566/leaf/log"
-	"server/game/card"
 	pb_msg "server/msg/Protocal"
 )
 
@@ -40,11 +39,11 @@ func (p *Player) GetRoomCordData(r *Room) {
 		for _, v := range p.PotWinList {
 			if v.RedWin == 1 {
 				p.RedWinCount++
-				p.RedBlackList = append(p.RedBlackList, card.RedWin)
+				p.RedBlackList = append(p.RedBlackList, RedWin)
 			}
 			if v.BlackWin == 1 {
 				p.BlackWinCount++
-				p.RedBlackList = append(p.RedBlackList, card.BlackWin)
+				p.RedBlackList = append(p.RedBlackList, BlackWin)
 			}
 			if v.LuckWin == 1 {
 				p.LuckWinCount++
@@ -125,7 +124,7 @@ func (r *Room) RspRoomData() *pb_msg.RoomData {
 		value.RedWin = pot.RedWin
 		value.BlackWin = pot.BlackWin
 		value.LuckWin = pot.LuckWin
-		value.CardTypes = card.CardsType(pot.CardType)
+		value.CardTypes = CardsType(pot.CardType)
 		room.RPotWinList = append(room.RPotWinList, pot)
 	}
 	return room

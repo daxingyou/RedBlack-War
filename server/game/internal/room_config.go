@@ -1,9 +1,5 @@
 package internal
 
-import (
-	"server/game/card"
-)
-
 type RoomStatus int32
 
 const (
@@ -36,10 +32,10 @@ var DownBetChannel chan bool
 var SettlerChannel chan bool
 
 type GameWinList struct {
-	RedWin    int32          //红Win为 1
-	BlackWin  int32          //黑Win为 1
-	LuckWin   int32          //幸运luck为 1
-	CardTypes card.CardsType //比牌类型  1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
+	RedWin    int32     //红Win为 1
+	BlackWin  int32     //黑Win为 1
+	LuckWin   int32     //幸运luck为 1
+	CardTypes CardsType //比牌类型  1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
 }
 
 //房间注池下注总金额
@@ -53,9 +49,9 @@ type PotRoomCount struct {
 type CardData struct {
 	ReadCard  []int32
 	BlackCard []int32
-	RedType   card.CardsType
-	BlackType card.CardsType
-	LuckType  card.CardsType // 本局幸运类型
+	RedType   CardsType
+	BlackType CardsType
+	LuckType  CardsType // 本局幸运类型
 }
 
 type Room struct {

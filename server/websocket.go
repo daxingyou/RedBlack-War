@@ -52,8 +52,9 @@ func wsMsg() []byte {
 
 	//message := &pb_msg.JoinRoom_C2S{
 	//	RoomId: "1",
-	//	Id:     "tomas",
+	//	Id:     "tomas1",
 	//}
+
 
 	message := &pb_msg.PlayerAction_C2S{
 		Id:       "tomas",

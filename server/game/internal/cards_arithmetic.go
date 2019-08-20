@@ -1,4 +1,4 @@
-package card
+package internal
 
 import (
 	"sort"

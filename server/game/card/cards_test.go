@@ -1,6 +1,7 @@
 package card
 
 import (
+	"server/game/internal"
 	"testing"
 )
 
@@ -43,5 +44,28 @@ func Test_Dealer(t *testing.T) {
 	//fmt.Println("offfff2 ::", str2)
 	//fmt.Println("222:", hexb)
 	//
-	RBdzPk()
+	internal.RBdzPk()
+}
+
+var betItemCount int
+var taxRate = []int64{50, 50, 50}
+
+// 预算输赢(prize:扣税前总返奖，tax:总税收，bet:总下注)
+func Balance(group []int64, odds []int32) (prize, tax, bet int64) {
+	for i := 0; i < betItemCount; i++ {
+		// 下注金币大于0
+		if b := group[i]; b > 0 {
+			bet += b
+			if odd := int64(odds[i]); odd != 0 {
+				w := b * odd / internal.Radix
+				//有钱回收,包含输1半
+				if w > b {
+					// 赢钱了收税，税率按千分比配置，需除以1000
+					tax += (w - b) * taxRate[i] / 1000
+				}
+				prize += w
+			}
+		}
+	}
+	return
 }

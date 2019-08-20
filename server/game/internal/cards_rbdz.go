@@ -1,8 +1,7 @@
-package card
+package internal
 
 import (
 	"github.com/name5566/leaf/log"
-	"server/game/internal"
 )
 
 // 红黑大战
@@ -28,17 +27,17 @@ const (
 )
 
 // 结算,欧赔方式计算,赔率放大100倍
-const radix = 100
+const Radix = 100
 const lostRadix = 0
 
 // 0:红赢，1赔1，和 黑全输
 // 1:黑赢，1赔1，和 红全输
 const (
-	WinLeopard       = 10*radix + radix //三同10倍
-	WinStraightFlush = 5*radix + radix  //顺金5倍
-	WinFlush         = 3*radix + radix  //金花3倍
-	WinStraight      = 2*radix + radix  //顺子2倍
-	WinBigPair       = 1*radix + radix  //大对子(9-A)
+	WinLeopard       = 10*Radix + Radix //三同10倍
+	WinStraightFlush = 5*Radix + Radix  //顺金5倍
+	WinFlush         = 3*Radix + Radix  //金花3倍
+	WinStraight      = 2*Radix + Radix  //顺子2倍
+	WinBigPair       = 1*Radix + Radix  //大对子(9-A)
 )
 
 type RBdzDealer struct {
@@ -77,7 +76,8 @@ func RBdzPk() {
 	log.Debug("花牌 数据Black~ : %v", hb)
 
 	//红黑池牌型赋值
-	r := internal.Room{}
+	r := Room{}
+	r.Cards = new(CardData)
 	r.Cards.ReadCard = HexInt(a)
 	r.Cards.BlackCard = HexInt(b)
 
@@ -89,17 +89,95 @@ func RBdzPk() {
 	ag := dealer.GetGroup(a)
 	bg := dealer.GetGroup(b)
 
-	//room := &internal.Room{}
-	//gameWin := &internal.GameWinList{}
+	gw := &GameWinList{}
 
 	//获取Pot池Win
 	if ag.Weight > bg.Weight { //redWin
-
 		log.Debug("Red Win ~")
+		gw.RedWin = 1
 
+		if ag.IsThreeKind() {
+			r.Cards.LuckType = CardsType(Leopard)
+			gw.LuckWin = 1
+			gw.CardTypes = Leopard
+			r.CardTypeList = append(r.CardTypeList,int32(Leopard))
+		}
+		if ag.IsStraightFlush() {
+			r.Cards.LuckType = CardsType(Shunjin)
+			gw.LuckWin = 1
+			gw.CardTypes = Shunjin
+			r.CardTypeList = append(r.CardTypeList,int32(Shunjin))
+		}
+		if ag.IsFlush() {
+			r.Cards.LuckType = CardsType(Golden)
+			gw.LuckWin = 1
+			gw.CardTypes = Golden
+			r.CardTypeList = append(r.CardTypeList,int32(Golden))
+		}
+		if ag.IsStraight() {
+			r.Cards.LuckType = CardsType(Straight)
+			gw.LuckWin = 1
+			gw.CardTypes = Straight
+			r.CardTypeList = append(r.CardTypeList,int32(Straight))
+		}
+		if (ag.Key.Pair() >> 8) >= 9 {
+			r.Cards.LuckType = CardsType(Pair)
+			gw.LuckWin = 1
+			gw.CardTypes = Pair
+			r.CardTypeList = append(r.CardTypeList,int32(Pair))
+		} else if ag.IsPair() {
+			gw.CardTypes = Pair
+			r.CardTypeList = append(r.CardTypeList,int32(Pair))
+		}
+		if ag.IsZilch() {
+			gw.CardTypes = Leaflet
+			r.CardTypeList = append(r.CardTypeList,int32(Leaflet))
+		}
 	} else if ag.Weight < bg.Weight { //blackWin
 		log.Debug("Black Win ~")
+		gw.BlackWin = 1
+
+		if bg.IsThreeKind() {
+			r.Cards.LuckType = CardsType(Leopard)
+			gw.LuckWin = 1
+			gw.CardTypes = Leopard
+			r.CardTypeList = append(r.CardTypeList,int32(Leopard))
+		}
+		if bg.IsStraightFlush() {
+			r.Cards.LuckType = CardsType(Shunjin)
+			gw.LuckWin = 1
+			gw.CardTypes = Shunjin
+			r.CardTypeList = append(r.CardTypeList,int32(Shunjin))
+		}
+		if bg.IsFlush() {
+			r.Cards.LuckType = CardsType(Golden)
+			gw.LuckWin = 1
+			gw.CardTypes = Golden
+			r.CardTypeList = append(r.CardTypeList,int32(Golden))
+		}
+		if bg.IsStraight() {
+			r.Cards.LuckType = CardsType(Straight)
+			gw.LuckWin = 1
+			gw.CardTypes = Straight
+			r.CardTypeList = append(r.CardTypeList,int32(Straight))
+		}
+		if (bg.Key.Pair() >> 8) >= 9 {
+			r.Cards.LuckType = CardsType(Pair)
+			gw.LuckWin = 1
+			gw.CardTypes = Pair
+			r.CardTypeList = append(r.CardTypeList,int32(Pair))
+		} else if bg.IsPair() {
+			gw.CardTypes = Pair
+			r.CardTypeList = append(r.CardTypeList,int32(Pair))
+		}
+		if bg.IsZilch() {
+			gw.CardTypes = Leaflet
+			r.CardTypeList = append(r.CardTypeList,int32(Leaflet))
+		}
 	}
+
+	//追加每局红黑Win、Luck、比牌类型的总集合
+	r.RPotWinList = append(r.RPotWinList, gw)
 
 	//获取牌型处理
 	if ag.IsThreeKind() {
