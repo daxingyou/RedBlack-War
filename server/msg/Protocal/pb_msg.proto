@@ -143,14 +143,25 @@ message PotMoneyCount {
     int32 LuckMoneyCount = 3;
 }
 
+//卡牌数据
+message CardData {
+    repeated int32 ReadCard = 1; //红池牌 1-52对应 方、梅、黑、红
+    repeated int32 BlackCard = 2; //黑池牌
+    CardsType RedType = 3; //本局红池牌局类型
+    CardsType BlackType = 4; //本局黑池牌局类型
+    CardsType LuckType = 5; // 本局幸运类型
+}
+
+
 message RoomData {
     string roomId = 1;
     repeated PlayerData playerList = 2; //玩家列表
     string godGableName = 3; //赌神ID
     GameStage gameStage = 4; //游戏阶段
-    PotMoneyCount potMoneyCount = 5; //房间注池金额总数量集合
-    repeated int32 cardTypeList = 6; //卡牌类型集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
-    repeated PotWinList rPotWinList = 7; //红黑Win、Luck、比牌类型的总集合
+    CardData cards = 5;
+    PotMoneyCount potMoneyCount = 6; //房间注池金额总数量集合
+    repeated int32 cardTypeList = 7; //卡牌类型集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
+    repeated PotWinList rPotWinList = 8; //红黑Win、Luck、比牌类型的总集合
 }
 
 //--6

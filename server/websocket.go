@@ -52,7 +52,7 @@ func wsMsg() []byte {
 
 	//message := &pb_msg.JoinRoom_C2S{
 	//	RoomId: "1",
-	//	Id:     "tomas1",
+	//	Id:     "tomas",
 	//}
 
 

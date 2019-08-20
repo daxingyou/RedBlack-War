@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/name5566/leaf/log"
 )
 
@@ -76,7 +77,7 @@ func RBdzPk() {
 	log.Debug("花牌 数据Black~ : %v", hb)
 
 	//红黑池牌型赋值
-	r := Room{}
+	r := &Room{}
 	r.Cards = new(CardData)
 	r.Cards.ReadCard = HexInt(a)
 	r.Cards.BlackCard = HexInt(b)
@@ -100,38 +101,38 @@ func RBdzPk() {
 			r.Cards.LuckType = CardsType(Leopard)
 			gw.LuckWin = 1
 			gw.CardTypes = Leopard
-			r.CardTypeList = append(r.CardTypeList,int32(Leopard))
+			r.CardTypeList = append(r.CardTypeList, int32(Leopard))
 		}
 		if ag.IsStraightFlush() {
 			r.Cards.LuckType = CardsType(Shunjin)
 			gw.LuckWin = 1
 			gw.CardTypes = Shunjin
-			r.CardTypeList = append(r.CardTypeList,int32(Shunjin))
+			r.CardTypeList = append(r.CardTypeList, int32(Shunjin))
 		}
 		if ag.IsFlush() {
 			r.Cards.LuckType = CardsType(Golden)
 			gw.LuckWin = 1
 			gw.CardTypes = Golden
-			r.CardTypeList = append(r.CardTypeList,int32(Golden))
+			r.CardTypeList = append(r.CardTypeList, int32(Golden))
 		}
 		if ag.IsStraight() {
 			r.Cards.LuckType = CardsType(Straight)
 			gw.LuckWin = 1
 			gw.CardTypes = Straight
-			r.CardTypeList = append(r.CardTypeList,int32(Straight))
+			r.CardTypeList = append(r.CardTypeList, int32(Straight))
 		}
 		if (ag.Key.Pair() >> 8) >= 9 {
 			r.Cards.LuckType = CardsType(Pair)
 			gw.LuckWin = 1
 			gw.CardTypes = Pair
-			r.CardTypeList = append(r.CardTypeList,int32(Pair))
+			r.CardTypeList = append(r.CardTypeList, int32(Pair))
 		} else if ag.IsPair() {
 			gw.CardTypes = Pair
-			r.CardTypeList = append(r.CardTypeList,int32(Pair))
+			r.CardTypeList = append(r.CardTypeList, int32(Pair))
 		}
 		if ag.IsZilch() {
 			gw.CardTypes = Leaflet
-			r.CardTypeList = append(r.CardTypeList,int32(Leaflet))
+			r.CardTypeList = append(r.CardTypeList, int32(Leaflet))
 		}
 	} else if ag.Weight < bg.Weight { //blackWin
 		log.Debug("Black Win ~")
@@ -141,38 +142,38 @@ func RBdzPk() {
 			r.Cards.LuckType = CardsType(Leopard)
 			gw.LuckWin = 1
 			gw.CardTypes = Leopard
-			r.CardTypeList = append(r.CardTypeList,int32(Leopard))
+			r.CardTypeList = append(r.CardTypeList, int32(Leopard))
 		}
 		if bg.IsStraightFlush() {
 			r.Cards.LuckType = CardsType(Shunjin)
 			gw.LuckWin = 1
 			gw.CardTypes = Shunjin
-			r.CardTypeList = append(r.CardTypeList,int32(Shunjin))
+			r.CardTypeList = append(r.CardTypeList, int32(Shunjin))
 		}
 		if bg.IsFlush() {
 			r.Cards.LuckType = CardsType(Golden)
 			gw.LuckWin = 1
 			gw.CardTypes = Golden
-			r.CardTypeList = append(r.CardTypeList,int32(Golden))
+			r.CardTypeList = append(r.CardTypeList, int32(Golden))
 		}
 		if bg.IsStraight() {
 			r.Cards.LuckType = CardsType(Straight)
 			gw.LuckWin = 1
 			gw.CardTypes = Straight
-			r.CardTypeList = append(r.CardTypeList,int32(Straight))
+			r.CardTypeList = append(r.CardTypeList, int32(Straight))
 		}
 		if (bg.Key.Pair() >> 8) >= 9 {
 			r.Cards.LuckType = CardsType(Pair)
 			gw.LuckWin = 1
 			gw.CardTypes = Pair
-			r.CardTypeList = append(r.CardTypeList,int32(Pair))
+			r.CardTypeList = append(r.CardTypeList, int32(Pair))
 		} else if bg.IsPair() {
 			gw.CardTypes = Pair
-			r.CardTypeList = append(r.CardTypeList,int32(Pair))
+			r.CardTypeList = append(r.CardTypeList, int32(Pair))
 		}
 		if bg.IsZilch() {
 			gw.CardTypes = Leaflet
-			r.CardTypeList = append(r.CardTypeList,int32(Leaflet))
+			r.CardTypeList = append(r.CardTypeList, int32(Leaflet))
 		}
 	}
 
@@ -233,5 +234,12 @@ func RBdzPk() {
 	if bg.IsZilch() {
 		r.Cards.BlackType = CardsType(Leaflet)
 		log.Debug("Black 单张")
+	}
+
+	fmt.Println("room1 :", r.Cards)
+	for _, v := range r.RPotWinList {
+		if v != nil {
+			fmt.Println("room2 :", v)
+		}
 	}
 }

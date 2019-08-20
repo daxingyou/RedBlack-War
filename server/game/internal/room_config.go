@@ -67,7 +67,4 @@ type Room struct {
 	CardTypeList   []int32        //卡牌类型的总集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
 	RPotWinList    []*GameWinList //红黑Win、Luck、比牌类型的总集合
 	GameTotalCount int32          //房间游戏的总局数
-
-	PokerRed   []int32 //红池牌
-	PokerBlack []int32 //黑池牌
 }
