@@ -22,14 +22,14 @@ var userRoomMap map[string]*Room
 
 //玩家各注池下注的金额
 type DownBetMoney struct {
-	ReadDownBet  int32
+	RedDownBet   int32
 	BlackDownBet int32
 	LuckDownBet  int32
 }
 
 //玩家各注池是否下了注
 type DownPotType struct {
-	ReadDownPot  bool
+	RedDownPot   bool
 	BlackDownPot bool
 	LuckDownPot  bool
 }
@@ -53,11 +53,11 @@ type Player struct {
 	HeadImg  string
 	Account  float64 // 玩家金额
 
+	room            *Room         //玩家房间信息
 	DownBetMoneys   *DownBetMoney //玩家各注池下注的金额
 	DownPotTypes    *DownPotType  //玩家各注池是否下了注
 	TotalAmountBet  int32         //玩家房间总下注金额
 	Status          PlayerStatus  //玩家状态
-	room            *Room         //玩家房间信息
 	IsAction        bool          //玩家是否行动了
 	IsGodGambling   bool          //玩家是否是赌神
 	ContinueVot     *ContinueBet  //续投，记录玩家上局的下注金额。
@@ -67,8 +67,8 @@ type Player struct {
 	WinTotalCount int32          //玩家房间获胜Win总次数
 	PotWinList    []*GameWinList //底池每局Win总列表
 	CardTypeList  []int32        //卡牌类型列表
-	ReadBlackList []int32        //每局红黑Win总顺序列表  红为 1,黑为 2
-	ReadWinCount  int32          //Win总列表红Win的局数
+	RedBlackList  []int32        //每局红黑Win总顺序列表  红为 1,黑为 2
+	RedWinCount   int32          //Win总列表红Win的局数
 	BlackWinCount int32          //Win总列表黑Win的局数
 	LuckWinCount  int32          //Win总列表幸运的局数
 	IsOnline      bool           //玩家是否在线

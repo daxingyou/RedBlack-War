@@ -28,8 +28,8 @@ func (p *Player) Init() {
 	p.WinTotalCount = 0
 	p.PotWinList = nil
 	p.CardTypeList = nil
-	p.ReadBlackList = nil
-	p.ReadWinCount = 0
+	p.RedBlackList = nil
+	p.RedWinCount = 0
 	p.BlackWinCount = 0
 	p.LuckWinCount = 0
 	p.IsOnline = true
@@ -117,7 +117,7 @@ func (p *Player) StartBreathe() {
 				errMsg.Msg = recodeText[RECODE_BREATHSTOP]
 				p.ConnAgent.WriteMsg(errMsg)
 
-				log.Debug("用户长时间未响应心跳,停止心跳~")
+				log.Debug("用户长时间未响应心跳,停止心跳~ : %v", p.Id)
 				p.ConnAgent.Destroy()
 				p.ConnAgent.Close()
 				return

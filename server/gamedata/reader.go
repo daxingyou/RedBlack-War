@@ -12,7 +12,7 @@ func readRf(st interface{}) *recordfile.RecordFile {
 		log.Fatal("%v", err)
 	}
 	fn := reflect.TypeOf(st).Name() + ".txt"
-	err = rf.Read("gamedata/" + fn)
+	err = rf.Red("gamedata/" + fn)
 	if err != nil {
 		log.Fatal("%v: %v", fn, err)
 	}

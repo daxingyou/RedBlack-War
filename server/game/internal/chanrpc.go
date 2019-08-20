@@ -21,7 +21,7 @@ func rpcNewAgent(args []interface{}) {
 	p.ConnAgent.SetUserData(p)
 
 	//开始呼吸
-	p.StartBreathe()
+	//p.StartBreathe()
 }
 
 func rpcCloseAgent(args []interface{}) {
@@ -37,7 +37,7 @@ func rpcCloseAgent(args []interface{}) {
 		errMsg.Msg = recodeText[RECODE_PLAYERBREAKLINE]
 		p.ConnAgent.WriteMsg(errMsg)
 
-		log.Debug("玩家断开服务器连接,关闭链接~")
+		//log.Debug("玩家断开服务器连接,关闭链接~")
 		DeletePlayer(p)
 	}
 	a.SetUserData(nil)

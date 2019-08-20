@@ -58,6 +58,21 @@ func handleLoginInfo(args []interface{}) {
 	if userRoomMap[p.Id] != nil {
 		p.PlayerLoginAgain(a)
 	}
+
+	//player := p.GetUserRoomInfo()
+	//log.Debug("用户断线重连数据: %v", player)
+	//if player != nil {
+	//	p = player
+	//	p.IsOnline = true
+	//	p.ConnAgent = a
+	//	p.ConnAgent.SetUserData(p)
+	//	//返回前端信息
+	//	r := p.room.RspRoomData()
+	//	enter := &pb_msg.EnterRoom_S2C{}
+	//	enter.RoomData = r
+	//	p.ConnAgent.WriteMsg(enter)
+	//	log.Debug("用户断线重连成功,返回客户端数据~")
+	//}
 }
 
 func handleJoinRoom(args []interface{}) {
@@ -73,13 +88,14 @@ func handleJoinRoom(args []interface{}) {
 }
 
 func handleLeaveRoom(args []interface{}) {
+	//m := args[0].(*pb_msg.LeaveRoom_C2S)
 	a := args[1].(gate.Agent)
 
 	p, ok := a.UserData().(*Player)
 	log.Debug("handleLeaveRoom 玩家退出房间~ : %v", p.Id)
 
 	if ok {
-		p.room.PlayerReqExit(p)
+		p.PlayerReqExit()
 	}
 }
 

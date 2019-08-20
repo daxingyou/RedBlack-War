@@ -2,6 +2,27 @@ syntax = "proto3";
 
 package pb_msg;
 
+// 消息ID
+enum MessageID {
+    MSG_Ping = 0;
+    MSG_Pong = 1;
+    MSG_MsgInfo_S2C = 2;
+    MSG_LoginInfo_C2S = 3;
+    MSG_LoginInfo_S2C = 4;
+    MSG_JoinRoom_C2S = 5;
+    MSG_JoinRoom_S2C = 6;
+    MSG_LeaveRoom_C2S = 7;
+    MSG_LeaveRoom_S2C = 8;
+    MSG_EnterRoom_S2C = 9;
+    MSG_DownBetTime_S2C = 10;
+    MSG_SettlerTime_S2C = 11;
+    MSG_PlayerAction_C2S = 12;
+    MSG_PlayerAction_S2C = 13;
+    MSG_MaintainList_S2C = 14;
+    MSG_OpenCardResult_S2C = 15;
+    MSG_RoomSettleData_S2C = 16;
+}
+
 //--0
 message Ping {
 }
@@ -44,14 +65,14 @@ message JoinRoom_C2S {
 
 //玩家各注池下注的金额
 message DownBetMoney {
-    int32 ReadDownBet = 1;
+    int32 RedDownBet = 1;
     int32 BlackDownBet = 2;
     int32 LuckDownBet = 3;
 }
 
-//玩家各注池下注的金额
+//玩家各注池是否下注
 message DownPotType {
-    bool ReadDownPot = 1;
+    bool RedDownPot = 1;
     bool BlackDownPot = 2;
     bool LuckDownPot = 3;
 }
@@ -70,7 +91,7 @@ enum PlayerStatus {
 
 //游戏输赢的数据
 message PotWinList {
-    int32 ReadWin = 1; //红Win为 1
+    int32 RedWin = 1; //红Win为 1
     int32 BlackWin = 2; //黑Win为 1
     int32 LuckWin = 3; //幸运luck为 1
     CardsType cardType = 4; //比牌类型
@@ -89,8 +110,8 @@ message PlayerData {
     int32 winTotalCount = 10; //玩家房间获胜Win总次数
     repeated int32 cardTypeList = 11; //卡牌类型列表
     repeated PotWinList potWinList = 12; //底池每局Win总列表
-    repeated int32 readBlackList = 13; //每局红黑Win总顺序列表  红为 1,黑为 2
-    int32 readWinCount = 14; //Win总列表红Win的局数
+    repeated int32 redBlackList = 13; //每局红黑Win总顺序列表  红为 1,黑为 2
+    int32 redWinCount = 14; //Win总列表红Win的局数
     int32 blackWinCount = 15; //Win总列表黑Win的局数
     int32 luckWinCount = 16; //Win总列表幸运的局数
     bool IsOnline = 17; //玩家是否在线
@@ -116,7 +137,7 @@ enum CardsType {
 
 //房间注池金额总数量
 message PotMoneyCount {
-    int32 ReadMoneyCount = 1;
+    int32 RedMoneyCount = 1;
     int32 BlackMoneyCount = 2;
     int32 LuckMoneyCount = 3;
 }
@@ -138,7 +159,6 @@ message JoinRoom_S2C {
 
 //--7
 message LeaveRoom_C2S {
-
 }
 
 //--8
@@ -164,7 +184,7 @@ message SettlerTime_S2C {
 //注池类型
 enum PotType {
     XXX_Pot = 0;
-    ReadPot = 1;
+    RedPot = 1;
     BlackPot = 2;
     LuckPot = 3;
 }
@@ -181,7 +201,7 @@ message PlayerAction_S2C {
     RoomData roomData = 1;
 }
 
-//--14  更新房间列表
+//--14  更新房间用户列表
 message MaintainList_S2C {
     repeated PlayerData playerList = 1;
 }

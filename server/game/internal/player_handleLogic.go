@@ -38,13 +38,13 @@ func (p *Player) GetRoomCordData(r *Room) {
 		p.PotWinList = append(p.PotWinList, r.RPotWinList[num:]...)
 		p.CardTypeList = append(p.CardTypeList, r.CardTypeList[num:]...)
 		for _, v := range p.PotWinList {
-			if v.ReadWin == 1 {
-				p.ReadWinCount++
-				p.ReadBlackList = append(p.ReadBlackList, card.ReadWin)
+			if v.RedWin == 1 {
+				p.RedWinCount++
+				p.RedBlackList = append(p.RedBlackList, card.RedWin)
 			}
 			if v.BlackWin == 1 {
 				p.BlackWinCount++
-				p.ReadBlackList = append(p.ReadBlackList, card.BlackWin)
+				p.RedBlackList = append(p.RedBlackList, card.BlackWin)
 			}
 			if v.LuckWin == 1 {
 				p.LuckWinCount++
@@ -55,8 +55,8 @@ func (p *Player) GetRoomCordData(r *Room) {
 		p.PotWinList = append(p.PotWinList, r.RPotWinList...)
 		p.CardTypeList = append(p.CardTypeList, r.CardTypeList...)
 		for _, v := range p.PotWinList {
-			if v.ReadWin == 1 {
-				p.ReadWinCount++
+			if v.RedWin == 1 {
+				p.RedWinCount++
 			}
 			if v.BlackWin == 1 {
 				p.BlackWinCount++
@@ -69,11 +69,11 @@ func (p *Player) GetRoomCordData(r *Room) {
 }
 
 //RspRoomData 返回房间信息
-func (p *Player) RspRoomData() *pb_msg.RoomData {
-	r := &pb_msg.RoomData{}
-	r.RoomId = p.room.RoomId
+func (r *Room) RspRoomData() *pb_msg.RoomData {
+	room := &pb_msg.RoomData{}
+	room.RoomId = r.RoomId
 
-	for _, v := range p.room.PlayerList {
+	for _, v := range r.PlayerList {
 		if v != nil {
 			data := &pb_msg.PlayerData{}
 			data.PlayerInfo = new(pb_msg.PlayerInfo)
@@ -87,7 +87,7 @@ func (p *Player) RspRoomData() *pb_msg.RoomData {
 			data.ContinueVot.DownBetMoneys = new(pb_msg.DownBetMoney)
 			v.ContinueVot = new(ContinueBet)
 			v.ContinueVot.DownBetMoneys = new(DownBetMoney)
-			data.ContinueVot.DownBetMoneys.ReadDownBet = v.ContinueVot.DownBetMoneys.ReadDownBet
+			data.ContinueVot.DownBetMoneys.RedDownBet = v.ContinueVot.DownBetMoneys.RedDownBet
 			data.ContinueVot.DownBetMoneys.BlackDownBet = v.ContinueVot.DownBetMoneys.BlackDownBet
 			data.ContinueVot.DownBetMoneys.LuckDownBet = v.ContinueVot.DownBetMoneys.LuckDownBet
 			data.ContinueVot.TotalMoneyBet = v.ContinueVot.TotalMoneyBet
@@ -97,39 +97,38 @@ func (p *Player) RspRoomData() *pb_msg.RoomData {
 			data.CardTypeList = v.CardTypeList
 			for _, val := range v.PotWinList {
 				pot := &pb_msg.PotWinList{}
-				pot.ReadWin = val.ReadWin
+				pot.RedWin = val.RedWin
 				pot.BlackWin = val.BlackWin
 				pot.LuckWin = val.LuckWin
 				pot.CardType = pb_msg.CardsType(val.CardTypes)
 				data.PotWinList = append(data.PotWinList, pot)
 			}
-			data.ReadBlackList = v.ReadBlackList
-			data.ReadWinCount = v.ReadWinCount
+			data.RedBlackList = v.RedBlackList
+			data.RedWinCount = v.RedWinCount
 			data.BlackWinCount = v.BlackWinCount
 			data.LuckWinCount = v.LuckWinCount
 			data.TotalAmountBet = v.TotalAmountBet
 			data.IsOnline = v.IsOnline
-			r.PlayerList = append(r.PlayerList, data)
+			room.PlayerList = append(room.PlayerList, data)
 		}
 	}
-	r.GodGableName = p.room.GodGambleName
-	r.GameStage = pb_msg.GameStage(p.room.GameStat)
-	r.PotMoneyCount = new(pb_msg.PotMoneyCount)
-	p.room = new(Room)
-	p.room.PotMoneyCount = new(PotRoomCount)
-	r.PotMoneyCount.ReadMoneyCount = p.room.PotMoneyCount.ReadMoneyCount
-	r.PotMoneyCount.BlackMoneyCount = p.room.PotMoneyCount.BlackMoneyCount
-	r.PotMoneyCount.LuckMoneyCount = p.room.PotMoneyCount.LuckMoneyCount
-	r.CardTypeList = p.room.CardTypeList
-	for _, value := range p.room.RPotWinList {
+	room.GodGableName = r.GodGambleName
+	room.GameStage = pb_msg.GameStage(r.GameStat)
+	room.PotMoneyCount = new(pb_msg.PotMoneyCount)
+	r.PotMoneyCount = new(PotRoomCount)
+	room.PotMoneyCount.RedMoneyCount = r.PotMoneyCount.RedMoneyCount
+	room.PotMoneyCount.BlackMoneyCount = r.PotMoneyCount.BlackMoneyCount
+	room.PotMoneyCount.LuckMoneyCount = r.PotMoneyCount.LuckMoneyCount
+	room.CardTypeList = r.CardTypeList
+	for _, value := range r.RPotWinList {
 		pot := &pb_msg.PotWinList{}
-		value.ReadWin = pot.ReadWin
+		value.RedWin = pot.RedWin
 		value.BlackWin = pot.BlackWin
 		value.LuckWin = pot.LuckWin
 		value.CardTypes = card.CardsType(pot.CardType)
-		r.RPotWinList = append(r.RPotWinList, pot)
+		room.RPotWinList = append(room.RPotWinList, pot)
 	}
-	return r
+	return room
 }
 
 //PlayerActionDownBet 玩家行动下注
@@ -137,25 +136,24 @@ func (p *Player) ActionHandler() {
 	//判断玩家是否行动,做相应处理
 	if p.IsAction == true {
 		//记录玩家在该房间总下注 和 房间注池的总金额
-		if p.DownPotTypes.ReadDownPot == true {
-			p.TotalAmountBet += p.DownBetMoneys.ReadDownBet
-			p.room.PotMoneyCount.ReadMoneyCount += p.DownBetMoneys.ReadDownBet
+		if p.DownPotTypes.RedDownPot == true {
+			p.TotalAmountBet += p.DownBetMoneys.RedDownBet
+			p.room.PotMoneyCount.RedMoneyCount += p.DownBetMoneys.RedDownBet
 		}
-		if p.DownPotTypes.ReadDownPot == true {
+		if p.DownPotTypes.RedDownPot == true {
 			p.TotalAmountBet += p.DownBetMoneys.BlackDownBet
 			p.room.PotMoneyCount.BlackMoneyCount += p.DownBetMoneys.BlackDownBet
 
 		}
-		if p.DownPotTypes.ReadDownPot == true {
+		if p.DownPotTypes.RedDownPot == true {
 			p.TotalAmountBet += p.DownBetMoneys.LuckDownBet
 			p.room.PotMoneyCount.LuckMoneyCount += p.DownBetMoneys.LuckDownBet
 		}
 
 		//记录续投下注的金额对应注池
-		p.ContinueVot.DownBetMoneys.ReadDownBet = p.DownBetMoneys.ReadDownBet
+		p.ContinueVot.DownBetMoneys.RedDownBet = p.DownBetMoneys.RedDownBet
 		p.ContinueVot.DownBetMoneys.BlackDownBet = p.DownBetMoneys.BlackDownBet
 		p.ContinueVot.DownBetMoneys.LuckDownBet = p.DownBetMoneys.LuckDownBet
-		p.ContinueVot.TotalMoneyBet = p.DownBetMoneys.ReadDownBet + p.DownBetMoneys.BlackDownBet + p.DownBetMoneys.LuckDownBet
-
+		p.ContinueVot.TotalMoneyBet = p.DownBetMoneys.RedDownBet + p.DownBetMoneys.BlackDownBet + p.DownBetMoneys.LuckDownBet
 	}
 }

@@ -49,9 +49,30 @@ func tcpMsg() []byte {
 func wsMsg() []byte {
 	// 记得一定要对应消息号 在FindMsgId()函数
 	// 房间号：158816
-	message := &pb_msg.JoinRoom_C2S{
-		RoomId: "1",
+
+	//message := &pb_msg.JoinRoom_C2S{
+	//	RoomId: "1",
+	//	Id:     "tomas",
+	//}
+
+	message := &pb_msg.PlayerAction_C2S{
+		Id:       "tomas",
+		IsAction: true,
+		DownBetMoneys: &pb_msg.DownBetMoney{
+			RedDownBet:  10,
+			BlackDownBet: 20,
+			LuckDownBet:  30,
+		},
+		DownPotTypes: &pb_msg.DownPotType{
+			RedDownPot:  true,
+			BlackDownPot: true,
+			LuckDownPot:  true,
+		},
 	}
+
+	//message := &pb_msg.LeaveRoom_C2S{
+	//	Id: "tomas",
+	//}
 
 	payload, err := proto.Marshal(message)
 	if err != nil {

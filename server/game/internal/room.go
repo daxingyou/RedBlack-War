@@ -19,6 +19,9 @@ func (r *Room) RoomInit() {
 	r.CardTypeList = nil
 	r.RPotWinList = nil
 	r.GameTotalCount = 0
+
+	DownBetChannel = make(chan bool)
+	SettlerChannel = make(chan bool)
 }
 
 func (r *Room) GetRoomNumber() string {

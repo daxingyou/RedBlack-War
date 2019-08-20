@@ -144,10 +144,10 @@ func (r *Room) UpdateGamesNum() {
 	for _, v := range r.PlayerList {
 		//玩家局数达到72局，就清空一次玩家房间数据
 		if v != nil && v.GetPotWinCount() == GamesNumLimit {
-			v.ReadWinCount = 0
+			v.RedWinCount = 0
 			v.BlackWinCount = 0
 			v.LuckWinCount = 0
-			v.ReadBlackList = nil
+			v.RedBlackList = nil
 
 			//游戏结束玩家金额不足设为观战
 			v.PlayerMoneyHandler()
@@ -173,7 +173,7 @@ func (r *Room) PackageRoomInfo() *pb_msg.MaintainList_S2C {
 			data.ContinueVot.DownBetMoneys = new(pb_msg.DownBetMoney)
 			v.ContinueVot = new(ContinueBet)
 			v.ContinueVot.DownBetMoneys = new(DownBetMoney)
-			data.ContinueVot.DownBetMoneys.ReadDownBet = v.ContinueVot.DownBetMoneys.ReadDownBet
+			data.ContinueVot.DownBetMoneys.RedDownBet = v.ContinueVot.DownBetMoneys.RedDownBet
 			data.ContinueVot.DownBetMoneys.BlackDownBet = v.ContinueVot.DownBetMoneys.BlackDownBet
 			data.ContinueVot.DownBetMoneys.LuckDownBet = v.ContinueVot.DownBetMoneys.LuckDownBet
 			data.ContinueVot.TotalMoneyBet = v.ContinueVot.TotalMoneyBet
@@ -183,14 +183,14 @@ func (r *Room) PackageRoomInfo() *pb_msg.MaintainList_S2C {
 			data.CardTypeList = v.CardTypeList
 			for _, val := range v.PotWinList {
 				pot := &pb_msg.PotWinList{}
-				pot.ReadWin = val.ReadWin
+				pot.RedWin = val.RedWin
 				pot.BlackWin = val.BlackWin
 				pot.LuckWin = val.LuckWin
 				pot.CardType = pb_msg.CardsType(val.CardTypes)
 				data.PotWinList = append(data.PotWinList, pot)
 			}
-			data.ReadBlackList = v.ReadBlackList
-			data.ReadWinCount = v.ReadWinCount
+			data.RedBlackList = v.RedBlackList
+			data.RedWinCount = v.RedWinCount
 			data.BlackWinCount = v.BlackWinCount
 			data.LuckWinCount = v.LuckWinCount
 			data.TotalAmountBet = v.TotalAmountBet
@@ -228,29 +228,68 @@ func (r *Room) StartGameRun() {
 	r.RoomStat = RoomStatusRun
 	r.GameStat = DownBet
 
-	//玩家开始下注
-	r.PlayerAction()
+	//下注阶段定时任务
+	r.DownBetTimerTask()
+
+	//结算阶段定时任务
+	r.SettlerTimerTask()
+
+	//select {
+	//case s := <-SettlerChannel:
+	//	log.Debug("进来了了~")
+	//	if s == true {
+	//	}
+	//}
+}
+
+//TimerTask 下注阶段定时器任务
+func (r *Room) DownBetTimerTask() {
+	go func() {
+		//下注阶段定时器
+		timer := time.NewTicker(time.Second * DownBetTime)
+		select {
+		case <-timer.C:
+			DownBetChannel <- true
+			return
+		}
+	}()
+}
+
+//TimerTask 结算阶段定时器任务
+func (r *Room) SettlerTimerTask() {
+	go func() {
+		select {
+		case t := <-DownBetChannel:
+			if t == true {
+				log.Debug("进来了~")
+				//玩家开始下注  	(:其实不用写玩家行动，直接记录就ok
+				r.PlayerAction()
+
+				//这里测试数据
+				r.PrintPlayerList()
+
+				//返回前端玩家行动
+				action := &pb_msg.PlayerAction_S2C{}
+				roomData := r.RspRoomData()
+				action.RoomData = roomData
+				r.BroadCastMsg(action)
+				log.Debug("玩家行动阶段下注数据 :%v", action.RoomData)
+
+				//开始比牌结算任务
+				r.CompareSettlement()
+			}
+		}
+	}()
 }
 
 //PlayerAction 玩家下注行动
 func (r *Room) PlayerAction() {
-	//下注阶段定时器
-	timer1 := time.NewTicker(time.Second * DownBetTime)
-
-	go func() {
-		//遍历所有用户开始下注信息，观战用户也不能进行下注
-		for _, v := range r.PlayerList {
-			if v != nil && v.Status != WatchGame {
-				//获取玩家下注处理
-				v.ActionHandler()
-			}
+	//遍历所有用户开始下注信息，观战用户也不能进行下注
+	for _, v := range r.PlayerList {
+		if v != nil && v.Status != WatchGame {
+			//获取玩家下注处理
+			v.ActionHandler()
 		}
-	}()
-
-	select {
-	case <-timer1.C:
-		log.Debug("~~~~~~~~ 下注阶段 Over : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
-		r.CompareSettlement()
 	}
 }
 
@@ -260,6 +299,7 @@ func (r *Room) CompareSettlement() {
 	msg := &pb_msg.DownBetTime_S2C{}
 	msg.StartTime = SettleTime
 	r.BroadCastMsg(msg)
+
 	log.Debug("~~~~~~~~ 结算阶段 Start : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
 
 	//结算阶段定时器
@@ -288,9 +328,20 @@ func (r *Room) CompareSettlement() {
 
 	select {
 	case <-timer2.C:
-		log.Debug("~~~~~~~~ 结算阶段 Over : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
+		//踢出房间断线玩家
+		r.KickOutPlayer()
+
 		//开始新一轮游戏,重复调用StartGameRun函数
 		r.StartGameRun()
+	}
+}
+
+//KickOutPlayer 踢出房间断线玩家
+func (r *Room) KickOutPlayer() {
+	for _, v := range r.PlayerList {
+		if v != nil && v.IsOnline == false {
+			v.PlayerReqExit()
+		}
 	}
 }
 
@@ -298,7 +349,9 @@ func (r *Room) CompareSettlement() {
 func (r *Room) PrintPlayerList() {
 	for _, v := range r.PlayerList {
 		if v != nil {
-			log.Debug("获取房间玩家信息列表 : %v, %v, %v", v.Id, v.Account, v.WinTotalCount)
+			log.Debug("玩家ID : %v", v.Id)
+			log.Debug("玩家下注金额 : %v", v.DownBetMoneys)
+			log.Debug("玩家下注金额 : %v", v.DownPotTypes)
 		}
 	}
 }

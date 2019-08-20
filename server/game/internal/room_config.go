@@ -31,8 +31,12 @@ const (
 	RoomLimitMoney = 50 //房间限定金额50,否则处于观战状态
 )
 
+//游戏状态channel
+var DownBetChannel chan bool
+var SettlerChannel chan bool
+
 type GameWinList struct {
-	ReadWin   int32          //红Win为 1
+	RedWin    int32          //红Win为 1
 	BlackWin  int32          //黑Win为 1
 	LuckWin   int32          //幸运luck为 1
 	CardTypes card.CardsType //比牌类型  1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
@@ -40,21 +44,34 @@ type GameWinList struct {
 
 //房间注池下注总金额
 type PotRoomCount struct {
-	ReadMoneyCount  int32 //红池金额数量
+	RedMoneyCount   int32 //红池金额数量
 	BlackMoneyCount int32 //黑池金额数量
 	LuckMoneyCount  int32 //Luck金额数量
+}
+
+//卡牌数据
+type CardData struct {
+	ReadCard  []int32
+	BlackCard []int32
+	RedType   card.CardsType
+	BlackType card.CardsType
+	LuckType  card.CardsType // 本局幸运类型
 }
 
 type Room struct {
 	RoomId     string    //房间号
 	PlayerList []*Player //玩家列表
 
-	GodGambleName string         //赌神id
-	RoomStat      RoomStatus     //房间状态
-	GameStat      GameStatus     //游戏状态
+	GodGambleName string     //赌神id
+	RoomStat      RoomStatus //房间状态
+	GameStat      GameStatus //游戏状态
 
-	PotMoneyCount *PotRoomCount  //房间注池下注总金额
+	Cards          *CardData      //卡牌数据
+	PotMoneyCount  *PotRoomCount  //房间注池下注总金额
 	CardTypeList   []int32        //卡牌类型的总集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
 	RPotWinList    []*GameWinList //红黑Win、Luck、比牌类型的总集合
 	GameTotalCount int32          //房间游戏的总局数
+
+	PokerRed   []int32 //红池牌
+	PokerBlack []int32 //黑池牌
 }

@@ -13,6 +13,7 @@ const (
 	RECODE_JOINROOMIDERR    = 1004
 	RECODE_PEOPLENOTFULL    = 1005
 	RECODE_SELLTENOTDOWNBET = 1006
+	RECODE_NOTDOWNBETSTATUS = 1007
 )
 
 var recodeText = map[int32]string{
@@ -23,6 +24,7 @@ var recodeText = map[int32]string{
 	RECODE_JOINROOMIDERR:    "请求加入的房间号不正确",
 	RECODE_PEOPLENOTFULL:    "房间人数不够,不能开始游戏",
 	RECODE_SELLTENOTDOWNBET: "当前结算阶段,不能进行操作",
+	RECODE_NOTDOWNBETSTATUS: "当前不是下注阶段,玩家不能行动",
 }
 
 func jsonData() {

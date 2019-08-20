@@ -1,0 +1,159 @@
+package card
+
+import (
+	"github.com/name5566/leaf/log"
+	"server/game/internal"
+)
+
+// 红黑大战
+// 游戏玩法：
+// 游戏使用1副扑克牌，无大小王
+// 红黑各派3张牌
+
+//卡牌类型
+type CardsType int32
+
+const (
+	Leaflet  CardsType = 1 //单张
+	Pair     CardsType = 2 //对子
+	Straight CardsType = 3 //顺子
+	Golden   CardsType = 4 //金花
+	Shunjin  CardsType = 5 //顺金
+	Leopard  CardsType = 6 //豹子
+)
+
+const (
+	RedWin   = 1 //红Win为 1
+	BlackWin = 2 //黑Win为 2
+)
+
+// 结算,欧赔方式计算,赔率放大100倍
+const radix = 100
+const lostRadix = 0
+
+// 0:红赢，1赔1，和 黑全输
+// 1:黑赢，1赔1，和 红全输
+const (
+	WinLeopard       = 10*radix + radix //三同10倍
+	WinStraightFlush = 5*radix + radix  //顺金5倍
+	WinFlush         = 3*radix + radix  //金花3倍
+	WinStraight      = 2*radix + radix  //顺子2倍
+	WinBigPair       = 1*radix + radix  //大对子(9-A)
+)
+
+type RBdzDealer struct {
+	Poker  []byte //所有的牌
+	Offset int    //牌的位置
+}
+
+var (
+	dealer = NewGoldenFlowerDealer(true)
+)
+
+func (this *RBdzDealer) Deal() ([]byte, []byte) {
+	// 检查剩余牌数量
+	offset := this.Offset
+	if offset >= len(this.Poker)/2 {
+		//获取牌值
+		this.Poker = NewPoker(1, false, true)
+		offset = 0
+	}
+	// 红黑各取3张牌
+	a := this.Poker[offset : offset+3]
+	b := this.Poker[offset+3 : offset+6]
+
+	this.Offset = offset + 6
+	return a, b
+}
+
+//获取牌型并比牌
+func RBdzPk() {
+	rb := &RBdzDealer{}
+	a, b := rb.Deal()
+
+	ha := Hex(a)
+	log.Debug("花牌 数据Red~ : %v", ha)
+	hb := Hex(b)
+	log.Debug("花牌 数据Black~ : %v", hb)
+
+	//红黑池牌型赋值
+	r := internal.Room{}
+	r.Cards.ReadCard = HexInt(a)
+	r.Cards.BlackCard = HexInt(b)
+
+	//字符串牌型
+	note := PokerArrayString(a) + "|" + PokerArrayString(b)
+	log.Debug("花牌 牌型~ : %v", note)
+
+	// 可下注的选项数量(0:红赢,1:黑赢,2:幸运一击)
+	ag := dealer.GetGroup(a)
+	bg := dealer.GetGroup(b)
+
+	//room := &internal.Room{}
+	//gameWin := &internal.GameWinList{}
+
+	//获取Pot池Win
+	if ag.Weight > bg.Weight { //redWin
+
+		log.Debug("Red Win ~")
+
+	} else if ag.Weight < bg.Weight { //blackWin
+		log.Debug("Black Win ~")
+	}
+
+	//获取牌型处理
+	if ag.IsThreeKind() {
+		r.Cards.RedType = CardsType(Leopard)
+		log.Debug("Red 三同10倍")
+	}
+	if bg.IsThreeKind() {
+		r.Cards.BlackType = CardsType(Leopard)
+		log.Debug("Black 三同10倍")
+	}
+	if ag.IsStraightFlush() {
+		r.Cards.RedType = CardsType(Shunjin)
+		log.Debug("Red 顺金5倍")
+	}
+	if bg.IsStraightFlush() {
+		r.Cards.BlackType = CardsType(Shunjin)
+		log.Debug("Black 顺金5倍")
+	}
+	if ag.IsFlush() {
+		r.Cards.RedType = CardsType(Golden)
+		log.Debug("Red 金花3倍")
+	}
+	if bg.IsFlush() {
+		r.Cards.BlackType = CardsType(Golden)
+		log.Debug("Black 金花3倍")
+	}
+	if ag.IsStraight() {
+		r.Cards.RedType = CardsType(Straight)
+		log.Debug("Red 顺子2倍")
+	}
+	if bg.IsStraight() {
+		r.Cards.BlackType = CardsType(Straight)
+		log.Debug("Black 顺子2倍")
+	}
+	if (ag.Key.Pair() >> 8) >= 9 {
+		r.Cards.RedType = CardsType(Pair)
+		log.Debug("Red 大对子(9-A)")
+	} else if ag.IsPair() {
+		r.Cards.RedType = CardsType(Pair)
+		log.Debug("Red 小对子(2-8)")
+	}
+	if (bg.Key.Pair() >> 8) >= 9 {
+		r.Cards.BlackType = CardsType(Pair)
+		log.Debug("Black 大对子(9-A)")
+	} else if bg.IsPair() {
+		r.Cards.BlackType = CardsType(Pair)
+		log.Debug("Black 小对子(2-8)")
+	}
+	if ag.IsZilch() {
+		r.Cards.RedType = CardsType(Leaflet)
+		log.Debug("Red 单张")
+	}
+	if bg.IsZilch() {
+		r.Cards.BlackType = CardsType(Leaflet)
+		log.Debug("Black 单张")
+	}
+}

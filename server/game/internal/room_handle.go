@@ -6,7 +6,7 @@ import (
 )
 
 //JoinGameRoom 加入游戏房间
-func (r *Room) JoinGameRoom(p *Player)  {
+func (r *Room) JoinGameRoom(p *Player) {
 
 	//寻找可用的座位号
 	//p.SeatNum = r.FindUsableSeat()
@@ -26,10 +26,12 @@ func (r *Room) JoinGameRoom(p *Player)  {
 	p.GetRoomCordData(r)
 
 	//todo 看数据用,打印玩家列表信息
-	r.PrintPlayerList()
+	//r.PrintPlayerList()
 
-	//更新房间列表	todo 这里可以不需要发前端指令，因为加入房间要返回 roomData
+	//更新房间列表
 	r.UpdatePlayerList()
+	maintainList := r.PackageRoomInfo()
+	r.BroadCastExcept(maintainList, p)
 
 	//判断房间人数是否小于两人，否则不能开始运行
 	if r.PlayerLength() < 2 {
@@ -43,7 +45,7 @@ func (r *Room) JoinGameRoom(p *Player)  {
 
 		//返回前端房间信息
 		msg := &pb_msg.JoinRoom_S2C{}
-		roomData := p.RspRoomData()
+		roomData := p.room.RspRoomData()
 		msg.RoomData = roomData
 		p.ConnAgent.WriteMsg(msg)
 
@@ -55,7 +57,7 @@ func (r *Room) JoinGameRoom(p *Player)  {
 
 	//返回前端房间信息
 	msg := &pb_msg.JoinRoom_S2C{}
-	roomData := p.RspRoomData()
+	roomData := p.room.RspRoomData()
 	msg.RoomData = roomData
 	p.ConnAgent.WriteMsg(msg)
 
@@ -70,15 +72,6 @@ func (r *Room) JoinGameRoom(p *Player)  {
 
 			log.Debug("当前结算阶段,不能进行操作~")
 		}
-	}
-}
-
-//PlayerExitRoom 玩家退出房间
-func (r *Room) PlayerReqExit(p *Player) {
-	if p.room != nil {
-		r.ExitFromRoom(p)
-	} else {
-		log.Debug("Player Exit Room, But not found Player Room ~")
 	}
 }
 
@@ -99,6 +92,7 @@ func (r *Room) ExitFromRoom(p *Player) {
 
 	//广播其他玩家该玩家退出房间
 	leave := &pb_msg.LeaveRoom_S2C{}
+	leave.PlayerInfo = new(pb_msg.PlayerInfo)
 	leave.PlayerInfo.Id = p.Id
 	leave.PlayerInfo.NickName = p.NickName
 	leave.PlayerInfo.HeadImg = p.HeadImg
