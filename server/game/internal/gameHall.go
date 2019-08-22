@@ -31,7 +31,7 @@ func (gh *GameHall) CreatGameRoom() *Room {
 //PlayerJoinRoom 玩家大厅加入房间
 func (gh *GameHall) PlayerJoinRoom(rid string, p *Player) {
 	for _, room := range gh.roomList {
-		if room != nil && room.RoomId == rid {  // 这里要不要遍历房间，查看用户id是否存在
+		if room != nil && room.RoomId == rid { // 这里要不要遍历房间，查看用户id是否存在
 			//加入房间
 			room.JoinGameRoom(p)
 			return
@@ -42,4 +42,11 @@ func (gh *GameHall) PlayerJoinRoom(rid string, p *Player) {
 	p.ConnAgent.WriteMsg(msg)
 
 	log.Debug("请求加入的房间号不正确~")
+}
+
+//LoadHallRobots 为每个房间装载机器人
+func (gh *GameHall) LoadHallRobots(num int32) {
+	//for _, room := range gh.roomList {
+	//	room.LoadRoomRobots(num)
+	//}
 }

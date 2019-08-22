@@ -70,4 +70,7 @@ type Player struct {
 	LuckWinCount  int32          //Win总列表幸运的局数
 	IsOnline      bool           //玩家是否在线
 	//SeatNum        int32          //玩家座位号
+
+	//是否是机器人
+	IsRobot bool
 }

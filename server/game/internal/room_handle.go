@@ -96,7 +96,7 @@ func (r *Room) ExitFromRoom(p *Player) {
 			p.room = nil
 			userRoomMap = make(map[string]*Room)
 			userRoomMap[p.Id] = nil
-			r.PlayerList = append(r.PlayerList[:k], r.PlayerList[k+1:]...)
+			r.PlayerList = append(r.PlayerList[:k], r.PlayerList[k+1:]...)   //这里两个同样的用户名退出，会报错
 		}
 	}
 

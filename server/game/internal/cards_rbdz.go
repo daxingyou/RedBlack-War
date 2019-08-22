@@ -62,7 +62,6 @@ func (this *RBdzDealer) Deal() ([]byte, []byte) {
 	a := this.Poker[offset : offset+3]
 	b := this.Poker[offset+3 : offset+6]
 
-	this.Offset = offset + 6
 	return a, b
 }
 
