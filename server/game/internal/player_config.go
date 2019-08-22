@@ -46,28 +46,25 @@ type Player struct {
 	// 客户端延迟
 	uClientDelay int32
 
-	Index int32
+	Index uint32
 
 	Id       string
 	NickName string
 	HeadImg  string
 	Account  float64 // 玩家金额
 
-	room            *Room         //玩家房间信息
-	DownBetMoneys   *DownBetMoney //玩家各注池下注的金额
-	DownPotTypes    *DownPotType  //玩家各注池是否下了注
-	TotalAmountBet  int32         //玩家房间总下注金额
-	Status          PlayerStatus  //玩家状态
-	IsAction        bool          //玩家是否行动了
-	IsGodGambling   bool          //玩家是否是赌神
-	ContinueVot     *ContinueBet  //续投，记录玩家上局的下注金额。
-	ResultWinMoney  float64       //本局游戏结束赢的钱
-	ResultLoseMoney float64       //本局游戏结束输的钱
+	room           *Room         //玩家房间信息
+	DownBetMoneys  *DownBetMoney //玩家各注池下注的金额
+	TotalAmountBet int32         //玩家房间总下注金额
+	Status         PlayerStatus  //玩家状态
+	IsAction       bool          //玩家是否行动了
+	ContinueVot    *ContinueBet  //续投，记录玩家上局的下注金额。
+	ResultMoney    float64       //本局游戏结束的钱,Win and Lose
 
 	WinTotalCount int32          //玩家房间获胜Win总次数
 	PotWinList    []*GameWinList //底池每局Win总列表
 	CardTypeList  []int32        //卡牌类型列表
-	RedBlackList  []int32        //每局红黑Win总顺序列表  红为 1,黑为 2
+	RedBlackList  []int32        //每局红黑Win总顺序列表  红为 1,黑为 2   TODO 直接 len这个获取总局数
 	RedWinCount   int32          //Win总列表红Win的局数
 	BlackWinCount int32          //Win总列表黑Win的局数
 	LuckWinCount  int32          //Win总列表幸运的局数

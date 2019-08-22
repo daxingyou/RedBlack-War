@@ -18,9 +18,10 @@ enum MessageID {
     MSG_SettlerTime_S2C = 11;
     MSG_PlayerAction_C2S = 12;
     MSG_PlayerAction_S2C = 13;
-    MSG_MaintainList_S2C = 14;
-    MSG_OpenCardResult_S2C = 15;
-    MSG_RoomSettleData_S2C = 16;
+    MSG_PotTotalMoney_S2C = 14;
+    MSG_MaintainList_S2C = 15;
+    MSG_OpenCardResult_S2C = 16;
+    MSG_RoomSettleData_S2C = 17;
 }
 
 //--0
@@ -60,7 +61,7 @@ message LoginInfo_S2C {
 
 //--5
 message JoinRoom_C2S {
-    string id = 2; //todo
+    //    string id = 2; //todo
     string roomId = 1;
 }
 
@@ -69,13 +70,6 @@ message DownBetMoney {
     int32 RedDownBet = 1;
     int32 BlackDownBet = 2;
     int32 LuckDownBet = 3;
-}
-
-//玩家各注池是否下注
-message DownPotType {
-    bool RedDownPot = 1;
-    bool BlackDownPot = 2;
-    bool LuckDownPot = 3;
 }
 
 //续投
@@ -101,21 +95,18 @@ message PotWinList {
 message PlayerData {
     PlayerInfo playerInfo = 1;
     DownBetMoney downBetMoneys = 2; //玩家各注池下注的金额
-    DownPotType downPotTypes = 3; //玩家注池下注类型,1、2、3都可以进行下注
-    int32 TotalAmountBet = 4; //玩家总下注
-    PlayerStatus status = 5; //玩家状态
-    bool IsGodGambling = 6; //玩家是否是赌神
-    ContinueBet continueVot = 7; //续投，记录玩家上局的下注金额。
-    double resultWinMoney = 8; //本局游戏结束赢的钱
-    double resultLoseMoney = 9; //本局游戏结束输的钱
-    int32 winTotalCount = 10; //玩家房间获胜Win总次数
-    repeated int32 cardTypeList = 11; //卡牌类型列表
-    repeated PotWinList potWinList = 12; //底池每局Win总列表
-    repeated int32 redBlackList = 13; //每局红黑Win总顺序列表  红为 1,黑为 2
-    int32 redWinCount = 14; //Win总列表红Win的局数
-    int32 blackWinCount = 15; //Win总列表黑Win的局数
-    int32 luckWinCount = 16; //Win总列表幸运的局数
-    bool IsOnline = 17; //玩家是否在线
+    int32 TotalAmountBet = 3; //玩家总下注
+    PlayerStatus status = 4; //玩家状态
+    ContinueBet continueVot = 5; //续投，记录玩家上局的下注金额。
+    double resultMoney = 6; //本局游戏结束的钱,Win and Lose
+    int32 winTotalCount = 7; //玩家房间获胜Win总次数
+    repeated int32 cardTypeList = 8; //卡牌类型列表
+    repeated PotWinList potWinList = 9; //底池每局Win总列表
+    repeated int32 redBlackList = 10; //每局红黑Win总顺序列表  红为 1,黑为 2
+    int32 redWinCount = 11; //Win总列表红Win的局数
+    int32 blackWinCount = 12; //Win总列表黑Win的局数
+    int32 luckWinCount = 13; //Win总列表幸运的局数
+    bool IsOnline = 14; //玩家是否在线
 }
 
 //游戏阶段
@@ -158,7 +149,7 @@ message RoomData {
     repeated PlayerData playerList = 2; //玩家列表
     string godGableName = 3; //赌神ID
     GameStage gameStage = 4; //游戏阶段
-    CardData cards = 5;
+    CardData cards = 5; //棋牌数据
     PotMoneyCount potMoneyCount = 6; //房间注池金额总数量集合
     repeated int32 cardTypeList = 7; //卡牌类型集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
     repeated PotWinList rPotWinList = 8; //红黑Win、Luck、比牌类型的总集合
@@ -171,7 +162,7 @@ message JoinRoom_S2C {
 
 //--7
 message LeaveRoom_C2S {
-    string id = 1; //todo
+    //    string id = 1; //todo
 }
 
 //--8
@@ -204,23 +195,38 @@ enum PotType {
 
 //--12  玩家行动
 message PlayerAction_C2S {
-    DownBetMoney downBetMoneys = 1; // 下注金额
-    DownPotType downPotTypes = 2; // 下注注池类型
+    int32 downBet = 1; // 下注金额
+    PotType downPot = 2; // 下注注池类型
     bool IsAction = 3; // 玩家是否行动
     string id = 4; //todo
 }
 
 //--13
 message PlayerAction_S2C {
-    RoomData roomData = 1;
+    int32 downBet = 1; // 下注金额
+    PotType downPot = 2; // 下注注池类型
+    bool IsAction = 3; // 玩家是否行动
+    double account = 4; //玩家的最新金额
 }
 
-//--14  更新房间用户列表
+//--14 广播注池金额变化
+message PotTotalMoney_S2C {
+    PotMoneyCount potMoneyCount = 1; //房间注池金额总数量集合
+}
+
+//--15  更新房间用户列表
 message MaintainList_S2C {
     repeated PlayerData playerList = 1;
 }
 
-//--15  开牌结果
+//玩家注池Win类型, True为 Win,False为 Lose
+message DownPotType {
+    bool RedDownPot = 1;
+    bool BlackDownPot = 2;
+    bool LuckDownPot = 3;
+}
+
+//--16  开牌结果
 message OpenCardResult_S2C {
     //1、卡牌数据
     repeated int32 cardData = 1;
@@ -230,7 +236,7 @@ message OpenCardResult_S2C {
     DownPotType PotWinTypes = 3;
 }
 
-//--16  房间结算数据
+//--17  房间结算数据
 message RoomSettleData_S2C {
     RoomData roomData = 1;
 }

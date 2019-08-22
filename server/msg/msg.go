@@ -27,7 +27,8 @@ func init() {
 	Processor.Register(&pb_msg.SettlerTime_S2C{})    //--11
 	Processor.Register(&pb_msg.PlayerAction_C2S{})   //--12
 	Processor.Register(&pb_msg.PlayerAction_S2C{})   //--13
-	Processor.Register(&pb_msg.MaintainList_S2C{})   //--14
-	Processor.Register(&pb_msg.OpenCardResult_S2C{}) //--15
-	Processor.Register(&pb_msg.RoomSettleData_S2C{}) //--16
+	Processor.Register(&pb_msg.PotTotalMoney_S2C{})  //--14
+	Processor.Register(&pb_msg.MaintainList_S2C{})   //--15
+	Processor.Register(&pb_msg.OpenCardResult_S2C{}) //--16
+	Processor.Register(&pb_msg.RoomSettleData_S2C{}) //--17
 }

@@ -55,9 +55,9 @@ func handleLoginInfo(args []interface{}) {
 	a.WriteMsg(msg)
 
 	//TODO 用户重新登陆
-	if userRoomMap[p.Id] != nil {
-		p.PlayerLoginAgain(a)
-	}
+	//if userRoomMap[p.Id] != nil {
+	//	PlayerLoginAgain(p, a)
+	//}
 
 	//player := p.GetUserRoomInfo()
 	//log.Debug("用户断线重连数据: %v", player)
@@ -80,7 +80,7 @@ func handleJoinRoom(args []interface{}) {
 	a := args[1].(gate.Agent)
 
 	p, ok := a.UserData().(*Player)
-	p.Id = m.Id   //todo
+	//p.Id = m.Id   //todo
 	log.Debug("handleJoinRoom 玩家加入房间~ : %v", p.Id)
 
 	if ok {
@@ -89,11 +89,11 @@ func handleJoinRoom(args []interface{}) {
 }
 
 func handleLeaveRoom(args []interface{}) {
-	m := args[0].(*pb_msg.LeaveRoom_C2S)
+	//m := args[0].(*pb_msg.LeaveRoom_C2S)
 	a := args[1].(gate.Agent)
 
 	p, ok := a.UserData().(*Player)
-	p.Id = m.Id   //todo
+	//p.Id = m.Id   //todo
 	log.Debug("handleLeaveRoom 玩家退出房间~ : %v", p.Id)
 
 	if ok {
@@ -106,7 +106,7 @@ func handlePlayerAction(args []interface{}) {
 	a := args[1].(gate.Agent)
 
 	p, ok := a.UserData().(*Player)
-	p.Id = m.Id   //todo
+	//p.Id = m.Id   //todo
 	log.Debug("handlePlayerAction 玩家开始行动~ : %v", p.Id)
 
 	if ok {

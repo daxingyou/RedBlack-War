@@ -15,7 +15,8 @@ func (r *Room) RoomInit() {
 	r.GodGambleName = ""
 	r.RoomStat = RoomStatusNone
 
-	r.PotMoneyCount = nil
+	r.Cards = new(CardData)
+	r.PotMoneyCount = new(PotRoomCount)
 	r.CardTypeList = nil
 	r.RPotWinList = nil
 	r.GameTotalCount = 0

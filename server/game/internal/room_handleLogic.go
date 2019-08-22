@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
 	"time"
@@ -18,7 +19,7 @@ func (r *Room) BroadCastExcept(msg interface{}, p *Player) {
 //BroadCastMsg 进行广播消息
 func (r *Room) BroadCastMsg(msg interface{}) {
 	for _, v := range r.PlayerList {
-		if v != nil {
+		if v != nil && v.ConnAgent != nil {
 			v.ConnAgent.WriteMsg(msg)
 		}
 	}
@@ -147,6 +148,8 @@ func (r *Room) UpdateGamesNum() {
 			v.RedWinCount = 0
 			v.BlackWinCount = 0
 			v.LuckWinCount = 0
+
+			v.PotWinList = nil
 			v.RedBlackList = nil
 
 			//游戏结束玩家金额不足设为观战
@@ -156,7 +159,7 @@ func (r *Room) UpdateGamesNum() {
 }
 
 //PackageRoomInfo 封装房间信息
-func (r *Room) PackageRoomInfo() *pb_msg.MaintainList_S2C {
+func (r *Room) PackageRoomPlayerList() *pb_msg.MaintainList_S2C {
 	msg := &pb_msg.MaintainList_S2C{}
 
 	for _, v := range r.PlayerList {
@@ -167,18 +170,19 @@ func (r *Room) PackageRoomInfo() *pb_msg.MaintainList_S2C {
 			data.PlayerInfo.NickName = v.NickName
 			data.PlayerInfo.HeadImg = v.HeadImg
 			data.PlayerInfo.Account = v.Account
+			data.DownBetMoneys = new(pb_msg.DownBetMoney)
+			data.DownBetMoneys.RedDownBet = v.DownBetMoneys.RedDownBet
+			data.DownBetMoneys.BlackDownBet = v.DownBetMoneys.BlackDownBet
+			data.DownBetMoneys.LuckDownBet = v.DownBetMoneys.LuckDownBet
+			data.TotalAmountBet = v.TotalAmountBet
 			data.Status = pb_msg.PlayerStatus(v.Status)
-			data.IsGodGambling = v.IsGodGambling
 			data.ContinueVot = new(pb_msg.ContinueBet)
 			data.ContinueVot.DownBetMoneys = new(pb_msg.DownBetMoney)
-			v.ContinueVot = new(ContinueBet)
-			v.ContinueVot.DownBetMoneys = new(DownBetMoney)
 			data.ContinueVot.DownBetMoneys.RedDownBet = v.ContinueVot.DownBetMoneys.RedDownBet
 			data.ContinueVot.DownBetMoneys.BlackDownBet = v.ContinueVot.DownBetMoneys.BlackDownBet
 			data.ContinueVot.DownBetMoneys.LuckDownBet = v.ContinueVot.DownBetMoneys.LuckDownBet
 			data.ContinueVot.TotalMoneyBet = v.ContinueVot.TotalMoneyBet
-			data.ResultWinMoney = v.ResultWinMoney
-			data.ResultLoseMoney = v.ResultLoseMoney
+			data.ResultMoney = v.ResultMoney
 			data.WinTotalCount = v.WinTotalCount
 			data.CardTypeList = v.CardTypeList
 			for _, val := range v.PotWinList {
@@ -193,7 +197,6 @@ func (r *Room) PackageRoomInfo() *pb_msg.MaintainList_S2C {
 			data.RedWinCount = v.RedWinCount
 			data.BlackWinCount = v.BlackWinCount
 			data.LuckWinCount = v.LuckWinCount
-			data.TotalAmountBet = v.TotalAmountBet
 			data.IsOnline = v.IsOnline
 			msg.PlayerList = append(msg.PlayerList, data)
 		}
@@ -258,8 +261,6 @@ func (r *Room) SettlerTimerTask() {
 		select {
 		case t := <-DownBetChannel:
 			if t == true {
-				log.Debug("进来了~")
-
 				//这里测试数据
 				r.PrintPlayerList()
 
@@ -283,18 +284,6 @@ func (r *Room) GameCheckout() {
 
 //CompareSettlement 开始比牌结算
 func (r *Room) CompareSettlement() {
-	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
-	RBdzPk()
-
-	//玩家游戏结算
-	r.GameCheckout()
-
-	//返回前端玩家行动
-	action := &pb_msg.PlayerAction_S2C{}
-	roomData := r.RspRoomData()
-	action.RoomData = roomData
-	r.BroadCastMsg(action)
-	log.Debug("玩家行动阶段下注数据 :%v", action.RoomData)
 
 	//返回结算阶段倒计时
 	msg := &pb_msg.DownBetTime_S2C{}
@@ -302,6 +291,12 @@ func (r *Room) CompareSettlement() {
 	r.BroadCastMsg(msg)
 
 	log.Debug("~~~~~~~~ 结算阶段 Start : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
+
+	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
+	RBdzPk()
+
+	//玩家游戏结算  todo
+	//r.GameCheckout()
 
 	//结算阶段定时器
 	timer2 := time.NewTicker(time.Second * SettleTime)
@@ -325,8 +320,12 @@ func (r *Room) CompareSettlement() {
 
 	//更新房间列表
 	r.UpdatePlayerList()
-	maintainList := r.PackageRoomInfo()
+	maintainList := r.PackageRoomPlayerList()
+	fmt.Println("房间数据:::", maintainList)
 	r.BroadCastMsg(maintainList)
+
+	//清空玩家数据,开始下一句游戏
+	r.CleanPlayerData()
 
 	select {
 	case <-timer2.C:
@@ -334,7 +333,7 @@ func (r *Room) CompareSettlement() {
 		r.KickOutPlayer()
 
 		//开始新一轮游戏,重复调用StartGameRun函数
-		//r.StartGameRun()
+		r.StartGameRun()
 	}
 }
 
@@ -343,6 +342,17 @@ func (r *Room) KickOutPlayer() {
 	for _, v := range r.PlayerList {
 		if v != nil && v.IsOnline == false {
 			v.PlayerReqExit()
+			log.Debug("踢出房间断线玩家 : %v", v.Id)
+		}
+	}
+}
+
+//CleanPlayerData 清空玩家数据,开始下一句游戏
+func (r *Room) CleanPlayerData() {
+	for _, v := range r.PlayerList {
+		if v != nil {
+			v.DownBetMoneys = new(DownBetMoney)
+			v.IsAction = false
 		}
 	}
 }
@@ -351,9 +361,8 @@ func (r *Room) KickOutPlayer() {
 func (r *Room) PrintPlayerList() {
 	for _, v := range r.PlayerList {
 		if v != nil {
-			log.Debug("玩家ID : %v", v.Id)
-			log.Debug("玩家下注金额 : %v", v.DownBetMoneys)
-			log.Debug("玩家下注金额 : %v", v.DownPotTypes)
+			fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
+			fmt.Println("房间池红、黑、Luck总下注: ", v.room.PotMoneyCount, "续投总额:", v.ContinueVot.TotalMoneyBet)
 		}
 	}
 }

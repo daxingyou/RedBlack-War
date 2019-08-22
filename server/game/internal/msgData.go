@@ -14,6 +14,7 @@ const (
 	RECODE_PEOPLENOTFULL    = 1005
 	RECODE_SELLTENOTDOWNBET = 1006
 	RECODE_NOTDOWNBETSTATUS = 1007
+	RECODE_NOTDOWNMONEY     = 1008
 )
 
 var recodeText = map[int32]string{
@@ -25,6 +26,7 @@ var recodeText = map[int32]string{
 	RECODE_PEOPLENOTFULL:    "房间人数不够,不能开始游戏",
 	RECODE_SELLTENOTDOWNBET: "当前结算阶段,不能进行操作",
 	RECODE_NOTDOWNBETSTATUS: "当前不是下注阶段,玩家不能行动",
+	RECODE_NOTDOWNMONEY:     "玩家金额不足,不能进行下注",
 }
 
 func jsonData() {

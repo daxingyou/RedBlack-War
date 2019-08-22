@@ -14,16 +14,14 @@ func (p *Player) Init() {
 	p.HeadImg = "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2873269578,797009742&fm=26&gp=0.jpg"
 	p.Account = 4000
 
-	p.DownBetMoneys = nil
-	p.DownPotTypes = nil
 	p.TotalAmountBet = 0
 	p.IsAction = false
-	p.IsGodGambling = false
-	p.ContinueVot = nil
-	p.ResultWinMoney = 0
-	p.ResultLoseMoney = 0
+	p.DownBetMoneys = new(DownBetMoney)
+	p.ContinueVot = new(ContinueBet)
+	p.ContinueVot.DownBetMoneys = new(DownBetMoney)
+	p.ResultMoney = 0
 
-	p.room = nil
+	p.room = new(Room)
 
 	p.WinTotalCount = 0
 	p.PotWinList = nil
@@ -36,14 +34,14 @@ func (p *Player) Init() {
 }
 
 // 用户缓存数据
-var mapPlayerIndex int32
-var mapGlobalPlayer map[int32]*Player
+var mapPlayerIndex uint32
+var mapGlobalPlayer map[uint32]*Player
 var mapUserIDPlayer map[string]*Player
 
 // 初始化全局用户列表
 func InitMapPlayer() {
 	mapPlayerIndex = 0
-	mapGlobalPlayer = make(map[int32]*Player)
+	mapGlobalPlayer = make(map[uint32]*Player)
 	mapUserIDPlayer = make(map[string]*Player)
 }
 

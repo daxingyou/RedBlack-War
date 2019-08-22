@@ -30,18 +30,18 @@ func (r *Room) JoinGameRoom(p *Player) {
 
 	//更新房间列表
 	r.UpdatePlayerList()
-	maintainList := r.PackageRoomInfo()
-	r.BroadCastExcept(maintainList, p)
+	maintainList := r.PackageRoomPlayerList()
+	r.BroadCastMsg(maintainList)
 
 	//判断房间人数是否小于两人，否则不能开始运行
 	if r.PlayerLength() < 2 {
 		//房间游戏不能开始,房间设为等待状态
 		r.RoomStat = RoomStatusNone
 
-		errMsg := &pb_msg.MsgInfo_S2C{}
-		errMsg.Msg = recodeText[RECODE_PEOPLENOTFULL]
-		p.ConnAgent.WriteMsg(errMsg)
-		log.Debug("房间人数不够，不能开始游戏~")
+		msgInfo := &pb_msg.MsgInfo_S2C{}
+		msgInfo.Msg = recodeText[RECODE_PEOPLENOTFULL]
+		p.ConnAgent.WriteMsg(msgInfo)
+		log.Debug("房间当前人数不足，无法开始游戏~")
 
 		//返回前端房间信息
 		msg := &pb_msg.JoinRoom_S2C{}
@@ -77,17 +77,32 @@ func (r *Room) JoinGameRoom(p *Player) {
 
 //ExitFromRoom 从房间退出处理
 func (r *Room) ExitFromRoom(p *Player) {
+	//清空用户数据
+	p.DownBetMoneys = nil
+	p.TotalAmountBet = 0
+	p.IsAction = false
+	p.ContinueVot = nil
+	p.WinTotalCount = 0
+	p.PotWinList = nil
+	p.CardTypeList = nil
+	p.RedBlackList = nil
+	p.RedWinCount = 0
+	p.BlackWinCount = 0
+	p.LuckWinCount = 0
 
 	//从房间列表删除玩家信息,更新房间列表
 	for k, v := range r.PlayerList {
-		if v != nil && v == p {
+		if v != nil && v.Id == p.Id && v.IsOnline == false {
+			p.room = nil
+			userRoomMap = make(map[string]*Room)
+			userRoomMap[p.Id] = nil
 			r.PlayerList = append(r.PlayerList[:k], r.PlayerList[k+1:]...)
 		}
 	}
 
 	//更新房间列表
 	r.UpdatePlayerList()
-	maintainList := r.PackageRoomInfo()
+	maintainList := r.PackageRoomPlayerList()
 	r.BroadCastExcept(maintainList, p)
 
 	//广播其他玩家该玩家退出房间
@@ -97,7 +112,8 @@ func (r *Room) ExitFromRoom(p *Player) {
 	leave.PlayerInfo.NickName = p.NickName
 	leave.PlayerInfo.HeadImg = p.HeadImg
 	leave.PlayerInfo.Account = p.Account
+	p.ConnAgent.WriteMsg(leave)
+	//r.BroadCastExcept(leave, p)
 
-	r.BroadCastExcept(leave, p)
 	log.Debug("Player Exit from the Room SUCCESS ~")
 }

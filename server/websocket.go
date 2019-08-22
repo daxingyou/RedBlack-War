@@ -59,16 +59,8 @@ func wsMsg() []byte {
 	message := &pb_msg.PlayerAction_C2S{
 		Id:       "tomas",
 		IsAction: true,
-		DownBetMoneys: &pb_msg.DownBetMoney{
-			RedDownBet:  10,
-			BlackDownBet: 20,
-			LuckDownBet:  30,
-		},
-		DownPotTypes: &pb_msg.DownPotType{
-			RedDownPot:  true,
-			BlackDownPot: true,
-			LuckDownPot:  true,
-		},
+		DownBet:10,
+		DownPot:pb_msg.PotType_RedPot,
 	}
 
 	//message := &pb_msg.LeaveRoom_C2S{

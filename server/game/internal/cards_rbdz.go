@@ -83,7 +83,7 @@ func RBdzPk() {
 	r.Cards.BlackCard = HexInt(b)
 
 	//字符串牌型
-	note := PokerArrayString(a) + "|" + PokerArrayString(b)
+	note := PokerArrayString(a) + " | " + PokerArrayString(b)
 	log.Debug("花牌 牌型~ : %v", note)
 
 	// 可下注的选项数量(0:红赢,1:黑赢,2:幸运一击)
@@ -236,10 +236,6 @@ func RBdzPk() {
 		log.Debug("Black 单张")
 	}
 
-	fmt.Println("room1 :", r.Cards)
-	for _, v := range r.RPotWinList {
-		if v != nil {
-			fmt.Println("room2 :", v)
-		}
-	}
+	fmt.Println("Cards Data :", r.Cards)
+
 }
