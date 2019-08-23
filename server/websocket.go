@@ -50,18 +50,18 @@ func wsMsg() []byte {
 	// 记得一定要对应消息号 在FindMsgId()函数
 	// 房间号：158816
 
-	//message := &pb_msg.JoinRoom_C2S{
-	//	RoomId: "1",
-	//	Id:     "tomas",
-	//}
-
-
-	message := &pb_msg.PlayerAction_C2S{
-		Id:       "tomas",
-		IsAction: true,
-		DownBet:10,
-		DownPot:pb_msg.PotType_RedPot,
+	message := &pb_msg.JoinRoom_C2S{
+		RoomId: "1",
+		//Id:     "tomas",
 	}
+
+
+	//message := &pb_msg.PlayerAction_C2S{
+	//	Id:       "tomas",
+	//	IsAction: true,
+	//	DownBet:10,
+	//	DownPot:pb_msg.PotType_RedPot,
+	//}
 
 	//message := &pb_msg.LeaveRoom_C2S{
 	//	Id: "tomas",

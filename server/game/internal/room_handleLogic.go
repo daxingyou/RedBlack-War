@@ -261,6 +261,7 @@ func (r *Room) SettlerTimerTask() {
 		select {
 		case t := <-DownBetChannel:
 			if t == true {
+
 				//这里测试数据
 				r.PrintPlayerList()
 
@@ -286,8 +287,9 @@ func (r *Room) GameCheckout() {
 func (r *Room) CompareSettlement() {
 
 	//返回结算阶段倒计时
-	msg := &pb_msg.DownBetTime_S2C{}
+	msg := &pb_msg.SettlerTime_S2C{}
 	msg.StartTime = SettleTime
+	fmt.Println("下注阶段时间：：", msg)
 	r.BroadCastMsg(msg)
 
 	log.Debug("~~~~~~~~ 结算阶段 Start : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
@@ -330,7 +332,7 @@ func (r *Room) CompareSettlement() {
 	select {
 	case <-timer2.C:
 		//踢出房间断线玩家
-		r.KickOutPlayer()
+		//r.KickOutPlayer()
 
 		//开始新一轮游戏,重复调用StartGameRun函数
 		r.StartGameRun()
