@@ -31,6 +31,8 @@ func (p *Player) Init() {
 	p.BlackWinCount = 0
 	p.LuckWinCount = 0
 	p.IsOnline = true
+
+	p.IsRobot = false
 }
 
 // 用户缓存数据
@@ -69,7 +71,7 @@ func RegisterPlayer(p *Player) {
 
 		errMsg := &pb_msg.MsgInfo_S2C{}
 		errMsg.Msg = recodeText[RECODE_PLAYERDESTORY]
-		p.ConnAgent.WriteMsg(errMsg)
+		p.SendMsg(errMsg)
 		log.Debug("用户已在其他地方登录~")
 
 		up.ConnAgent.Destroy()
@@ -95,6 +97,12 @@ func DeletePlayer(p *Player) {
 	}
 }
 
+func (p *Player) SendMsg(msg interface{}) {
+	if !p.IsRobot && p.ConnAgent != nil {
+		p.ConnAgent.WriteMsg(msg)
+	}
+}
+
 //onClientBreathe 客户端呼吸，长时间未执行该函数可能已经断网，将主动踢掉
 func (p *Player) onClientBreathe() {
 	p.uClientDelay = 0
@@ -113,7 +121,7 @@ func (p *Player) StartBreathe() {
 
 				errMsg := &pb_msg.MsgInfo_S2C{}
 				errMsg.Msg = recodeText[RECODE_BREATHSTOP]
-				p.ConnAgent.WriteMsg(errMsg)
+				p.SendMsg(errMsg)
 
 				log.Debug("用户长时间未响应心跳,停止心跳~ : %v", p.Id)
 				p.ConnAgent.Destroy()

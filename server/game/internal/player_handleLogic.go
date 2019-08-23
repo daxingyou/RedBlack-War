@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
 )
@@ -13,7 +14,7 @@ func (p *Player) PlayerMoneyHandler() {
 
 		errMsg := &pb_msg.MsgInfo_S2C{}
 		errMsg.Msg = recodeText[RECODE_MONEYNOTFULL]
-		p.ConnAgent.WriteMsg(errMsg)
+		p.SendMsg(errMsg)
 
 		log.Debug("玩家金额不足,设为观战~")
 		return
@@ -34,6 +35,7 @@ func (p *Player) GetRoomCordData(r *Room) {
 	if roomGCount > RoomCordCount {
 		//大于40局则截取最新40局数据
 		num := roomGCount - RoomCordCount
+		fmt.Println("p.PotWinList~~~~~~~~~~~ :", p.PotWinList)
 		p.PotWinList = append(p.PotWinList, r.RPotWinList[num:]...)
 		p.CardTypeList = append(p.CardTypeList, r.CardTypeList[num:]...)
 		for _, v := range p.PotWinList {

@@ -35,7 +35,7 @@ func rpcCloseAgent(args []interface{}) {
 
 		errMsg := &pb_msg.MsgInfo_S2C{}
 		errMsg.Msg = recodeText[RECODE_PLAYERBREAKLINE]
-		p.ConnAgent.WriteMsg(errMsg)
+		p.SendMsg(errMsg)
 
 		//log.Debug("玩家断开服务器连接,关闭链接~")
 		DeletePlayer(p)

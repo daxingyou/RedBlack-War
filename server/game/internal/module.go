@@ -19,6 +19,9 @@ func (m *Module) OnInit() {
 
 	gameHall.Init()
 	InitMapPlayer()
+
+	gRobotCenter.Init()
+	gRobotCenter.Start()
 }
 
 func (m *Module) OnDestroy() {

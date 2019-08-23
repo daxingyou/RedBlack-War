@@ -10,8 +10,8 @@ import (
 //BroadCastExcept 向当前玩家之外的玩家广播
 func (r *Room) BroadCastExcept(msg interface{}, p *Player) {
 	for _, v := range r.PlayerList {
-		if v != nil && v != p {
-			v.ConnAgent.WriteMsg(msg)
+		if v != nil && v.Id != p.Id {
+			v.SendMsg(msg)
 		}
 	}
 }
@@ -19,8 +19,8 @@ func (r *Room) BroadCastExcept(msg interface{}, p *Player) {
 //BroadCastMsg 进行广播消息
 func (r *Room) BroadCastMsg(msg interface{}) {
 	for _, v := range r.PlayerList {
-		if v != nil && v.ConnAgent != nil {
-			v.ConnAgent.WriteMsg(msg)
+		if v != nil {
+			v.SendMsg(msg)
 		}
 	}
 }
@@ -53,71 +53,68 @@ func (r *Room) FindUsableSeat() int32 {
 
 //PlayerListSort 玩家列表排序(进入房间、退出房间、重新开始)
 func (r *Room) UpdatePlayerList() {
-
-	//先将玩家信息列表置为空
-	var PlayerSort []*Player
+	//首先
+	//临时切片
 	var playerSlice []*Player
-
+	//1、赌神
 	for _, v := range r.PlayerList {
-		if v != nil && v.TotalAmountBet != 0 {
+		if v != nil && v.Id == r.GodGambleName {
 			playerSlice = append(playerSlice, v)
 		}
 	}
-
-	var ps []*Player
-	for _, v := range playerSlice {
-		if v != nil && v.Id == r.GodGambleName {
-			PlayerSort = append(PlayerSort, v)
-		} else {
-			ps = append(ps, v)
-		}
-	}
-	for i := 0; i < len(ps); i++ {
-		for j := 1; j < len(ps)-i; j++ {
-			if ps[j].TotalAmountBet > ps[j-1].TotalAmountBet {
-				//交换
-				ps[j], ps[j-1] = ps[j-1], ps[j]
-			}
-
-		}
-	}
-
-	var ps2 []*Player
+	//2、玩家下注总金额
+	var p1 []*Player //所有下注过的用户
+	var p2 []*Player //所有下注金额为0的用户
 	for _, v := range r.PlayerList {
-		if v != nil && v.TotalAmountBet == 0 {
-			ps2 = append(ps2, v)
+		if v != nil && v.TotalAmountBet != 0 {
+			p1 = append(p1, v)
+		} else {
+			p2 = append(p2, v)
 		}
 	}
-	for i := 0; i < len(ps2); i++ {
-		for j := 1; j < len(ps2)-i; j++ {
-			if ps2[j].TotalAmountBet > ps2[j-1].TotalAmountBet {
+	//根据玩家总下注进行排序
+	for i := 0; i < len(p1); i++ {
+		for j := 1; j < len(p1)-i; j++ {
+			if p1[j].TotalAmountBet > p1[j-1].TotalAmountBet {
 				//交换
-				ps2[j], ps2[j-1] = ps2[j-1], ps2[j]
+				p1[j], p1[j-1] = p1[j-1], p1[j]
 			}
-
 		}
 	}
-
-	for _, v := range ps {
-		if v != nil {
-			PlayerSort = append(PlayerSort, v)
+	//将用户总下注金额顺序追加到临时切片
+	playerSlice = append(playerSlice, p1...)
+	//3、玩家金额,总下注为0,按用户金额排序
+	for i := 0; i < len(p2); i++ {
+		for j := 1; j < len(p2)-i; j++ {
+			if p2[j].Account > p2[j-1].Account {
+				//交换
+				p2[j], p2[j-1] = p2[j-1], p2[j]
+			}
 		}
 	}
-	for _, v := range ps2 {
-		if v != nil {
-			PlayerSort = append(PlayerSort, v)
-		}
-	}
+	//将用户余额排序追加到临时切片
+	playerSlice = append(playerSlice, p2...)
 
 	//将房间列表置为空,将更新的数据追加到房间列表
 	r.PlayerList = nil
-	r.PlayerList = append(r.PlayerList, PlayerSort...)
+	r.PlayerList = append(r.PlayerList, playerSlice...)
 }
 
 //GetGodGableId 获取赌神ID
 func (r *Room) GetGodGableId() {
 	var GodSlice []*Player
 	GodSlice = append(GodSlice, r.PlayerList...)
+
+	var WinCount []*Player
+	for _, v := range GodSlice {
+		if v != nil && v.WinTotalCount != 0 {
+			WinCount = append(WinCount, v)
+		}
+	}
+	if len(WinCount) == 0 {
+		log.Debug("---------- 没有获取到赌神 ~")
+		return
+	}
 
 	for i := 0; i < len(GodSlice); i++ {
 		for j := 1; j < len(GodSlice)-i; j++ {
@@ -134,7 +131,7 @@ func (r *Room) GetGodGableId() {
 func (r *Room) GatherRCardType() {
 	for _, v := range r.RPotWinList {
 		if v != nil {
-			//TODO 这里存在一个问题,卡牌类型是房间的，不是用户的，用户只是截取 40局类型
+			// 这里存在一个问题,卡牌类型是房间的，不是用户的，用户只是截取 40局类型
 			r.CardTypeList = append(r.CardTypeList, int32(v.CardTypes))
 		}
 	}
@@ -234,6 +231,9 @@ func (r *Room) StartGameRun() {
 	//下注阶段定时任务
 	r.DownBetTimerTask()
 
+	//机器人进行下注  todo,只要两个玩家进入玩家，就直接走到这一步，所以只有两个玩家，忘了断点
+	//r.RobotsDownBet()
+
 	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
 	//RBdzPk()
 
@@ -262,8 +262,8 @@ func (r *Room) SettlerTimerTask() {
 		case t := <-DownBetChannel:
 			if t == true {
 
-				//这里测试数据
-				r.PrintPlayerList()
+				//todo 这里测试数据
+				//r.PrintPlayerList()
 
 				//开始比牌结算任务
 				r.CompareSettlement()
@@ -289,7 +289,6 @@ func (r *Room) CompareSettlement() {
 	//返回结算阶段倒计时
 	msg := &pb_msg.SettlerTime_S2C{}
 	msg.StartTime = SettleTime
-	fmt.Println("下注阶段时间：：", msg)
 	r.BroadCastMsg(msg)
 
 	log.Debug("~~~~~~~~ 结算阶段 Start : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
@@ -298,7 +297,7 @@ func (r *Room) CompareSettlement() {
 	RBdzPk()
 
 	//玩家游戏结算  todo
-	//r.GameCheckout()
+	r.GameCheckout()
 
 	//结算阶段定时器
 	timer2 := time.NewTicker(time.Second * SettleTime)
@@ -323,8 +322,9 @@ func (r *Room) CompareSettlement() {
 	//更新房间列表
 	r.UpdatePlayerList()
 	maintainList := r.PackageRoomPlayerList()
-	fmt.Println("房间数据:::", maintainList)
 	r.BroadCastMsg(maintainList)
+
+	r.PrintPlayerList()
 
 	//清空玩家数据,开始下一句游戏
 	r.CleanPlayerData()
@@ -363,8 +363,9 @@ func (r *Room) CleanPlayerData() {
 func (r *Room) PrintPlayerList() {
 	for _, v := range r.PlayerList {
 		if v != nil {
-			fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
-			fmt.Println("房间池红、黑、Luck总下注: ", v.room.PotMoneyCount, "续投总额:", v.ContinueVot.TotalMoneyBet)
+			fmt.Println("玩家ID ：", v.Id, "金额 :", v.Account)
+			//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
+			//fmt.Println("房间池红、黑、Luck总下注: ", v.room.PotMoneyCount, "续投总额:", v.ContinueVot.TotalMoneyBet)
 		}
 	}
 }

@@ -39,14 +39,16 @@ func (gh *GameHall) PlayerJoinRoom(rid string, p *Player) {
 	}
 	msg := &pb_msg.MsgInfo_S2C{}
 	msg.Error = recodeText[RECODE_JOINROOMIDERR]
-	p.ConnAgent.WriteMsg(msg)
+	p.SendMsg(msg)
 
 	log.Debug("请求加入的房间号不正确~")
 }
 
 //LoadHallRobots 为每个房间装载机器人
-func (gh *GameHall) LoadHallRobots(num int32) {
-	//for _, room := range gh.roomList {
-	//	room.LoadRoomRobots(num)
-	//}
+func (gh *GameHall) LoadHallRobots(num int) {
+	for _, room := range gh.roomList {
+		if room != nil {
+			room.LoadRoomRobots(num)
+		}
+	}
 }

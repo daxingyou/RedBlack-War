@@ -48,7 +48,7 @@ func PlayerLoginAgain(p *Player, a gate.Agent) {
 	r := p.room.RspRoomData()
 	enter := &pb_msg.EnterRoom_S2C{}
 	enter.RoomData = r
-	p.ConnAgent.WriteMsg(enter)
+	p.SendMsg(enter)
 	log.Debug("用户断线重连成功,返回客户端数据~")
 }
 
@@ -68,7 +68,7 @@ func (p *Player) SetPlayerAction(m *pb_msg.PlayerAction_C2S) {
 		//返回前端信息
 		msg := &pb_msg.MsgInfo_S2C{}
 		msg.Msg = recodeText[RECODE_NOTDOWNBETSTATUS]
-		p.ConnAgent.WriteMsg(msg)
+		p.SendMsg(msg)
 		log.Debug("当前不是下注阶段,玩家不能行动~")
 		return
 	}
@@ -77,7 +77,7 @@ func (p *Player) SetPlayerAction(m *pb_msg.PlayerAction_C2S) {
 	if p.Account < float64(m.DownBet) {
 		msg := &pb_msg.MsgInfo_S2C{}
 		msg.Error = recodeText[RECODE_NOTDOWNMONEY]
-		p.ConnAgent.WriteMsg(msg)
+		p.SendMsg(msg)
 
 		log.Debug("玩家金额不足,不能进行下注~")
 		return
@@ -118,7 +118,8 @@ func (p *Player) SetPlayerAction(m *pb_msg.PlayerAction_C2S) {
 	action.DownPot = m.DownPot
 	action.IsAction = m.IsAction
 	action.Account = p.Account
-	p.ConnAgent.WriteMsg(action)
+	p.room.BroadCastMsg(action)
+	//p.SendMsg(action)
 
 	//广播玩家注池金额
 	pot := &pb_msg.PotTotalMoney_S2C{}

@@ -54,10 +54,10 @@ func handleLoginInfo(args []interface{}) {
 
 	a.WriteMsg(msg)
 
-	//TODO 用户重新登陆
-	//if userRoomMap[p.Id] != nil {
-	//	PlayerLoginAgain(p, a)
-	//}
+	//判断用户是否存在房间信息,如果有就返回
+	if userRoomMap[p.Id] != nil {
+		PlayerLoginAgain(p, a)
+	}
 
 	//player := p.GetUserRoomInfo()
 	//log.Debug("用户断线重连数据: %v", player)
@@ -70,7 +70,7 @@ func handleLoginInfo(args []interface{}) {
 	//	r := p.room.RspRoomData()
 	//	enter := &pb_msg.EnterRoom_S2C{}
 	//	enter.RoomData = r
-	//	p.ConnAgent.WriteMsg(enter)
+	//	p.SendMsg(enter)
 	//	log.Debug("用户断线重连成功,返回客户端数据~")
 	//}
 }

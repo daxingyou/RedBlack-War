@@ -22,7 +22,9 @@ func (r *Room) RoomInit() {
 	r.GameTotalCount = 0
 
 	DownBetChannel = make(chan bool)
-	SettlerChannel = make(chan bool)
+	RobotDownBetChan = make(chan bool)
+
+	r.IsLoadRobots = false
 }
 
 func (r *Room) GetRoomNumber() string {

@@ -29,7 +29,7 @@ const (
 
 //游戏状态channel
 var DownBetChannel chan bool
-var SettlerChannel chan bool
+var RobotDownBetChan chan bool
 
 type GameWinList struct {
 	RedWin    int32     //红Win为 1
@@ -67,4 +67,7 @@ type Room struct {
 	CardTypeList   []int32        //卡牌类型的总集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
 	RPotWinList    []*GameWinList //红黑Win、Luck、比牌类型的总集合
 	GameTotalCount int32          //房间游戏的总局数
+
+	//是否加载机器人
+	IsLoadRobots bool
 }
