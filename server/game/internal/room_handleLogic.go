@@ -231,7 +231,7 @@ func (r *Room) StartGameRun() {
 	//下注阶段定时任务
 	r.DownBetTimerTask()
 
-	//机器人进行下注  todo,只要两个玩家进入玩家，就直接走到这一步，所以只有两个玩家，忘了断点
+	//机器人进行下注 todo
 	//r.RobotsDownBet()
 
 	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
@@ -244,13 +244,25 @@ func (r *Room) StartGameRun() {
 
 //TimerTask 下注阶段定时器任务
 func (r *Room) DownBetTimerTask() {
+	//go func() {
+	//	//下注阶段定时器
+	//	timer := time.NewTicker(time.Second * DownBetTime)
+	//	select {
+	//	case <-timer.C:
+	//		DownBetChannel <- true
+	//		return
+	//	}
+	//}()
+
 	go func() {
-		//下注阶段定时器
-		timer := time.NewTicker(time.Second * DownBetTime)
-		select {
-		case <-timer.C:
-			DownBetChannel <- true
-			return
+		for range r.clock.C {
+			r.counter++
+			log.Debug("clock : %v ", r.counter)
+			if r.counter == DownBetTime {
+				r.counter = 0
+				DownBetChannel <- true
+				return
+			}
 		}
 	}()
 }
@@ -261,12 +273,12 @@ func (r *Room) SettlerTimerTask() {
 		select {
 		case t := <-DownBetChannel:
 			if t == true {
-
-				//todo 这里测试数据
-				//r.PrintPlayerList()
-
 				//开始比牌结算任务
 				r.CompareSettlement()
+
+				//开始新一轮游戏,重复调用StartGameRun函数
+				r.StartGameRun()
+				return
 			}
 		}
 	}()
@@ -293,14 +305,14 @@ func (r *Room) CompareSettlement() {
 
 	log.Debug("~~~~~~~~ 结算阶段 Start : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
 
+	var count int32
+	t := time.NewTicker(time.Second)
+
 	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
 	RBdzPk()
 
 	//玩家游戏结算  todo
 	r.GameCheckout()
-
-	//结算阶段定时器
-	timer2 := time.NewTicker(time.Second * SettleTime)
 
 	r.GameStat = Settle
 
@@ -313,8 +325,11 @@ func (r *Room) CompareSettlement() {
 	//计时数又重置为0,开始新的下注阶段时间倒计时
 	r.RoomStat = RoomStatusOver
 
-	//处理玩家局数
+	//处理玩家局数 和 玩家金额
 	r.UpdateGamesNum()
+
+	//清空玩家数据,开始下一句游戏
+	r.CleanPlayerData()
 
 	//更新房间赌神ID
 	r.GetGodGableId()
@@ -324,18 +339,21 @@ func (r *Room) CompareSettlement() {
 	maintainList := r.PackageRoomPlayerList()
 	r.BroadCastMsg(maintainList)
 
+	//踢出房间断线玩家
+	r.KickOutPlayer()
+
+	//todo 这里会发送前端房间数据，前端做处理
+
+	//测试，打印数据
 	r.PrintPlayerList()
 
-	//清空玩家数据,开始下一句游戏
-	r.CleanPlayerData()
-
-	select {
-	case <-timer2.C:
-		//踢出房间断线玩家
-		//r.KickOutPlayer()
-
-		//开始新一轮游戏,重复调用StartGameRun函数
-		r.StartGameRun()
+	for range t.C {
+		count++
+		log.Debug("clock : %v ", count)
+		if count == SettleTime {
+			count = 0
+			return
+		}
 	}
 }
 
@@ -351,10 +369,23 @@ func (r *Room) KickOutPlayer() {
 
 //CleanPlayerData 清空玩家数据,开始下一句游戏
 func (r *Room) CleanPlayerData() {
+	fmt.Println("进来了~~~")
 	for _, v := range r.PlayerList {
 		if v != nil {
 			v.DownBetMoneys = new(DownBetMoney)
 			v.IsAction = false
+		}
+	}
+	for _, v := range r.PlayerList {
+		if v != nil && v.IsRobot == true {
+			if v.Account < RoomLimitMoney {
+				//退出一个机器人就在创建一个机器人
+				log.Debug("删除机器人！~~~~~~~~~~~~~~~~~~~~~~~~~")
+				v.PlayerReqExit()
+
+				robot := gRobotCenter.CreateRobot()
+				r.JoinGameRoom(robot)
+			}
 		}
 	}
 }
@@ -363,7 +394,7 @@ func (r *Room) CleanPlayerData() {
 func (r *Room) PrintPlayerList() {
 	for _, v := range r.PlayerList {
 		if v != nil {
-			fmt.Println("玩家ID ：", v.Id, "金额 :", v.Account)
+			fmt.Println("玩家ID ：", v.Id, "金额 :", v.Account, "下注总金额 :", v.TotalAmountBet)
 			//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
 			//fmt.Println("房间池红、黑、Luck总下注: ", v.room.PotMoneyCount, "续投总额:", v.ContinueVot.TotalMoneyBet)
 		}

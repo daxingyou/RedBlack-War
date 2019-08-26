@@ -61,8 +61,8 @@ message LoginInfo_S2C {
 
 //--5
 message JoinRoom_C2S {
-    //    string id = 2; //todo
     string roomId = 1;
+    //    string id = 2; //todo
 }
 
 //玩家各注池下注的金额
@@ -158,6 +158,7 @@ message RoomData {
 //--6
 message JoinRoom_S2C {
     RoomData roomData = 1;
+    int32 gameTime = 2;
 }
 
 //--7
@@ -173,6 +174,7 @@ message LeaveRoom_S2C {
 //--9 进入房间
 message EnterRoom_S2C {
     RoomData roomData = 1;
+    int32 gameTime = 2;
 }
 
 //--10 下注阶段倒计时
@@ -198,7 +200,7 @@ message PlayerAction_C2S {
     int32 downBet = 1; // 下注金额
     PotType downPot = 2; // 下注注池类型
     bool IsAction = 3; // 玩家是否行动
-//    string id = 4; //todo
+    //    string id = 4; //todo
 }
 
 //--13

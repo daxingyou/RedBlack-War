@@ -36,7 +36,7 @@ func (p *Player) GetRoomCordData(r *Room) {
 		//大于40局则截取最新40局数据
 		num := roomGCount - RoomCordCount
 		fmt.Println("p.PotWinList~~~~~~~~~~~ :", p.PotWinList)
-		p.PotWinList = append(p.PotWinList, r.RPotWinList[num:]...)
+		p.PotWinList = append(p.PotWinList, r.RPotWinList[num:]...)   // todo 这里报错原因是因为，我还没有往里面填数据
 		p.CardTypeList = append(p.CardTypeList, r.CardTypeList[num:]...)
 		for _, v := range p.PotWinList {
 			if v.RedWin == 1 {

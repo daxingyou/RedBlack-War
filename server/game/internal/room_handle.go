@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
 	"time"
@@ -25,7 +24,7 @@ func (r *Room) JoinGameRoom(p *Player) {
 	p.PlayerMoneyHandler()
 
 	//获取最新40局游戏数据(小于40局则全部显示出来)
-	p.GetRoomCordData(r)
+	//p.GetRoomCordData(r)  todo  40局会报错
 
 	//todo 看数据用,打印玩家列表信息
 	//r.PrintPlayerList()
@@ -61,6 +60,12 @@ func (r *Room) JoinGameRoom(p *Player) {
 	msg := &pb_msg.JoinRoom_S2C{}
 	roomData := p.room.RspRoomData()
 	msg.RoomData = roomData
+	if r.GameStat == DownBetTime {
+		msg.GameTime = DownBetTime - r.counter
+	} else {
+		msg.GameTime = SettleTime - r.counter
+	}
+	log.Debug("返回前端的时间: %v", msg.GameTime)
 	p.SendMsg(msg)
 
 	if r.RoomStat != RoomStatusRun {
@@ -85,6 +90,7 @@ func (r *Room) ExitFromRoom(p *Player) {
 	p.TotalAmountBet = 0
 	p.IsAction = false
 	p.ContinueVot = new(ContinueBet)
+	p.ContinueVot.DownBetMoneys = new(DownBetMoney)
 	p.WinTotalCount = 0
 	p.PotWinList = nil
 	p.CardTypeList = nil
@@ -95,7 +101,7 @@ func (r *Room) ExitFromRoom(p *Player) {
 
 	//从房间列表删除玩家信息,更新房间列表
 	for k, v := range r.PlayerList {
-		if v != nil && v.Id == p.Id && v.IsOnline == false {
+		if v != nil && v.Id == p.Id && v.IsOnline == true {
 			p.room = nil
 			userRoomMap = make(map[string]*Room)
 			userRoomMap[p.Id] = nil
@@ -115,21 +121,19 @@ func (r *Room) ExitFromRoom(p *Player) {
 	leave.PlayerInfo.NickName = p.NickName
 	leave.PlayerInfo.HeadImg = p.HeadImg
 	leave.PlayerInfo.Account = p.Account
-	//p.SendMsg(leave)
-	r.BroadCastExcept(leave, p) // todo 这里要测试一下广播退出
+	p.SendMsg(leave)
+	//r.BroadCastMsg(leave) // todo 这里要测试一下广播退出
 
 	log.Debug("Player Exit from the Room SUCCESS ~")
 }
 
 //LoadRoomRobots 装载机器人
 func (r *Room) LoadRoomRobots(num int) {
-	fmt.Println("room:", r)
 	log.Debug("房间: %v ----- 装载 %v个机器人", r.RoomId, num)
 	r.IsLoadRobots = true
 	for i := 0; i < num; i++ {
 		time.Sleep(time.Millisecond)
 		robot := gRobotCenter.CreateRobot()
-		fmt.Println("创建机器人 ID :", robot.Id)
 		r.JoinGameRoom(robot)
 	}
 }

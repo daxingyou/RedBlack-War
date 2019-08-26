@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/name5566/leaf/log"
 	"math/rand"
+	pb_msg "server/msg/Protocal"
 	"time"
 )
 
@@ -31,32 +32,80 @@ func (rc *RobotsCenter) CreateRobot() *Player {
 	r.HeadImg = RandomIMG()
 	//生成机器人金币随机数
 	rand.Intn(int(time.Now().Unix()))
-	money := rand.Intn(3000) + 2000
+	money := rand.Intn(6000) + 1000
 	r.Account = float64(money)
 
 	r.Index = uint32(len(rc.mapRobotList))
 	rc.mapRobotList[r.Index] = r
+	log.Debug("创建机器人~ : %v", r.Id)
 	return r
 }
 
 //RobotsDownBet 机器人进行下注
 func (r *Room) RobotsDownBet() {
-
 	// 线程下注
 	go func() {
-		for _, v := range r.PlayerList {
-			fmt.Println("你好 我是机器人---", v.Id)
-			if v != nil && v.IsRobot == true && r.GameStat == DownBet {
-				//bet := RobotRandBet()
-				fmt.Println("你好 我是机器人-------------------------------", v.Id)
+		var count int32
+		t := time.NewTicker(time.Second)
+		for range t.C {
+			for _, v := range r.PlayerList {
+				if v != nil && v.IsRobot == true && r.GameStat == DownBet {
+					fmt.Println("你好 我是机器人-------------------------------", v.Id)
+					time.Sleep(time.Millisecond * 250)
+
+					bet1 := RobotRandBet()
+					pot1 := RobotRandPot()
+					v.IsAction = true
+
+					if v.Account < float64(bet1) {
+						log.Debug("机器人:%v 下注金额小于身上筹码,下注失败~", v.Id)
+						break
+					}
+
+					//记录玩家在该房间总下注 和 房间注池的总金额
+					if pb_msg.PotType(pot1) == pb_msg.PotType_RedPot {
+						v.Account -= float64(bet1)
+						v.DownBetMoneys.RedDownBet += bet1
+						v.TotalAmountBet += bet1
+						v.room.PotMoneyCount.RedMoneyCount += bet1
+					}
+					if pb_msg.PotType(pot1) == pb_msg.PotType_BlackPot {
+						v.Account -= float64(bet1)
+						v.DownBetMoneys.BlackDownBet += bet1
+						v.TotalAmountBet += bet1
+						v.room.PotMoneyCount.BlackMoneyCount += bet1
+					}
+					if pb_msg.PotType(pot1) == pb_msg.PotType_LuckPot {
+						v.Account -= float64(bet1)
+						v.DownBetMoneys.LuckDownBet += bet1
+						v.TotalAmountBet += bet1
+						v.room.PotMoneyCount.LuckMoneyCount += bet1
+					}
+					//返回前端玩家行动,更新玩家最新金额
+					action := &pb_msg.PlayerAction_S2C{}
+					action.DownBet = bet1
+					action.DownPot = pb_msg.PotType(pot1)
+					action.IsAction = v.IsAction
+					action.Account = v.Account
+					r.BroadCastMsg(action)
+
+					//广播玩家注池金额
+					pot := &pb_msg.PotTotalMoney_S2C{}
+					pot.PotMoneyCount = new(pb_msg.PotMoneyCount)
+					pot.PotMoneyCount.RedMoneyCount = v.room.PotMoneyCount.RedMoneyCount
+					pot.PotMoneyCount.BlackMoneyCount = v.room.PotMoneyCount.BlackMoneyCount
+					pot.PotMoneyCount.LuckMoneyCount = v.room.PotMoneyCount.LuckMoneyCount
+					r.BroadCastMsg(pot)
+
+					//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
+				}
 			}
 		}
-		//select {
-		//case t := <-RobotDownBetChan:
-		//	if t == true {
-		//		return
-		//	}
-		//}
+		log.Debug("Robot clock : %v", count)
+		count++
+		if count == RobotDownTime {
+			return
+		}
 	}()
 }
 
@@ -65,6 +114,14 @@ func RobotRandBet() int32 {
 	slice := []int32{1, 10, 50, 100}
 	rand.Seed(int64(time.Now().UnixNano()))
 	num := rand.Intn(4)
+	return slice[num]
+}
+
+//RandNumber 随机机器下注金额
+func RobotRandPot() int32 {
+	slice := []int32{1, 2, 3}
+	rand.Seed(int64(time.Now().UnixNano()))
+	num := rand.Intn(3)
 	return slice[num]
 }
 

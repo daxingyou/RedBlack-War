@@ -48,7 +48,17 @@ func PlayerLoginAgain(p *Player, a gate.Agent) {
 	r := p.room.RspRoomData()
 	enter := &pb_msg.EnterRoom_S2C{}
 	enter.RoomData = r
+	if p.room.GameStat == DownBetTime {
+		enter.GameTime = DownBetTime - p.room.counter
+	} else {
+		enter.GameTime = SettleTime - p.room.counter
+	}
 	p.SendMsg(enter)
+
+	//更新房间列表
+	p.room.UpdatePlayerList()
+	maintainList := p.room.PackageRoomPlayerList()
+	p.room.BroadCastExcept(maintainList, p)
 	log.Debug("用户断线重连成功,返回客户端数据~")
 }
 

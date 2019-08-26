@@ -24,6 +24,9 @@ func (r *Room) RoomInit() {
 	DownBetChannel = make(chan bool)
 	RobotDownBetChan = make(chan bool)
 
+	r.counter = 0
+	r.clock = time.NewTicker(time.Second)
+
 	r.IsLoadRobots = false
 }
 

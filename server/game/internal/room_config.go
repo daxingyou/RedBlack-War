@@ -1,5 +1,7 @@
 package internal
 
+import "time"
+
 type RoomStatus int32
 
 const (
@@ -68,6 +70,8 @@ type Room struct {
 	RPotWinList    []*GameWinList //红黑Win、Luck、比牌类型的总集合
 	GameTotalCount int32          //房间游戏的总局数
 
+	counter int32        //已经过去多少秒
+	clock   *time.Ticker //计时器
 	//是否加载机器人
 	IsLoadRobots bool
 }
