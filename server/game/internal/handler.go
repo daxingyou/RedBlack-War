@@ -80,7 +80,6 @@ func handleJoinRoom(args []interface{}) {
 	a := args[1].(gate.Agent)
 
 	p, ok := a.UserData().(*Player)
-	//p.Id = m.Id   //todo
 	log.Debug("handleJoinRoom 玩家加入房间~ : %v", p.Id)
 
 	if ok {
@@ -93,7 +92,6 @@ func handleLeaveRoom(args []interface{}) {
 	a := args[1].(gate.Agent)
 
 	p, ok := a.UserData().(*Player)
-	//p.Id = m.Id   //todo
 	log.Debug("handleLeaveRoom 玩家退出房间~ : %v", p.Id)
 
 	if ok {
@@ -106,7 +104,6 @@ func handlePlayerAction(args []interface{}) {
 	a := args[1].(gate.Agent)
 
 	p, ok := a.UserData().(*Player)
-	//p.Id = m.Id   //todo
 	log.Debug("handlePlayerAction 玩家开始行动~ : %v", p.Id)
 
 	if ok {

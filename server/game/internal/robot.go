@@ -92,6 +92,7 @@ func (r *Room) RobotsDownBet() {
 					}
 					//返回前端玩家行动,更新玩家最新金额
 					action := &pb_msg.PlayerAction_S2C{}
+					action.Id = v.Id
 					action.DownBet = bet1
 					action.DownPot = pb_msg.PotType(pot1)
 					action.IsAction = v.IsAction

@@ -205,10 +205,11 @@ message PlayerAction_C2S {
 
 //--13
 message PlayerAction_S2C {
-    int32 downBet = 1; // 下注金额
-    PotType downPot = 2; // 下注注池类型
-    bool IsAction = 3; // 玩家是否行动
-    double account = 4; //玩家的最新金额
+    string Id = 1;
+    int32 downBet = 2; // 下注金额
+    PotType downPot = 3; // 下注注池类型
+    bool IsAction = 4; // 玩家是否行动
+    double account = 5; //玩家的最新金额
 }
 
 //--14 广播注池金额变化

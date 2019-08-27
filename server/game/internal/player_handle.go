@@ -124,6 +124,7 @@ func (p *Player) SetPlayerAction(m *pb_msg.PlayerAction_C2S) {
 
 	//返回前端玩家行动,更新玩家最新金额
 	action := &pb_msg.PlayerAction_S2C{}
+	action.Id = p.Id
 	action.DownBet = m.DownBet
 	action.DownPot = m.DownPot
 	action.IsAction = m.IsAction

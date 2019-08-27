@@ -291,8 +291,6 @@ func (r *Room) GameCheckout() {
 	for _, v := range r.PlayerList {
 		if v != nil && v.Status != WatchGame && v.IsRobot == false {
 
-
-
 			//获取玩家下注处理
 			//v.ActionHandler()
 		}
@@ -317,7 +315,9 @@ func (r *Room) CompareSettlement() {
 	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
 	RBdzPk()
 
-
+	//1、比牌结算如果 玩家总赢 - 玩家总输 大于 盈余池的指定金额，就要重新洗牌，再次进行比较，直到小于为止
+	//2、如果小于就开始给各个用户结算金额
+	//3、机器人不计算在盈余池之类，但是也要根据比牌结果莱多金额进行加减
 
 	//玩家游戏结算  todo
 	r.GameCheckout()
@@ -354,6 +354,8 @@ func (r *Room) CompareSettlement() {
 		count++
 		log.Debug("settle clock : %v ", count)
 		if count == SettleTime {
+			//清空桌面注池
+			r.PotMoneyCount = new(PotRoomCount)
 			//计时数又重置为0,开始新的下注阶段时间倒计时
 			r.RoomStat = RoomStatusOver
 			count = 0
