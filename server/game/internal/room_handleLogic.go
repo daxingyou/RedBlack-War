@@ -231,8 +231,8 @@ func (r *Room) StartGameRun() {
 	//下注阶段定时任务
 	r.DownBetTimerTask()
 
-	//机器人进行下注 todo
-	//r.RobotsDownBet()
+	//机器人进行下注
+	r.RobotsDownBet()
 
 	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
 	//RBdzPk()
@@ -257,7 +257,7 @@ func (r *Room) DownBetTimerTask() {
 	go func() {
 		for range r.clock.C {
 			r.counter++
-			log.Debug("clock : %v ", r.counter)
+			log.Debug("downBet clock : %v ", r.counter)
 			if r.counter == DownBetTime {
 				r.counter = 0
 				DownBetChannel <- true
@@ -277,7 +277,8 @@ func (r *Room) SettlerTimerTask() {
 				r.CompareSettlement()
 
 				//开始新一轮游戏,重复调用StartGameRun函数
-				r.StartGameRun()
+				defer r.StartGameRun()
+				fmt.Println("进来了~~~~")
 				return
 			}
 		}
@@ -288,9 +289,12 @@ func (r *Room) SettlerTimerTask() {
 func (r *Room) GameCheckout() {
 	//遍历所有用户开始下注信息，观战用户也不能进行下注
 	for _, v := range r.PlayerList {
-		if v != nil && v.Status != WatchGame {
+		if v != nil && v.Status != WatchGame && v.IsRobot == false {
+
+
+
 			//获取玩家下注处理
-			v.ActionHandler()
+			//v.ActionHandler()
 		}
 	}
 }
@@ -305,25 +309,24 @@ func (r *Room) CompareSettlement() {
 
 	log.Debug("~~~~~~~~ 结算阶段 Start : %v", time.Now().Format("2006.01.02 15:04:05")+" ~~~~~~~~")
 
+	r.GameStat = Settle
+
 	var count int32
 	t := time.NewTicker(time.Second)
 
 	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
 	RBdzPk()
 
+
+
 	//玩家游戏结算  todo
 	r.GameCheckout()
-
-	r.GameStat = Settle
 
 	// 摊牌,要在摊牌之前发牌,做盈余池计算,可以进行换牌
 
 	// 比牌
 	// Who Win?
 	// 注池结算
-
-	//计时数又重置为0,开始新的下注阶段时间倒计时
-	r.RoomStat = RoomStatusOver
 
 	//处理玩家局数 和 玩家金额
 	r.UpdateGamesNum()
@@ -349,8 +352,10 @@ func (r *Room) CompareSettlement() {
 
 	for range t.C {
 		count++
-		log.Debug("clock : %v ", count)
+		log.Debug("settle clock : %v ", count)
 		if count == SettleTime {
+			//计时数又重置为0,开始新的下注阶段时间倒计时
+			r.RoomStat = RoomStatusOver
 			count = 0
 			return
 		}
@@ -369,7 +374,6 @@ func (r *Room) KickOutPlayer() {
 
 //CleanPlayerData 清空玩家数据,开始下一句游戏
 func (r *Room) CleanPlayerData() {
-	fmt.Println("进来了~~~")
 	for _, v := range r.PlayerList {
 		if v != nil {
 			v.DownBetMoneys = new(DownBetMoney)
@@ -380,11 +384,9 @@ func (r *Room) CleanPlayerData() {
 		if v != nil && v.IsRobot == true {
 			if v.Account < RoomLimitMoney {
 				//退出一个机器人就在创建一个机器人
-				log.Debug("删除机器人！~~~~~~~~~~~~~~~~~~~~~~~~~")
+				log.Debug("删除机器人！~~~~~~~~~~~~~~~~~~~~~: %v", v.Id)
 				v.PlayerReqExit()
 
-				robot := gRobotCenter.CreateRobot()
-				r.JoinGameRoom(robot)
 			}
 		}
 	}

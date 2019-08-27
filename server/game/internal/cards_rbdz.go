@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"github.com/name5566/leaf/log"
 )
 
@@ -235,6 +234,6 @@ func RBdzPk() {
 		log.Debug("Black 单张")
 	}
 
-	fmt.Println("Cards Data :", r.Cards)
+	log.Debug("Cards Data :%v", r.Cards)
 
 }

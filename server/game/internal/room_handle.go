@@ -24,7 +24,7 @@ func (r *Room) JoinGameRoom(p *Player) {
 	p.PlayerMoneyHandler()
 
 	//获取最新40局游戏数据(小于40局则全部显示出来)
-	//p.GetRoomCordData(r)  todo  40局会报错
+	p.GetRoomCordData(r) //todo  40局会报错
 
 	//todo 看数据用,打印玩家列表信息
 	//r.PrintPlayerList()
@@ -65,7 +65,6 @@ func (r *Room) JoinGameRoom(p *Player) {
 	} else {
 		msg.GameTime = SettleTime - r.counter
 	}
-	log.Debug("返回前端的时间: %v", msg.GameTime)
 	p.SendMsg(msg)
 
 	if r.RoomStat != RoomStatusRun {
@@ -102,10 +101,23 @@ func (r *Room) ExitFromRoom(p *Player) {
 	//从房间列表删除玩家信息,更新房间列表
 	for k, v := range r.PlayerList {
 		if v != nil && v.Id == p.Id && v.IsOnline == true {
-			p.room = nil
-			userRoomMap = make(map[string]*Room)
-			userRoomMap[p.Id] = nil
-			r.PlayerList = append(r.PlayerList[:k], r.PlayerList[k+1:]...) //这里两个同样的用户名退出，会报错
+			if v.IsRobot == false {
+				p.room = nil
+				//userRoomMap = make(map[string]*Room)
+				//userRoomMap[p.Id] = nil
+				delete(userRoomMap, p.Id)
+				r.PlayerList = append(r.PlayerList[:k], r.PlayerList[k+1:]...) //这里两个同样的用户名退出，会报错
+			} else {
+				p.room = nil
+				delete(userRoomMap, p.Id)
+				delete(gRobotCenter.mapRobotList, p.Index)
+				r.PlayerList = append(r.PlayerList[:k], r.PlayerList[k+1:]...)
+
+				//创建机器人
+				robot := gRobotCenter.CreateRobot()
+				r.JoinGameRoom(robot)
+			}
+
 		}
 	}
 
