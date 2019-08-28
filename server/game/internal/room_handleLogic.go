@@ -289,10 +289,14 @@ func (r *Room) SettlerTimerTask() {
 func (r *Room) GameCheckout() {
 	//遍历所有用户开始下注信息，观战用户也不能进行下注
 	for _, v := range r.PlayerList {
-		if v != nil && v.Status != WatchGame && v.IsRobot == false {
+		if v != nil && v.Status != WatchGame {
+			if v.IsRobot == false {
 
-			//获取玩家下注处理
-			//v.ActionHandler()
+				//获取玩家下注处理
+				//v.ActionHandler()
+			} else {
+
+			}
 		}
 	}
 }
@@ -317,8 +321,86 @@ func (r *Room) CompareSettlement() {
 
 	//1、比牌结算如果 玩家总赢 - 玩家总输 大于 盈余池的指定金额，就要重新洗牌，再次进行比较，直到小于为止
 	//2、如果小于就开始给各个用户结算金额
-	//3、机器人不计算在盈余池之类，但是也要根据比牌结果莱多金额进行加减
+	//3、机器人不计算在盈余池之类，但是也要根据比牌结果来对金额进行加减
 
+	rb := &RBdzDealer{}
+	a, b := rb.Deal()
+
+	//字符串牌型
+	note := PokerArrayString(a) + " | " + PokerArrayString(b)
+	log.Debug("花牌 牌型~ : %v", note)
+
+	// 可下注的选项数量(0:红赢,1:黑赢,2:幸运一击)
+	ag := dealer.GetGroup(a)
+	bg := dealer.GetGroup(b)
+
+	//获取Pot池Win
+	if ag.Weight > bg.Weight { //redWin
+		//获取玩家金额，进行处理
+		//先判断玩家下注的类型
+		for _, v := range r.PlayerList {
+			if v.IsRobot == false && v.IsAction == true {
+
+			} else {
+
+			}
+		}
+
+		log.Debug("Red Win ~")
+
+		if ag.IsThreeKind() {
+			r.Cards.LuckType = CardsType(Leopard)
+
+		}
+		if ag.IsStraightFlush() {
+			r.Cards.LuckType = CardsType(Shunjin)
+
+		}
+		if ag.IsFlush() {
+			r.Cards.LuckType = CardsType(Golden)
+
+		}
+		if ag.IsStraight() {
+			r.Cards.LuckType = CardsType(Straight)
+
+		}
+		if (ag.Key.Pair() >> 8) >= 9 {
+			r.Cards.LuckType = CardsType(Pair)
+
+		} else if ag.IsPair() {
+			r.CardTypeList = append(r.CardTypeList, int32(Pair))
+		}
+		if ag.IsZilch() {
+			r.CardTypeList = append(r.CardTypeList, int32(Leaflet))
+		}
+	} else if ag.Weight < bg.Weight { //blackWin
+		log.Debug("Black Win ~")
+
+		if bg.IsThreeKind() {
+			r.Cards.LuckType = CardsType(Leopard)
+		}
+		if bg.IsStraightFlush() {
+			r.Cards.LuckType = CardsType(Shunjin)
+
+		}
+		if bg.IsFlush() {
+			r.Cards.LuckType = CardsType(Golden)
+
+		}
+		if bg.IsStraight() {
+			r.Cards.LuckType = CardsType(Straight)
+
+		}
+		if (bg.Key.Pair() >> 8) >= 9 {
+			r.Cards.LuckType = CardsType(Pair)
+
+		} else if bg.IsPair() {
+			r.CardTypeList = append(r.CardTypeList, int32(Pair))
+		}
+		if bg.IsZilch() {
+			r.CardTypeList = append(r.CardTypeList, int32(Leaflet))
+		}
+	}
 	//玩家游戏结算  todo
 	r.GameCheckout()
 
@@ -345,7 +427,10 @@ func (r *Room) CompareSettlement() {
 	//踢出房间断线玩家
 	r.KickOutPlayer()
 
-	//todo 这里会发送前端房间数据，前端做处理
+	//这里会发送前端房间数据，前端做处理
+	data := &pb_msg.RoomSettleData_S2C{}
+	data.RoomData = r.RspRoomData()
+	r.BroadCastMsg(data)
 
 	//测试，打印数据
 	r.PrintPlayerList()

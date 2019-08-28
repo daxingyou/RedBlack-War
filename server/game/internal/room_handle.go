@@ -133,8 +133,8 @@ func (r *Room) ExitFromRoom(p *Player) {
 	leave.PlayerInfo.NickName = p.NickName
 	leave.PlayerInfo.HeadImg = p.HeadImg
 	leave.PlayerInfo.Account = p.Account
-	p.SendMsg(leave)
-	//r.BroadCastMsg(leave) // todo 这里要测试一下广播退出
+	//p.SendMsg(leave)
+	r.BroadCastMsg(leave) // todo 这里要测试一下广播退出
 
 	log.Debug("Player Exit from the Room SUCCESS ~")
 }
