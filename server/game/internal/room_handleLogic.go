@@ -317,7 +317,7 @@ func (r *Room) CompareSettlement() {
 	t := time.NewTicker(time.Second)
 
 	//开始发牌,这里开始计算牌型盈余池。如果亏损就换牌
-	RBdzPk()
+	RBdzPk(r)
 
 	//1、比牌结算如果 玩家总赢 - 玩家总输 大于 盈余池的指定金额，就要重新洗牌，再次进行比较，直到小于为止
 	//2、如果小于就开始给各个用户结算金额

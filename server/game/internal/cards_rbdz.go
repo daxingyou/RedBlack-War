@@ -26,18 +26,14 @@ const (
 	BlackWin = 2 //黑Win为 2
 )
 
-// 结算,欧赔方式计算,赔率放大100倍
-const Radix = 100
-const lostRadix = 0
-
 // 0:红赢，1赔1，和 黑全输
 // 1:黑赢，1赔1，和 红全输
 const (
-	WinLeopard       = 10*Radix + Radix //三同10倍
-	WinStraightFlush = 5*Radix + Radix  //顺金5倍
-	WinFlush         = 3*Radix + Radix  //金花3倍
-	WinStraight      = 2*Radix + Radix  //顺子2倍
-	WinBigPair       = 1*Radix + Radix  //大对子(9-A)
+	WinLeopard  int32 = 10 //豹子10倍
+	WinShunjin  int32 = 5  //顺金5倍
+	WinGolden   int32 = 3  //金花3倍
+	WinStraight int32 = 2  //顺子2倍
+	WinBigPair  int32 = 1  //大对子(9-A)
 )
 
 type RBdzDealer struct {
@@ -65,7 +61,7 @@ func (this *RBdzDealer) Deal() ([]byte, []byte) {
 }
 
 //获取牌型并比牌
-func RBdzPk() {
+func RBdzPk(r *Room) {
 	rb := &RBdzDealer{}
 	a, b := rb.Deal()
 
@@ -75,8 +71,6 @@ func RBdzPk() {
 	log.Debug("花牌 数据Black~ : %v", hb)
 
 	//红黑池牌型赋值
-	r := &Room{}
-	r.Cards = new(CardData)
 	r.Cards.ReadCard = HexInt(a)
 	r.Cards.BlackCard = HexInt(b)
 

@@ -54,11 +54,11 @@ func (r *Room) RobotsDownBet() {
 		var count int32
 		t := time.NewTicker(time.Second)
 		for range t.C {
-			//A:
 			for _, v := range r.PlayerList {
+				time.Sleep(time.Millisecond * 200)
 				if v != nil && v.IsRobot == true && r.GameStat == DownBet {
 					fmt.Println("你好 我是机器人-------------------------------", v.Id)
-					time.Sleep(time.Millisecond * 400) //这里时间不能大于500,不然执行时间会超出一秒
+					time.Sleep(time.Millisecond * 200) //这里时间不能大于500,不然执行时间会超出一秒
 
 					bet1 := RobotRandBet()
 					pot1 := RobotRandPot()
@@ -67,7 +67,6 @@ func (r *Room) RobotsDownBet() {
 					if v.Account < float64(bet1) {
 						log.Debug("机器人:%v 下注金额小于身上筹码,下注失败~", v.Id)
 						continue
-						//goto A
 					}
 
 					//记录玩家在该房间总下注 和 房间注池的总金额

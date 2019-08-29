@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
 )
@@ -35,8 +34,7 @@ func (p *Player) GetRoomCordData(r *Room) {
 	if roomGCount > RoomCordCount {
 		//大于40局则截取最新40局数据
 		num := roomGCount - RoomCordCount
-		fmt.Println("p.PotWinList~~~~~~~~~~~ :", p.PotWinList)
-		p.PotWinList = append(p.PotWinList, r.RPotWinList[num:]...)   // todo 这里报错原因是因为，我还没有往里面填数据
+		p.PotWinList = append(p.PotWinList, r.RPotWinList[num:]...)
 		p.CardTypeList = append(p.CardTypeList, r.CardTypeList[num:]...)
 		for _, v := range p.PotWinList {
 			if v.RedWin == 1 {
@@ -128,10 +126,10 @@ func (r *Room) RspRoomData() *pb_msg.RoomData {
 	room.CardTypeList = r.CardTypeList
 	for _, value := range r.RPotWinList {
 		pot := &pb_msg.PotWinList{}
-		value.RedWin = pot.RedWin
-		value.BlackWin = pot.BlackWin
-		value.LuckWin = pot.LuckWin
-		value.CardTypes = CardsType(pot.CardType)
+		pot.RedWin = value.RedWin
+		pot.BlackWin = value.BlackWin
+		pot.LuckWin = value.LuckWin
+		pot.CardType = pb_msg.CardsType(value.CardTypes)
 		room.RPotWinList = append(room.RPotWinList, pot)
 	}
 	return room

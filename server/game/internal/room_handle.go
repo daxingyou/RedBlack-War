@@ -24,7 +24,7 @@ func (r *Room) JoinGameRoom(p *Player) {
 	p.PlayerMoneyHandler()
 
 	//获取最新40局游戏数据(小于40局则全部显示出来)
-	p.GetRoomCordData(r) //todo  40局会报错
+	p.GetRoomCordData(r)
 
 	//todo 看数据用,打印玩家列表信息
 	//r.PrintPlayerList()
