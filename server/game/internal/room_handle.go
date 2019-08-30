@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
 	"time"
@@ -8,7 +9,6 @@ import (
 
 //JoinGameRoom 加入游戏房间
 func (r *Room) JoinGameRoom(p *Player) {
-
 	//寻找可用的座位号
 	//p.SeatNum = r.FindUsableSeat()
 	//r.PlayerList[p.SeatNum] = p
@@ -60,10 +60,12 @@ func (r *Room) JoinGameRoom(p *Player) {
 	msg := &pb_msg.JoinRoom_S2C{}
 	roomData := p.room.RspRoomData()
 	msg.RoomData = roomData
-	if r.GameStat == DownBetTime {
+	if r.GameStat == DownBet {
 		msg.GameTime = DownBetTime - r.counter
+		log.Debug("DownBetTime.GameTime : %v", msg.GameTime)
 	} else {
 		msg.GameTime = SettleTime - r.counter
+		log.Debug("SettleTime GameTime : %v", msg.GameTime)
 	}
 	p.SendMsg(msg)
 
@@ -107,6 +109,7 @@ func (r *Room) ExitFromRoom(p *Player) {
 				//userRoomMap[p.Id] = nil
 				delete(userRoomMap, p.Id)
 				r.PlayerList = append(r.PlayerList[:k], r.PlayerList[k+1:]...) //这里两个同样的用户名退出，会报错
+				fmt.Println("打印列表查看是否退出: ", v)
 			} else {
 				p.room = nil
 				delete(userRoomMap, p.Id)
@@ -133,8 +136,7 @@ func (r *Room) ExitFromRoom(p *Player) {
 	leave.PlayerInfo.NickName = p.NickName
 	leave.PlayerInfo.HeadImg = p.HeadImg
 	leave.PlayerInfo.Account = p.Account
-	//p.SendMsg(leave)
-	r.BroadCastMsg(leave) // todo 这里要测试一下广播退出
+	p.SendMsg(leave)
 
 	log.Debug("Player Exit from the Room SUCCESS ~")
 }

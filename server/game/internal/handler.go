@@ -30,6 +30,11 @@ func handlePing(args []interface{}) {
 	log.Debug("Hello Pong: %v", m)
 
 	HeartBeatHandle(a)
+
+	p, ok := a.UserData().(*Player)
+	if ok {
+		p.onClientBreathe()  // 用户刷新会起新go程
+	}
 }
 
 func handleLoginInfo(args []interface{}) {

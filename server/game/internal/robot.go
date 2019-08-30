@@ -57,7 +57,7 @@ func (r *Room) RobotsDownBet() {
 			for _, v := range r.PlayerList {
 				time.Sleep(time.Millisecond * 200)
 				if v != nil && v.IsRobot == true && r.GameStat == DownBet {
-					fmt.Println("你好 我是机器人-------------------------------", v.Id)
+					//fmt.Println("你好 我是机器人-------------------------------", v.Id)
 					time.Sleep(time.Millisecond * 200) //这里时间不能大于500,不然执行时间会超出一秒
 
 					bet1 := RobotRandBet()

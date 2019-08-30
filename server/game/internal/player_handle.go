@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/name5566/leaf/gate"
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
@@ -34,6 +35,7 @@ func (p *Player) GetUserRoomInfo() *Player {
 
 //PlayerLoginAgain 用户重新登陆
 func PlayerLoginAgain(p *Player, a gate.Agent) {
+	fmt.Println("进来了呀~~~")
 	p.room = userRoomMap[p.Id]
 	for _, v := range p.room.PlayerList {
 		if v.Id == p.Id {
@@ -45,13 +47,16 @@ func PlayerLoginAgain(p *Player, a gate.Agent) {
 	p.ConnAgent.SetUserData(p)
 
 	//返回前端信息
+	//fmt.Println("LoginAgain房间信息:", p.room)
 	r := p.room.RspRoomData()
 	enter := &pb_msg.EnterRoom_S2C{}
 	enter.RoomData = r
-	if p.room.GameStat == DownBetTime {
+	if p.room.GameStat == DownBet {
 		enter.GameTime = DownBetTime - p.room.counter
+		log.Debug("DownBetTime.GameTime ::: %v", enter.GameTime)
 	} else {
 		enter.GameTime = SettleTime - p.room.counter
+		log.Debug("SettleTime.GameTime ::: %v", enter.GameTime)
 	}
 	p.SendMsg(enter)
 
@@ -59,7 +64,7 @@ func PlayerLoginAgain(p *Player, a gate.Agent) {
 	p.room.UpdatePlayerList()
 	maintainList := p.room.PackageRoomPlayerList()
 	p.room.BroadCastExcept(maintainList, p)
-	log.Debug("用户断线重连成功,返回客户端数据~")
+	log.Debug("用户断线重连成功,返回客户端数据~ ")
 }
 
 //PlayerExitRoom 玩家退出房间
@@ -124,7 +129,7 @@ func (p *Player) SetPlayerAction(m *pb_msg.PlayerAction_C2S) {
 
 	//返回前端玩家行动,更新玩家最新金额
 	action := &pb_msg.PlayerAction_S2C{}
-	//action.Id = p.Id
+	action.Id = p.Id
 	action.DownBet = m.DownBet
 	action.DownPot = m.DownPot
 	action.IsAction = m.IsAction

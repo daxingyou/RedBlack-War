@@ -19,6 +19,8 @@ func (p *Player) Init() {
 	p.DownBetMoneys = new(DownBetMoney)
 	p.ContinueVot = new(ContinueBet)
 	p.ContinueVot.DownBetMoneys = new(DownBetMoney)
+
+	p.TaxPreMoney = 0
 	p.ResultMoney = 0
 
 	p.room = new(Room)
@@ -123,7 +125,7 @@ func (p *Player) StartBreathe() {
 				errMsg.Msg = recodeText[RECODE_BREATHSTOP]
 				p.SendMsg(errMsg)
 
-				log.Debug("用户长时间未响应心跳,停止心跳~ : %v", p.Id)
+				log.Debug("用户长时间未响应心跳,停止心跳~ ")
 				p.ConnAgent.Destroy()
 				p.ConnAgent.Close()
 				return

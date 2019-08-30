@@ -59,7 +59,9 @@ type Player struct {
 	Status         PlayerStatus  //玩家状态
 	IsAction       bool          //玩家是否行动了
 	ContinueVot    *ContinueBet  //续投，记录玩家上局的下注金额。
-	ResultMoney    float64       //本局游戏结束的钱,Win and Lose
+
+	TaxPreMoney float64 //税前Win的总金额
+	ResultMoney float64 //本局游戏结束的钱,Win and Lose
 
 	WinTotalCount int32          //玩家房间获胜Win总次数
 	PotWinList    []*GameWinList //底池每局Win总列表

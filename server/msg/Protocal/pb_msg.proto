@@ -228,12 +228,12 @@ message DownPotType {
 
 //--16  开牌结果
 message OpenCardResult_S2C {
-    //1、卡牌数据
-    repeated int32 cardData = 1;
+    repeated int32 RedCard = 1;  //红池卡牌数据
+    repeated int32 BlackCard = 2; //黑池卡牌数据
     //2、比牌类型
-    CardsType cardType = 2;
+    CardsType cardType = 3;
     //3、注池Win类型, True为 Win,False为 Lose
-    DownPotType PotWinTypes = 3;
+    DownPotType PotWinTypes = 4;
 }
 
 //--17  房间结算数据
