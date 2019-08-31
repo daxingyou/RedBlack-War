@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
 	"time"
@@ -102,14 +101,14 @@ func (r *Room) ExitFromRoom(p *Player) {
 
 	//从房间列表删除玩家信息,更新房间列表
 	for k, v := range r.PlayerList {
-		if v != nil && v.Id == p.Id && v.IsOnline == true {
+		if v != nil && v.Id == p.Id {
 			if v.IsRobot == false {
 				p.room = nil
 				//userRoomMap = make(map[string]*Room)
 				//userRoomMap[p.Id] = nil
 				delete(userRoomMap, p.Id)
 				r.PlayerList = append(r.PlayerList[:k], r.PlayerList[k+1:]...) //这里两个同样的用户名退出，会报错
-				fmt.Println("打印列表查看是否退出: ", v)
+				log.Debug("%v 玩家从房间列表删除成功 ~", v.Id)
 			} else {
 				p.room = nil
 				delete(userRoomMap, p.Id)
@@ -137,6 +136,24 @@ func (r *Room) ExitFromRoom(p *Player) {
 	leave.PlayerInfo.HeadImg = p.HeadImg
 	leave.PlayerInfo.Account = p.Account
 	p.SendMsg(leave)
+
+	//更新大厅时间
+	hall := &pb_msg.GameHallTime_S2C{}
+	hall.HallTime = make(map[string]int32)
+	for _, r := range gameHall.roomList {
+		if r != nil {
+			if r.GameStat == DownBet {
+				hall.GameStage = pb_msg.GameStage(DownBet)
+				hall.HallTime[r.RoomId] = DownBetTime - r.counter
+				log.Debug("游戏大厅.DownBetTime : %v", hall.HallTime[r.RoomId])
+			} else {
+				hall.GameStage = pb_msg.GameStage(Settle)
+				hall.HallTime[r.RoomId] = SettleTime - r.counter
+				log.Debug("游戏大厅 SettleTime : %v", hall.HallTime[r.RoomId])
+			}
+		}
+	}
+	p.SendMsg(hall)
 
 	log.Debug("Player Exit from the Room SUCCESS ~")
 }

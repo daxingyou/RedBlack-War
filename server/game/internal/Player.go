@@ -110,7 +110,9 @@ func (p *Player) onClientBreathe() {
 	p.uClientDelay = 0
 }
 
-//StartBreathe 开始呼吸
+//这里是直接设置断线状态，每局结束会断定玩家是否在线，不是则踢掉。
+//否则会出现玩家刷新页面生成新的go程，但是玩家还是在线，会导致直接将玩家的当前链接断开
+//StartBreathe 开始呼吸。
 func (p *Player) StartBreathe() {
 	ticker := time.NewTicker(time.Second * 3)
 	go func() {
@@ -125,9 +127,9 @@ func (p *Player) StartBreathe() {
 				errMsg.Msg = recodeText[RECODE_BREATHSTOP]
 				p.SendMsg(errMsg)
 
-				log.Debug("用户长时间未响应心跳,停止心跳~ ")
 				p.ConnAgent.Destroy()
 				p.ConnAgent.Close()
+				log.Debug("用户长时间未响应心跳,停止心跳~ ")
 				return
 			}
 		}

@@ -33,7 +33,7 @@ func handlePing(args []interface{}) {
 
 	p, ok := a.UserData().(*Player)
 	if ok {
-		p.onClientBreathe()  // 用户刷新会起新go程
+		p.onClientBreathe() // 用户刷新会起新go程
 	}
 }
 
@@ -58,6 +58,23 @@ func handleLoginInfo(args []interface{}) {
 	msg.PlayerInfo.Account = p.Account
 
 	a.WriteMsg(msg)
+
+	hall := &pb_msg.GameHallTime_S2C{}
+	hall.HallTime = make(map[string]int32)
+	for _, r := range gameHall.roomList {
+		if r != nil {
+			if r.GameStat == DownBet {
+				hall.GameStage = pb_msg.GameStage(DownBet)
+				hall.HallTime[r.RoomId] = DownBetTime - r.counter
+				log.Debug("游戏大厅.DownBetTime : %v", hall.HallTime[r.RoomId])
+			} else {
+				hall.GameStage = pb_msg.GameStage(Settle)
+				hall.HallTime[r.RoomId] = SettleTime - r.counter
+				log.Debug("游戏大厅 SettleTime : %v", hall.HallTime[r.RoomId])
+			}
+		}
+	}
+	p.SendMsg(hall)
 
 	//判断用户是否存在房间信息,如果有就返回
 	if userRoomMap[p.Id] != nil { //todo

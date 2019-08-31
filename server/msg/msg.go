@@ -31,4 +31,5 @@ func init() {
 	Processor.Register(&pb_msg.MaintainList_S2C{})   //--15
 	Processor.Register(&pb_msg.OpenCardResult_S2C{}) //--16
 	Processor.Register(&pb_msg.RoomSettleData_S2C{}) //--17
+	Processor.Register(&pb_msg.GameHallTime_S2C{})   //--18
 }

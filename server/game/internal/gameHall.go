@@ -32,15 +32,15 @@ func (gh *GameHall) CreatGameRoom() *Room {
 func (gh *GameHall) PlayerJoinRoom(rid string, p *Player) {
 	for _, room := range gh.roomList {
 		if room != nil && room.RoomId == rid { // 这里要不要遍历房间，查看用户id是否存在
-			//for _, v := range room.PlayerList {
-			//	if v != nil && v.Id == p.Id {
-			//		msg := &pb_msg.MsgInfo_S2C{}
-			//		msg.Msg = recodeText[RECODE_PLAYERHAVESAME]
-			//		v.ConnAgent.WriteMsg(msg)
-			//		log.Debug("当前房间已存在相同的用户ID~")
-			//		return
-			//	}
-			//}
+			for _, v := range room.PlayerList {
+				if v != nil && v.Id == p.Id {
+					msg := &pb_msg.MsgInfo_S2C{}
+					msg.Msg = recodeText[RECODE_PLAYERHAVESAME]
+					v.ConnAgent.WriteMsg(msg)
+					log.Debug("当前房间已存在相同的用户ID~")
+					return
+				}
+			}
 			//加入房间
 			room.JoinGameRoom(p)
 			return

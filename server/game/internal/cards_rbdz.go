@@ -47,6 +47,11 @@ var (
 	dealer = NewGoldenFlowerDealer(true)
 )
 
+var (
+	aCard []byte
+	bCard []byte
+)
+
 func (this *RBdzDealer) Deal() ([]byte, []byte) {
 	// 检查剩余牌数量
 	offset := this.Offset
@@ -160,6 +165,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			gw.CardTypes = Leopard
 			r.CardTypeList = append(r.CardTypeList, int32(Leopard))
 			res.PotWinTypes.LuckDownPot = true
+			res.RedType = pb_msg.CardsType(Leopard)
 		}
 		if ag.IsStraightFlush() {
 			r.Cards.LuckType = CardsType(Shunjin)
@@ -167,6 +173,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			gw.CardTypes = Shunjin
 			r.CardTypeList = append(r.CardTypeList, int32(Shunjin))
 			res.PotWinTypes.LuckDownPot = true
+			res.RedType = pb_msg.CardsType(Shunjin)
 		}
 		if ag.IsFlush() {
 			r.Cards.LuckType = CardsType(Golden)
@@ -174,6 +181,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			gw.CardTypes = Golden
 			r.CardTypeList = append(r.CardTypeList, int32(Golden))
 			res.PotWinTypes.LuckDownPot = true
+			res.RedType = pb_msg.CardsType(Golden)
 		}
 		if ag.IsStraight() {
 			r.Cards.LuckType = CardsType(Straight)
@@ -181,6 +189,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			gw.CardTypes = Straight
 			r.CardTypeList = append(r.CardTypeList, int32(Straight))
 			res.PotWinTypes.LuckDownPot = true
+			res.RedType = pb_msg.CardsType(Straight)
 		}
 		if (ag.Key.Pair() >> 8) >= 9 {
 			r.Cards.LuckType = CardsType(Pair)
@@ -188,13 +197,16 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			gw.CardTypes = Pair
 			r.CardTypeList = append(r.CardTypeList, int32(Pair))
 			res.PotWinTypes.LuckDownPot = true
+			res.RedType = pb_msg.CardsType(Pair)
 		} else if ag.IsPair() {
 			gw.CardTypes = Pair
 			r.CardTypeList = append(r.CardTypeList, int32(Pair))
+			res.RedType = pb_msg.CardsType(Pair)
 		}
 		if ag.IsZilch() {
 			gw.CardTypes = Leaflet
 			r.CardTypeList = append(r.CardTypeList, int32(Leaflet))
+			res.RedType = pb_msg.CardsType(Leaflet)
 		}
 
 		for _, v := range r.PlayerList {
@@ -241,11 +253,11 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 					if v.ResultMoney > 0 {
 						//将玩家的税收金额添加到盈余池   // todo 玩家是否还要减去玩家金额
 						SurplusPool += tax
-						SurplusPool -= v.ResultMoney   //盈余池结算减去玩家Win金额
+						SurplusPool -= v.ResultMoney //盈余池结算减去玩家Win金额
 						v.WinTotalCount++
 					} else {
 						//将玩家输的金额添加到盈余池
-						SurplusPool -= v.ResultMoney  //这个Res是负数 负负得正
+						SurplusPool -= v.ResultMoney //这个Res是负数 负负得正
 					}
 					log.Debug("<======  最后结算为: %v ======>", v.ResultMoney)
 				} else {
@@ -300,6 +312,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			gw.CardTypes = Leopard
 			r.CardTypeList = append(r.CardTypeList, int32(Leopard))
 			res.PotWinTypes.LuckDownPot = true
+			res.BlackType = pb_msg.CardsType(Leopard)
 		}
 		if bg.IsStraightFlush() {
 			r.Cards.LuckType = CardsType(Shunjin)
@@ -307,6 +320,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			gw.CardTypes = Shunjin
 			r.CardTypeList = append(r.CardTypeList, int32(Shunjin))
 			res.PotWinTypes.LuckDownPot = true
+			res.BlackType = pb_msg.CardsType(Shunjin)
 		}
 		if bg.IsFlush() {
 			r.Cards.LuckType = CardsType(Golden)
@@ -314,6 +328,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			gw.CardTypes = Golden
 			r.CardTypeList = append(r.CardTypeList, int32(Golden))
 			res.PotWinTypes.LuckDownPot = true
+			res.BlackType = pb_msg.CardsType(Golden)
 		}
 		if bg.IsStraight() {
 			r.Cards.LuckType = CardsType(Straight)
@@ -321,6 +336,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			gw.CardTypes = Straight
 			r.CardTypeList = append(r.CardTypeList, int32(Straight))
 			res.PotWinTypes.LuckDownPot = true
+			res.BlackType = pb_msg.CardsType(Straight)
 		}
 		if (bg.Key.Pair() >> 8) >= 9 {
 			r.Cards.LuckType = CardsType(Pair)
@@ -328,13 +344,16 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			gw.CardTypes = Pair
 			r.CardTypeList = append(r.CardTypeList, int32(Pair))
 			res.PotWinTypes.LuckDownPot = true
+			res.BlackType = pb_msg.CardsType(Pair)
 		} else if bg.IsPair() {
 			gw.CardTypes = Pair
 			r.CardTypeList = append(r.CardTypeList, int32(Pair))
+			res.BlackType = pb_msg.CardsType(Pair)
 		}
 		if bg.IsZilch() {
 			gw.CardTypes = Leaflet
 			r.CardTypeList = append(r.CardTypeList, int32(Leaflet))
+			res.BlackType = pb_msg.CardsType(Leaflet)
 		}
 
 		for _, v := range r.PlayerList {
@@ -379,7 +398,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 					v.ResultMoney -= totalLoseMoney
 					if v.ResultMoney > 0 {
 						SurplusPool += tax
-						SurplusPool -= v.ResultMoney   //盈余池结算减去玩家Win金额
+						SurplusPool -= v.ResultMoney //盈余池结算减去玩家Win金额
 						v.WinTotalCount++
 					} else {
 						//将玩家输的金额添加到盈余池
@@ -428,8 +447,10 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			}
 		}
 	}
+	//广播开牌结果
+	r.BroadCastMsg(res)
+
 	//追加每局红黑Win、Luck、比牌类型的总集合
 	r.RPotWinList = append(r.RPotWinList, gw)
-
 	log.Debug("<-------- 更新盈余池金额为Last: %v --------->", SurplusPool)
 }

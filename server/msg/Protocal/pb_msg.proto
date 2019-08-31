@@ -22,6 +22,8 @@ enum MessageID {
     MSG_MaintainList_S2C = 15;
     MSG_OpenCardResult_S2C = 16;
     MSG_RoomSettleData_S2C = 17;
+    MSG_lGameHallTime_S2C = 18;
+
 }
 
 //--0
@@ -228,15 +230,21 @@ message DownPotType {
 
 //--16  开牌结果
 message OpenCardResult_S2C {
-    repeated int32 RedCard = 1;  //红池卡牌数据
+    repeated int32 RedCard = 1; //红池卡牌数据
     repeated int32 BlackCard = 2; //黑池卡牌数据
-    //2、比牌类型
-    CardsType cardType = 3;
+    CardsType RedType = 3; //红池卡牌类型
+    CardsType BlackType = 4; //红池卡牌类型
     //3、注池Win类型, True为 Win,False为 Lose
-    DownPotType PotWinTypes = 4;
+    DownPotType PotWinTypes = 5;
 }
 
 //--17  房间结算数据
 message RoomSettleData_S2C {
     RoomData roomData = 1;
+}
+
+//--18  大厅时间进度条
+message GameHallTime_S2C {
+    GameStage gameStage = 1; //游戏阶段
+    map<string, int32> hallTime = 2; //房间ID-当前时间
 }

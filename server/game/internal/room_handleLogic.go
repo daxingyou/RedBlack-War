@@ -258,6 +258,7 @@ func (r *Room) DownBetTimerTask() {
 			if r.counter == DownBetTime {
 				r.counter = 0
 				DownBetChannel <- true
+				RobotDownBetChan <- true
 				return
 			}
 		}
@@ -282,7 +283,7 @@ func (r *Room) SettlerTimerTask() {
 }
 
 //PlayerAction 玩家游戏结算
-func (r *Room) GameCheckout() ([]byte, []byte) {
+func (r *Room) GameCheckout() bool {
 
 	rb := &RBdzDealer{}
 	a, b := rb.Deal()
@@ -433,11 +434,12 @@ func (r *Room) GameCheckout() ([]byte, []byte) {
 	//playerNum := r.PlayerLength()
 	//pool := (taxWinMoney * taxRate) * (playerNum * 6)
 	if settle > (SurplusPool * SurplusTax) {
-		totalWinMoney = 0
-		totalLoseMoney = 0
 		log.Debug("<--------- 盈余池金额不足,换牌 ----------->")
+		return false
 	}
-	return a, b
+	aCard = a
+	bCard = b
+	return true
 }
 
 //CompareSettlement 开始比牌结算
@@ -460,13 +462,19 @@ func (r *Room) CompareSettlement() {
 	//3、机器人不计算在盈余池之类，但是也要根据比牌结果来对金额进行加减
 
 	//开始计算牌型盈余池,如果亏损就换牌  todo
-	//a, b := r.GameCheckout()
-	rb := &RBdzDealer{}
-	a, b := rb.Deal()
+	for {
+		b := r.GameCheckout()
+		if b == true {
+			break
+		}
+	}
 	//开始摊牌和结算玩家金额
-	r.RBdzPk(a, b)
+	log.Debug("aCard 卡牌数据: %v", aCard)
+	log.Debug("bCard 卡牌数据: %v", bCard)
 
-	//处理玩家局数 和 玩家金额
+	r.RBdzPk(aCard, bCard)
+
+	//处理清空玩家局数 和 玩家金额
 	r.UpdateGamesNum()
 
 	//清空玩家数据,开始下一句游戏
@@ -483,18 +491,20 @@ func (r *Room) CompareSettlement() {
 	//踢出房间断线玩家
 	r.KickOutPlayer()
 
-	//这里会发送前端房间数据，前端做处理
-	data := &pb_msg.RoomSettleData_S2C{}
-	data.RoomData = r.RspRoomData()
-	r.BroadCastMsg(data)
-
-	//测试，打印数据
-	r.PrintPlayerList()
-
 	for range t.C {
 		r.counter++
 		log.Debug("settle clock : %v ", r.counter)
+		// 如果时间处理不及时,可以判断定时9秒的时候将处理这个数据然后发送给前端进行处理
 		if r.counter == SettleTime {
+
+			//这里会发送前端房间数据，前端做处理
+			data := &pb_msg.RoomSettleData_S2C{}
+			data.RoomData = r.RspRoomData()
+			r.BroadCastMsg(data)
+
+			//测试，打印数据
+			r.PrintPlayerList()
+
 			//清空桌面注池
 			r.PotMoneyCount = new(PotRoomCount)
 			//计时数又重置为0,开始新的下注阶段时间倒计时
@@ -509,6 +519,7 @@ func (r *Room) CompareSettlement() {
 func (r *Room) KickOutPlayer() {
 	for _, v := range r.PlayerList {
 		if v != nil && v.IsOnline == false {
+			//玩家断线的话，退出房间信息，也要断开链接
 			v.PlayerReqExit()
 			log.Debug("踢出房间断线玩家 : %v", v.Id)
 		}
@@ -539,6 +550,7 @@ func (r *Room) CleanPlayerData() {
 func (r *Room) PrintPlayerList() {
 	for _, v := range r.PlayerList {
 		if v != nil {
+			fmt.Println("当前玩家人数为 :", r.PlayerLength())
 			fmt.Println("玩家ID ：", v.Id, "金额 :", v.Account, "下注总金额 :", v.TotalAmountBet)
 			//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
 			//fmt.Println("房间池红、黑、Luck总下注: ", v.room.PotMoneyCount, "续投总额:", v.ContinueVot.TotalMoneyBet)
