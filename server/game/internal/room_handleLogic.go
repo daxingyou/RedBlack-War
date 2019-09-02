@@ -66,10 +66,12 @@ func (r *Room) UpdatePlayerList() {
 	var p1 []*Player //所有下注过的用户
 	var p2 []*Player //所有下注金额为0的用户
 	for _, v := range r.PlayerList {
-		if v != nil && v.TotalAmountBet != 0 {
-			p1 = append(p1, v)
-		} else {
-			p2 = append(p2, v)
+		if v != nil && v.Id != r.GodGambleName {
+			if v.TotalAmountBet != 0 {
+				p1 = append(p1, v)
+			} else {
+				p2 = append(p2, v)
+			}
 		}
 	}
 	//根据玩家总下注进行排序
@@ -258,7 +260,7 @@ func (r *Room) DownBetTimerTask() {
 			if r.counter == DownBetTime {
 				r.counter = 0
 				DownBetChannel <- true
-				RobotDownBetChan <- true
+				//RobotDownBetChan <- true
 				return
 			}
 		}
@@ -432,7 +434,7 @@ func (r *Room) GameCheckout() bool {
 	log.Debug("<-------- SurplusPool %v --------->", SurplusPool*SurplusTax)
 
 	//playerNum := r.PlayerLength()
-	//pool := (taxWinMoney * taxRate) * (playerNum * 6)
+	//if settle > ((SurplusPool * SurplusTax) * float64(playerNum*6)) {}
 	if settle > (SurplusPool * SurplusTax) {
 		log.Debug("<--------- 盈余池金额不足,换牌 ----------->")
 		return false
@@ -469,9 +471,6 @@ func (r *Room) CompareSettlement() {
 		}
 	}
 	//开始摊牌和结算玩家金额
-	log.Debug("aCard 卡牌数据: %v", aCard)
-	log.Debug("bCard 卡牌数据: %v", bCard)
-
 	r.RBdzPk(aCard, bCard)
 
 	//处理清空玩家局数 和 玩家金额
@@ -550,10 +549,10 @@ func (r *Room) CleanPlayerData() {
 func (r *Room) PrintPlayerList() {
 	for _, v := range r.PlayerList {
 		if v != nil {
-			fmt.Println("当前玩家人数为 :", r.PlayerLength())
 			fmt.Println("玩家ID ：", v.Id, "金额 :", v.Account, "下注总金额 :", v.TotalAmountBet)
 			//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
 			//fmt.Println("房间池红、黑、Luck总下注: ", v.room.PotMoneyCount, "续投总额:", v.ContinueVot.TotalMoneyBet)
 		}
 	}
+	fmt.Println("当前玩家人数为 :", r.PlayerLength())
 }

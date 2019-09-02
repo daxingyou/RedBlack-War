@@ -16,6 +16,14 @@ var Server struct {
 	MaxConnNum  int
 	ConsolePort int
 	ProfilePath string
+
+	TokenServer      string
+	CenterServer     string
+	CenterServerPort string
+	DevKey           string
+	DevName          string
+	GameID           string
+	MongoDB          string
 }
 
 func init() {

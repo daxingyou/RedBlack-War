@@ -25,7 +25,7 @@ func (r *Room) JoinGameRoom(p *Player) {
 	//获取最新40局游戏数据(小于40局则全部显示出来)
 	p.GetRoomCordData(r)
 
-	//todo 看数据用,打印玩家列表信息
+	// 看数据用,打印玩家列表信息
 	//r.PrintPlayerList()
 
 	//更新房间列表
@@ -61,10 +61,10 @@ func (r *Room) JoinGameRoom(p *Player) {
 	msg.RoomData = roomData
 	if r.GameStat == DownBet {
 		msg.GameTime = DownBetTime - r.counter
-		log.Debug("DownBetTime.GameTime : %v", msg.GameTime)
+		log.Debug("加入房间 DownBetTime.GameTime: %v", msg.GameTime)
 	} else {
 		msg.GameTime = SettleTime - r.counter
-		log.Debug("SettleTime GameTime : %v", msg.GameTime)
+		log.Debug("加入房间 SettleTime GameTime: %v", msg.GameTime)
 	}
 	p.SendMsg(msg)
 

@@ -53,10 +53,10 @@ func PlayerLoginAgain(p *Player, a gate.Agent) {
 	enter.RoomData = r
 	if p.room.GameStat == DownBet {
 		enter.GameTime = DownBetTime - p.room.counter
-		log.Debug("DownBetTime.GameTime ::: %v", enter.GameTime)
+		log.Debug("用户重新登陆 DownBetTime.GameTime: %v", enter.GameTime)
 	} else {
 		enter.GameTime = SettleTime - p.room.counter
-		log.Debug("SettleTime.GameTime ::: %v", enter.GameTime)
+		log.Debug("用户重新登陆 SettleTime.GameTime: %v", enter.GameTime)
 	}
 	p.SendMsg(enter)
 

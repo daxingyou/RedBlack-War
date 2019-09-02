@@ -55,10 +55,11 @@ func (r *Room) RobotsDownBet() {
 		t := time.NewTicker(time.Second)
 		for range t.C {
 			for _, v := range r.PlayerList {
-				time.Sleep(time.Millisecond * 200)
+				time.Sleep(time.Millisecond * 600)
 				if v != nil && v.IsRobot == true && r.GameStat == DownBet {
 					fmt.Println("你好 我是机器人----------------------", v.Id, v.DownBetMoneys)
-					time.Sleep(time.Millisecond * 200) //这里时间不能大于500,不然执行时间会超出一秒
+					time.Sleep(time.Millisecond * 300) //这里时间不能大于500,不然执行时间会超出一秒
+
 
 					bet1 := RobotRandBet()
 					pot1 := RobotRandPot()

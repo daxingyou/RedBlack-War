@@ -22,7 +22,7 @@ enum MessageID {
     MSG_MaintainList_S2C = 15;
     MSG_OpenCardResult_S2C = 16;
     MSG_RoomSettleData_S2C = 17;
-    MSG_lGameHallTime_S2C = 18;
+    MSG_GameHallTime_S2C = 18;
 
 }
 

@@ -5,9 +5,12 @@
   "TCPAddr": "0.0.0.0:8888",
   "MaxConnNum": 20000,
 
-  "MongoDBAddr": "127.0.0.1:27017",
-  "MongoDBAuth": "",
-  "MongoDBUser": "root",
-  "MongoDBPwd": "123456"
+  "TokenServer": "http://swoole.0717996.com/Token/getToken",
+  "CenterServer": "http://swoole.0717996.com",
+  "CenterServerPort": "9502",
+  "DevKey": "new_game_4",
+  "DevName": "新游戏开发",
+  "GameID": "5b1f3a3cb76a591e7f251711",
+  "MongoDB": "mongodb://10.63.60.119:27917"
 }
 
