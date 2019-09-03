@@ -66,7 +66,7 @@ type Player struct {
 	WinTotalCount int32          //玩家房间获胜Win总次数
 	PotWinList    []*GameWinList //底池每局Win总列表
 	CardTypeList  []int32        //卡牌类型列表
-	RedBlackList  []int32        //每局红黑Win总顺序列表  红为 1,黑为 2   TODO 直接 len这个获取总局数
+	RedBlackList  []int32        //每局红黑Win总顺序列表  红为 1,黑为 2
 	RedWinCount   int32          //Win总列表红Win的局数
 	BlackWinCount int32          //Win总列表黑Win的局数
 	LuckWinCount  int32          //Win总列表幸运的局数

@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/name5566/leaf/gate"
 	"github.com/name5566/leaf/log"
 	"reflect"
@@ -48,6 +49,13 @@ func handleLoginInfo(args []interface{}) {
 		p.Id = m.GetId()
 		p.NickName = m.GetId()
 		RegisterPlayer(p)
+		//todo
+		//c4c.UserLoginCenter(m.GetGameId(), func(data *UserInfo) {
+		//	log.Debug("ID: %v", data.ID)
+		//	log.Debug("Nick: %v", data.Nick)
+		//	log.Debug("HeadImg: %v", data.HeadImg)
+		//	log.Debug("Money: %v", data.Score)
+		//})
 	}
 
 	msg := &pb_msg.LoginInfo_S2C{}
@@ -74,6 +82,7 @@ func handleLoginInfo(args []interface{}) {
 			}
 		}
 	}
+	fmt.Println("hall ~~~~~~~~~:", hall)
 	p.SendMsg(hall)
 
 	//判断用户是否存在房间信息,如果有就返回

@@ -6,190 +6,73 @@ const (
 	msgUserLogout    string = "/GameServer/GameUser/loginout"
 	msgUserWinScore  string = "/GameServer/GameUser/winSettlement"
 	msgUserLoseScore string = "/GameServer/GameUser/loseSettlement"
-
-	centerStatusSuccess int = 200
 )
 
-// 游戏服务器<--->中心服 消息基本格式
-type Server2CenterMsg struct {
-	Event string `json:"event"`
-	// Data  interface{} `json:"data"`
+//BaseMessage 基本消息结构
+type BaseMessage struct {
+	Event string      `json:"event"`  // 事件
+	Data  interface{} `json:"data"`	  // 数据
 }
 
-/****************************************
-
-	ServerLogin 服务器登录
-
- ****************************************/
-
-type ServerLoginReq struct {
-	Event string             `json:"event"`
-	Data  ServerLoginReqData `json:"data"`
-}
-
-type ServerLoginReqData struct {
-	Host   string `json:"host"`
-	Port   string `json:"port"`
-	GameID string `json:"game_id"`
+//ServerLogin 服务器登录
+type ServerLogin struct {
+	Host   string `json:"host"`      // 主机
+	Port   string `json:"port"`		 // 端口
+	GameId string `jsod:"game_id"`	 // 游戏Id
 	Token  string `json:"token"`
 	DevKey string `json:"dev_key"`
 }
 
-type ServerLoginResp struct {
-	Event string              `json:"event"`
-	Data  ServerLoginRespData `json:"data"`
-}
-
-type ServerLoginRespData struct {
-	Status string                 `json:"status"`
-	Code   int                    `json:"code"`
-	Msg    ServerLoginRespDataMsg `json:"msg"`
-}
-
-type ServerLoginRespDataMsg struct {
-	PlatformTaxPercent int `json:"platform_tax_percent"`
-}
-
-/****************************************
-
-	UserLogin 用户登录
-
- ****************************************/
-
-type UserLoginReq struct {
-	Event string           `json:"event"`
-	Data  UserLoginReqData `json:"data"`
-}
-
-type UserLoginReqData struct {
-	UserID   uint32 `json:"id"`
-	Password string `json:"password"`
-	Token    string `json:"token"`
-	GameID   string `json:"game_id"`
-	DevKey   string `json:"dev_key"`
-}
-
-type UserLoginResp struct {
-	Event string            `json:"event"`
-	Data  UserLoginRespData `json:"data"`
-}
-
-type UserLoginRespData struct {
-	Code   int        `json:"code"`
-	Status string     `json:"status"`
-	Msg    UserLogMsg `json:"msg"`
-}
-
-type UserLogMsg struct {
-	GameUser    GameUser    `json:"game_user"`
-	GameAccount GameAccount `json:"game_account"`
-}
-
-type GameUser struct {
-	UserID   uint32 `json:"id"`
-	UUID     string `json:"uuid"`
-	GameNick string `json:"game_nick"`
-	GameIMG  string `json:"game_img"`
-}
-
-type GameAccount struct {
-	Balance  float64 `json:"balance"`
-	GameName string  `json:"game_name"`
-}
-
-/****************************************
-
-	UserLogout 用户登出
-
- ****************************************/
-
-type UserLogoutReq struct {
-	Event string            `json:"event"`
-	Data  UserLogoutReqData `json:"data"`
-}
-
-type UserLogoutReqData struct {
-	UserID uint32 `json:"id"`
-	Token  string `json:"token"`
-	GameID string `json:"game_id"`
-	DevKey string `json:"dev_key"`
-}
-
-type UserLogoutResp struct {
-	Event string             `json:"event"`
-	Data  UserLogoutRespData `json:"data"`
-}
-
-type UserLogoutRespData struct {
-	Code   int        `json:"code"`
-	Status string     `json:"status"`
-	Msg    UserLogMsg `json:"msg"`
-}
-
-/********************************************************
-
-	用户加钱减钱-中心服API垃圾！！！
-
-********************************************************/
-type SyncScoreReq struct {
-	Event string           `json:"event"`
-	Data  SyncScoreReqData `json:"data"`
-}
-
-type SyncScoreReqData struct {
-	Auth ServerAuth           `json:"auth"`
-	Info SyncScoreReqDataInfo `json:"info"`
-}
-
-// 服务器验证信息
-type ServerAuth struct {
+//UserReq 用户请求，用登录登出
+type UserReq struct {
+	ID     string `json:"id"`
+	GameId string `json:"game_id"`
 	Token  string `json:"token"`
 	DevKey string `json:"dev_key"`
 }
 
-// 请求信息
-type SyncScoreReqDataInfo struct {
-	UserID     uint32  `json:"id"`
-	CreateTime uint32  `json:"create_time"`
+//ServerLoginRsp 服务器登录返回
+type ServerLoginRsp struct {
+	Status string `json:"status"`
+	Code   int    `json:"code"`
+	Msg    string `json:"msg"`
+}
+
+//UserAuth 用户认证数据
+type UserAuth struct {
+	Token  string `json:"token"`
+	DevKey string `json:"dev_key"`
+}
+
+//UserScoreSync 同步分值数据
+type UserScoreSync struct {
+	ID         string  `json:"id"`
+	CreateTime int64   `json:"create_time"`
 	PayReason  string  `json:"pay_reason"`
 	Money      float64 `json:"money"`
 	LockMoney  float64 `json:"lock_money"`
 	PreMoney   float64 `json:"pre_money"`
-	Order      string  `json:"order"`
-	GameID     string  `json:"game_id"`
-	RoundID    string  `json:"round_id"`
+	Order      string  `json:"order"`    //唯一ID,方便之后查询
+	GameId     string  `json:"game_id"`
+	RoundId    string  `json:"round_id"` //唯一ID，识别多人是否在同一局游戏
 }
 
-type SyncScoreResp struct {
-	Event string            `json:"event"`
-	Data  SyncScoreRespData `json:"data"`
+//UserChangeScore 用户分值改变
+type UserChangeScore struct {
+	Auth UserAuth      `json:"auth"`
+	Info UserScoreSync `json:"info"`
 }
 
-type SyncScoreRespData struct {
-	Code   int          `json:"code"`
-	Status string       `json:"status"`
-	Msg    SyncScoreMsg `json:"msg"`
+//UserInfo 用户信息
+type UserInfo struct {
+	ID      string
+	Nick    string
+	HeadImg string
+	Score   float64
 }
 
-type SyncScoreMsg struct {
-	ID           uint32  `json:"id"`
-	Balance      float64 `json:"balance"`
-	FinalBalance float64 `json:"final_balance"`
-	Income       float64 `json:"income"`
-	Order        string  `json:"order"`
-}
-
-/***************************************************
-
-                  	请求Token
-
-****************************************************/
-
-type TokenResp struct {
-	StatusCode int      `json:"code"`
-	TokenMsg   tokenMsg `json:"msg"`
-}
-
-type tokenMsg struct {
-	Token string `json:"token"`
+//UserCallback 用户登录回调函数保存
+type UserCallback struct {
+	Data     UserInfo
+	Callback func(data *UserInfo)
 }

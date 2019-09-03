@@ -48,6 +48,7 @@ func (r *Room) JoinGameRoom(p *Player) {
 		roomData := p.room.RspRoomData()
 		msg.RoomData = roomData
 		p.SendMsg(msg)
+		log.Debug("返回客户端房间信息 JoinRoom_S2C~")
 
 		return
 	}
@@ -67,6 +68,7 @@ func (r *Room) JoinGameRoom(p *Player) {
 		log.Debug("加入房间 SettleTime GameTime: %v", msg.GameTime)
 	}
 	p.SendMsg(msg)
+	log.Debug("返回客户端房间信息 JoinRoom_S2C~")
 
 	if r.RoomStat != RoomStatusRun {
 		// None和Over状态都直接开始运行游戏

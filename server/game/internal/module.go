@@ -8,6 +8,8 @@ import (
 var (
 	skeleton = base.NewSkeleton()
 	ChanRPC  = skeleton.ChanRPCServer
+
+	c4c = &Conn4Center{}
 )
 
 type Module struct {
@@ -22,8 +24,12 @@ func (m *Module) OnInit() {
 
 	gRobotCenter.Init()
 	gRobotCenter.Start()
+
+	//todo
+	//c4c.Init()
+	//c4c.ReqCenterToken()
 }
 
 func (m *Module) OnDestroy() {
-
+	//c4c.onDestroy()
 }
