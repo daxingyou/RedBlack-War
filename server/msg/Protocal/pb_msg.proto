@@ -243,8 +243,14 @@ message RoomSettleData_S2C {
     RoomData roomData = 1;
 }
 
+message HallTime {
+    string roomId = 1;
+    GameStage gameStage = 2; //游戏阶段
+    int32 roomTime = 3;
+}
+
 //--18  大厅时间进度条
 message GameHallTime_S2C {
-    GameStage gameStage = 1; //游戏阶段
-   map<string, int32> hallTime = 2; //房间ID-当前时间
+    repeated HallTime hallTime = 1;
 }
+

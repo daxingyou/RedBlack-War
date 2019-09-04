@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"github.com/name5566/leaf/gate"
 	"github.com/name5566/leaf/log"
 	"reflect"
@@ -50,12 +49,12 @@ func handleLoginInfo(args []interface{}) {
 		p.NickName = m.GetId()
 		RegisterPlayer(p)
 		//todo
-		//c4c.UserLoginCenter(m.GetGameId(), func(data *UserInfo) {
-		//	log.Debug("ID: %v", data.ID)
-		//	log.Debug("Nick: %v", data.Nick)
-		//	log.Debug("HeadImg: %v", data.HeadImg)
-		//	log.Debug("Money: %v", data.Score)
-		//})
+		c4c.UserLoginCenter(m.GetGameId(), func(data *UserInfo) {
+			log.Debug("ID: %v", data.ID)
+			log.Debug("Nick: %v", data.Nick)
+			log.Debug("HeadImg: %v", data.HeadImg)
+			log.Debug("Money: %v", data.Score)
+		})
 	}
 
 	msg := &pb_msg.LoginInfo_S2C{}
@@ -68,21 +67,23 @@ func handleLoginInfo(args []interface{}) {
 	a.WriteMsg(msg)
 
 	hall := &pb_msg.GameHallTime_S2C{}
-	hall.HallTime = make(map[string]int32)
+	ht := &pb_msg.HallTime{}
 	for _, r := range gameHall.roomList {
 		if r != nil {
+			ht.RoomId = r.RoomId
 			if r.GameStat == DownBet {
-				hall.GameStage = pb_msg.GameStage(DownBet)
-				hall.HallTime[r.RoomId] = DownBetTime - r.counter
-				log.Debug("游戏大厅.DownBetTime : %v", hall.HallTime[r.RoomId])
+				ht.GameStage = pb_msg.GameStage(DownBet)
+				ht.RoomTime = DownBetTime - r.counter
+				log.Debug("游戏大厅.DownBetTime : %v", ht.RoomTime)
 			} else {
-				hall.GameStage = pb_msg.GameStage(Settle)
-				hall.HallTime[r.RoomId] = SettleTime - r.counter
-				log.Debug("游戏大厅 SettleTime : %v", hall.HallTime[r.RoomId])
+				ht.GameStage = pb_msg.GameStage(Settle)
+				ht.RoomTime = SettleTime - r.counter
+				log.Debug("游戏大厅 SettleTime : %v", ht.RoomTime)
 			}
+			hall.HallTime = append(hall.HallTime, ht)
 		}
 	}
-	fmt.Println("hall ~~~~~~~~~:", hall)
+	log.Debug("hall ~~~~~~: %v", hall)
 	p.SendMsg(hall)
 
 	//判断用户是否存在房间信息,如果有就返回

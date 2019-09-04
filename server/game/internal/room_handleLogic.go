@@ -554,5 +554,5 @@ func (r *Room) PrintPlayerList() {
 			//fmt.Println("房间池红、黑、Luck总下注: ", v.room.PotMoneyCount, "续投总额:", v.ContinueVot.TotalMoneyBet)
 		}
 	}
-	fmt.Println("当前玩家人数为 :", r.PlayerLength())
+	//fmt.Println("当前玩家人数为 :", r.PlayerLength())
 }

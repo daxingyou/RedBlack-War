@@ -70,6 +70,7 @@ func PlayerLoginAgain(p *Player, a gate.Agent) {
 //PlayerExitRoom 玩家退出房间
 func (p *Player) PlayerReqExit() {
 	if p.room != nil {
+		p.SyncScoreChangeToCenter("ExitRoom")   //todo
 		p.room.ExitFromRoom(p)
 	} else {
 		log.Debug("Player Exit Room, But not found Player Room ~")

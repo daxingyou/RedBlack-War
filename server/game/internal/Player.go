@@ -129,9 +129,16 @@ func (p *Player) StartBreathe() {
 
 				p.ConnAgent.Destroy()
 				p.ConnAgent.Close()
-				log.Debug("用户长时间未响应心跳,停止心跳~ ")
+				log.Debug("用户长时间未响应心跳,停止心跳~: %v", p.Id)
 				return
 			}
 		}
 	}()
+}
+
+//SyncScoreChangeToCenter 同步金币变化到中心服
+func (p *Player) SyncScoreChangeToCenter(reason string) {
+	//跨模块调用到login，然后由login调用到Center
+	//login.ChanRPC.Go("SyncCenterScoreChange", p.ID, p.fWinScore, p.fLoseScore)
+	c4c.UserSyncScoreChange(p, reason)
 }

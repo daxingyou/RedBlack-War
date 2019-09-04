@@ -26,10 +26,10 @@ func (m *Module) OnInit() {
 	gRobotCenter.Start()
 
 	//todo
-	//c4c.Init()
-	//c4c.ReqCenterToken()
+	c4c.Init()
+	c4c.ReqCenterToken()
 }
 
 func (m *Module) OnDestroy() {
-	//c4c.onDestroy()
+	c4c.onDestroy()
 }

@@ -8,9 +8,8 @@
   "TokenServer": "http://swoole.0717996.com/Token/getToken",
   "CenterServer": "http://swoole.0717996.com",
   "CenterServerPort": "9502",
-  "DevKey": "new_game_4",
-  "DevName": "新游戏开发",
-  "GameID": "5b1f3a3cb76a591e7f251711",
-  "MongoDB": "mongodb://10.63.60.119:27917"
+  "DevKey": "new_game_20",
+  "DevName": "%E6%96%B0%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91",
+  "GameID": "5b1f3a3cb76a591e7f251719"
 }
 

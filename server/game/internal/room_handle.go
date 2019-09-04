@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
 	"time"
@@ -141,20 +142,23 @@ func (r *Room) ExitFromRoom(p *Player) {
 
 	//更新大厅时间
 	hall := &pb_msg.GameHallTime_S2C{}
-	hall.HallTime = make(map[string]int32)
+	ht := &pb_msg.HallTime{}
 	for _, r := range gameHall.roomList {
 		if r != nil {
+			ht.RoomId = r.RoomId
 			if r.GameStat == DownBet {
-				hall.GameStage = pb_msg.GameStage(DownBet)
-				hall.HallTime[r.RoomId] = DownBetTime - r.counter
-				log.Debug("游戏大厅.DownBetTime : %v", hall.HallTime[r.RoomId])
+				ht.GameStage = pb_msg.GameStage(DownBet)
+				ht.RoomTime = DownBetTime - r.counter
+				log.Debug("游戏大厅.DownBetTime : %v", ht.RoomTime)
 			} else {
-				hall.GameStage = pb_msg.GameStage(Settle)
-				hall.HallTime[r.RoomId] = SettleTime - r.counter
-				log.Debug("游戏大厅 SettleTime : %v", hall.HallTime[r.RoomId])
+				ht.GameStage = pb_msg.GameStage(Settle)
+				ht.RoomTime = SettleTime - r.counter
+				log.Debug("游戏大厅 SettleTime : %v", ht.RoomTime)
 			}
+			hall.HallTime = append(hall.HallTime, ht)
 		}
 	}
+	fmt.Println("hall ~~~~~~~~~:", hall)
 	p.SendMsg(hall)
 
 	log.Debug("Player Exit from the Room SUCCESS ~")

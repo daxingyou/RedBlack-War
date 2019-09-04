@@ -23,7 +23,6 @@ var Server struct {
 	DevKey           string
 	DevName          string
 	GameID           string
-	MongoDB          string
 }
 
 func init() {
