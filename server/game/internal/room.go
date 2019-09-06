@@ -9,7 +9,7 @@ import (
 func (r *Room) RoomInit() {
 
 	//r.RoomId = r.GetRoomNumber()
-	r.RoomId = "1"
+	//r.RoomId = "1"
 	r.PlayerList = nil
 
 	r.GodGambleName = ""

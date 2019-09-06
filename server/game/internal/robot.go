@@ -36,7 +36,8 @@ func (rc *RobotsCenter) CreateRobot() *Player {
 	r.HeadImg = RandomIMG()
 	//生成机器人金币随机数
 	rand.Intn(int(time.Now().Unix()))
-	money := rand.Intn(6000) + 1000
+	//money := rand.Intn(6000) + 1000
+	money := rand.Intn(500) + 1000
 	r.Account = float64(money)
 
 	r.Index = RobotIndex
@@ -51,16 +52,12 @@ func (rc *RobotsCenter) CreateRobot() *Player {
 func (r *Room) RobotsDownBet() {
 	// 线程下注
 	go func() {
-		var count int32
-		t := time.NewTicker(time.Second)
-		for range t.C {
-			for _, v := range r.PlayerList {
-				time.Sleep(time.Millisecond * 600)
+		time.Sleep(time.Second)
+		for i := 0; i < 5; i++ {
+			for _, v := range r.PlayerList {  //TODO 可以将机器人房子啊一个切片里，然后进行随机下注
+				time.Sleep(time.Millisecond * 300)
 				if v != nil && v.IsRobot == true && r.GameStat == DownBet {
-					fmt.Println("你好 我是机器人----------------------", v.Id, v.DownBetMoneys)
-					time.Sleep(time.Millisecond * 300) //这里时间不能大于500,不然执行时间会超出一秒
-
-
+					//fmt.Println("你好 我是机器人----------------------", v.Id, v.DownBetMoneys)
 					bet1 := RobotRandBet()
 					pot1 := RobotRandPot()
 					v.IsAction = true
@@ -107,14 +104,9 @@ func (r *Room) RobotsDownBet() {
 					pot.PotMoneyCount.LuckMoneyCount = r.PotMoneyCount.LuckMoneyCount
 					r.BroadCastMsg(pot)
 
-					fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
+					//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
 				}
 			}
-		}
-		log.Debug("Robot clock : %v", count)
-		count++
-		if count == RobotDownTime {
-			return
 		}
 	}()
 }

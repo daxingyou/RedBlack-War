@@ -53,7 +53,7 @@ func (c4c *Conn4Center) Init() {
 //onDestroy 销毁用户
 func (c4c *Conn4Center) onDestroy() {
 	log.Debug("Conn4Center onDestroy ~")
-	c4c.UserLogoutCenter("991738698") //todo  测试用户
+	//c4c.UserLogoutCenter("991738698","123456") //todo  测试用户
 }
 
 //ReqCenterToken 向中心服务器请求token
@@ -61,13 +61,13 @@ func (c4c *Conn4Center) ReqCenterToken() {
 	// 拼接center Url
 	url4Center := fmt.Sprintf("http://swoole.0717996.com/Token/getToken?dev_key=%s&dev_name=%s", c4c.DevKey, conf.Server.DevName)
 
-	log.Debug("<------- Center access Url -------->: %v ", url4Center)
+	log.Debug("<--- Center access Url --->: %v ", url4Center)
 
 	resp, err1 := http.Get(url4Center)
 	if err1 != nil {
 		panic(err1.Error())
 	}
-	log.Debug("<------- resp -------->: %v ", resp)
+	log.Debug("<--- resp --->: %v ", resp)
 
 	defer resp.Body.Close()
 
@@ -76,19 +76,19 @@ func (c4c *Conn4Center) ReqCenterToken() {
 		if err2 != nil {
 			panic(err2.Error())
 		}
-		log.Debug("<----- resp.StatusCode ----->: %v", resp.StatusCode)
-		log.Debug("<----- body ----->: %v ,<----- err2 ----->: %v", string(body), err2)
+		//log.Debug("<----- resp.StatusCode ----->: %v", resp.StatusCode)
+		log.Debug("<--- body --->: %v ,<--- err2 --->: %v", string(body), err2)
 
 		var t CGCenterRsp
 		err3 := json.Unmarshal(body, &t)
-		log.Debug("<----- err3 ----->: %v <----- Results ----->: %v", err3, t)
+		log.Debug("<--- err3 --->: %v <--- Results --->: %v", err3, t)
 
 		if t.Status == "SUCCESS" && t.Code == 200 {
-			log.Debug("<----- CenterToken ----->: %v", t.Msg.Token)
+			log.Debug("<--- CenterToken --->: %v", t.Msg.Token)
 			c4c.token = t.Msg.Token
 			c4c.CreatConnect()
 		} else {
-			log.Fatal("<-------- Request Token Fail~ -------->")
+			log.Fatal("<--- Request Token Fail~ --->")
 		}
 	}
 }
@@ -100,7 +100,7 @@ func (c4c *Conn4Center) CreatConnect() {
 
 	conn, rsp, err := websocket.DefaultDialer.Dial(c4c.centerUrl, nil)
 	c4c.conn = conn
-	log.Debug("<-------- Dial rsp -------->: %v", rsp)
+	log.Debug("<--- Dial rsp --->: %v", rsp)
 
 	if err != nil {
 		log.Fatal(err.Error())
@@ -161,6 +161,7 @@ func (c4c *Conn4Center) onReceive(messType int, messBody []byte) {
 		switch baseData.Event {
 		case msgServerLogin:
 			c4c.onServerLogin(baseData.Data)
+			log.Debug("<-------- baseData onServerLogin -------->")
 			break
 		case msgUserLogin:
 			c4c.onUserLogin(baseData.Data)
@@ -185,11 +186,11 @@ func (c4c *Conn4Center) onServerLogin(msgBody interface{}) {
 	log.Debug("<-------- onServerLogin -------->: %v", msgBody)
 	data, ok := msgBody.(map[string]interface{})
 	if ok {
-		fmt.Println(data["status"], reflect.TypeOf(data["status"]))
-		fmt.Println(data["code"], reflect.TypeOf(data["code"]))
-		fmt.Println(data["msg"], reflect.TypeOf(data["msg"]))
+		//fmt.Println(data["status"], reflect.TypeOf(data["status"]))
+		//fmt.Println(data["code"], reflect.TypeOf(data["code"]))
+		//fmt.Println(data["msg"], reflect.TypeOf(data["msg"]))
 		code, err := data["code"].(json.Number).Int64()
-		fmt.Println("code,err", code, err)
+		//fmt.Println("code,err", code, err)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
@@ -209,11 +210,11 @@ func (c4c *Conn4Center) onUserLogin(msgBody interface{}) {
 	data, ok := msgBody.(map[string]interface{})
 	log.Debug("data:%v, ok:%v", data, ok)
 
-	fmt.Println(data["status"], reflect.TypeOf(data["status"]))
-	fmt.Println(data["code"], reflect.TypeOf(data["code"]))
-	fmt.Println(data["msg"], reflect.TypeOf(data["msg"]))
+	//fmt.Println(data["status"], reflect.TypeOf(data["status"]))
+	//fmt.Println(data["code"], reflect.TypeOf(data["code"]))
+	//fmt.Println(data["msg"], reflect.TypeOf(data["msg"]))
 	code, err := data["code"].(json.Number).Int64()
-	fmt.Println("code,err", code, err)
+	//fmt.Println("code,err", code, err)
 	if err != nil {
 		log.Error(err.Error())
 		return
@@ -278,11 +279,11 @@ func (c4c *Conn4Center) onUserWinScore(msgBody interface{}) {
 
 	log.Debug("<-------- data -------->:%v, <-------- ok -------->:%v", data, ok)
 
-	fmt.Println(data["status"], reflect.TypeOf(data["status"]))
-	fmt.Println(data["code"], reflect.TypeOf(data["code"]))
-	fmt.Println(data["msg"], reflect.TypeOf(data["msg"]))
+	//fmt.Println(data["status"], reflect.TypeOf(data["status"]))
+	//fmt.Println(data["code"], reflect.TypeOf(data["code"]))
+	//fmt.Println(data["msg"], reflect.TypeOf(data["msg"]))
 	code, err := data["code"].(json.Number).Int64()
-	fmt.Println("code,err", code, err)
+	//fmt.Println("code,err", code, err)
 	if err != nil {
 		log.Error(err.Error())
 	}
@@ -322,11 +323,11 @@ func (c4c *Conn4Center) onUserLoseScore(msgBody interface{}) {
 
 	log.Debug("data:%v, ok:%v", data, ok)
 
-	fmt.Println(data["status"], reflect.TypeOf(data["status"]))
-	fmt.Println(data["code"], reflect.TypeOf(data["code"]))
-	fmt.Println(data["msg"], reflect.TypeOf(data["msg"]))
+	//fmt.Println(data["status"], reflect.TypeOf(data["status"]))
+	//fmt.Println(data["code"], reflect.TypeOf(data["code"]))
+	//fmt.Println(data["msg"], reflect.TypeOf(data["msg"]))
 	code, err := data["code"].(json.Number).Int64()
-	fmt.Println("code,err", code, err)
+	//fmt.Println("code,err", code, err)
 	if err != nil {
 		log.Error(err.Error())
 	}
@@ -376,7 +377,7 @@ func (c4c *Conn4Center) ServerLoginCenter() {
 }
 
 //UserLoginCenter 用户登录
-func (c4c *Conn4Center) UserLoginCenter(userId string, callback func(data *UserInfo)) {
+func (c4c *Conn4Center) UserLoginCenter(userId string, password string, callback func(data *UserInfo)) {
 	if !c4c.LoginStat {
 		log.Debug("<-------- server not ready~!!! -------->")
 		return
@@ -386,10 +387,11 @@ func (c4c *Conn4Center) UserLoginCenter(userId string, callback func(data *UserI
 	baseData := &BaseMessage{}
 	baseData.Event = msgUserLogin
 	baseData.Data = &UserReq{
-		ID:     userId,
-		GameId: c4c.GameId,
-		Token:  c4c.token,
-		DevKey: c4c.DevKey}
+		ID:       userId,
+		PassWord: password,
+		GameId:   c4c.GameId,
+		Token:    c4c.token,
+		DevKey:   c4c.DevKey}
 
 	c4c.SendMsg2Center(baseData)
 
@@ -405,7 +407,8 @@ func (c4c *Conn4Center) UserLogoutCenter(userId string) {
 	base := &BaseMessage{}
 	base.Event = msgUserLogout
 	base.Data = &UserReq{
-		ID:     userId,
+		ID: userId,
+		//PassWord: password,
 		GameId: c4c.GameId,
 		Token:  c4c.token,
 		DevKey: c4c.DevKey,
@@ -432,7 +435,7 @@ func (c4c *Conn4Center) SendMsg2Center(data interface{}) {
 //UserSyncWinScore 同步赢分
 func (c4c *Conn4Center) UserSyncWinScore(p *Player, timeUnix int64, timeStr, reason string) {
 	winOrder := p.Id + "_" + timeStr + "_win"
-	log.Debug("GenWinOrder: %v", winOrder)
+	log.Debug("<-------- GenWinOrder -------->: %v", winOrder)
 	baseData := &BaseMessage{}
 	baseData.Event = msgUserWinScore
 	userWin := &UserChangeScore{}
@@ -442,7 +445,7 @@ func (c4c *Conn4Center) UserSyncWinScore(p *Player, timeUnix int64, timeStr, rea
 	userWin.Info.GameId = c4c.GameId
 	userWin.Info.ID = p.Id
 	userWin.Info.LockMoney = 0
-	userWin.Info.Money = p.ResultMoney //todo
+	userWin.Info.Money = p.WinResultMoney
 	userWin.Info.Order = winOrder
 	userWin.Info.PayReason = reason
 	userWin.Info.PreMoney = 0
@@ -455,7 +458,7 @@ func (c4c *Conn4Center) UserSyncWinScore(p *Player, timeUnix int64, timeStr, rea
 //UserSyncWinScore 同步输分
 func (c4c *Conn4Center) UserSyncLoseScore(p *Player, timeUnix int64, timeStr, reason string) {
 	loseOrder := p.Id + "_" + timeStr + "_lose"
-	fmt.Println("GenLoseOrder", loseOrder)
+	log.Debug("<-------- GenLoseOrder -------->", loseOrder)
 
 	baseData := &BaseMessage{}
 	baseData.Event = msgUserLoseScore
@@ -466,7 +469,7 @@ func (c4c *Conn4Center) UserSyncLoseScore(p *Player, timeUnix int64, timeStr, re
 	userLose.Info.GameId = c4c.GameId
 	userLose.Info.ID = p.Id
 	userLose.Info.LockMoney = 0
-	userLose.Info.Money = p.ResultMoney
+	userLose.Info.Money = p.LoseResultMoney
 	userLose.Info.Order = loseOrder
 	userLose.Info.PayReason = reason
 	userLose.Info.PreMoney = 0

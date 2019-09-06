@@ -27,13 +27,15 @@ func (p *Player) GetPotWinCount() int32 {
 
 //GetPlayerTableData 获取房间战绩数据
 func (p *Player) GetRoomCordData(r *Room) {
-	//最新40局游戏数据、红黑Win顺序列表、每局Win牌局类型、红黑Luck的总数量
 
+	//最新40局游戏数据、红黑Win顺序列表、每局Win牌局类型、红黑Luck的总数量
 	roomGCount := r.RoomGameCount()
 	//判断房间数据是否大于40局
 	if roomGCount > RoomCordCount {
 		//大于40局则截取最新40局数据
 		num := roomGCount - RoomCordCount
+		log.Debug("num 长度: %v", num)
+		log.Debug("r.RPotWinList 长度: %v", len(r.RPotWinList))
 		p.PotWinList = append(p.PotWinList, r.RPotWinList[num:]...)
 		p.CardTypeList = append(p.CardTypeList, r.CardTypeList[num:]...)
 		for _, v := range p.PotWinList {
@@ -49,6 +51,7 @@ func (p *Player) GetRoomCordData(r *Room) {
 				p.LuckWinCount++
 			}
 		}
+		p.TotalCount = RoomCordCount
 	} else {
 		//小于40局则截取全部房间数据
 		p.PotWinList = append(p.PotWinList, r.RPotWinList...)
@@ -56,14 +59,18 @@ func (p *Player) GetRoomCordData(r *Room) {
 		for _, v := range p.PotWinList {
 			if v.RedWin == 1 {
 				p.RedWinCount++
+				p.RedBlackList = append(p.RedBlackList, RedWin)
+
 			}
 			if v.BlackWin == 1 {
 				p.BlackWinCount++
+				p.RedBlackList = append(p.RedBlackList, BlackWin)
 			}
 			if v.LuckWin == 1 {
 				p.LuckWinCount++
 			}
 		}
+		p.TotalCount = roomGCount
 	}
 }
 
@@ -107,6 +114,7 @@ func (r *Room) RspRoomData() *pb_msg.RoomData {
 			data.RedWinCount = v.RedWinCount
 			data.BlackWinCount = v.BlackWinCount
 			data.LuckWinCount = v.LuckWinCount
+			data.TotalCount = v.TotalCount
 			data.IsOnline = v.IsOnline
 			room.PlayerList = append(room.PlayerList, data)
 		}

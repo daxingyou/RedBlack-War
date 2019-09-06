@@ -38,7 +38,7 @@ func (r *Room) PlayerLength() int32 {
 
 //RoomGameCount 获取房间游戏总数量
 func (r *Room) RoomGameCount() int32 {
-	return r.GameTotalCount
+	return int32(len(r.RPotWinList))
 }
 
 //FindUsableSeat 寻找可用座位
@@ -234,7 +234,7 @@ func (r *Room) StartGameRun() {
 	r.DownBetTimerTask()
 
 	//机器人进行下注
-	//r.RobotsDownBet()
+	r.RobotsDownBet()
 
 	//结算阶段定时任务
 	r.SettlerTimerTask()
@@ -490,17 +490,16 @@ func (r *Room) CompareSettlement() {
 	//踢出房间断线玩家
 	r.KickOutPlayer()
 
+	//这里会发送前端房间数据，前端做处理
+	data := &pb_msg.RoomSettleData_S2C{}
+	data.RoomData = r.RspRoomData()
+	r.BroadCastMsg(data)
+
 	for range t.C {
 		r.counter++
 		log.Debug("settle clock : %v ", r.counter)
 		// 如果时间处理不及时,可以判断定时9秒的时候将处理这个数据然后发送给前端进行处理
 		if r.counter == SettleTime {
-
-			//这里会发送前端房间数据，前端做处理
-			data := &pb_msg.RoomSettleData_S2C{}
-			data.RoomData = r.RspRoomData()
-			r.BroadCastMsg(data)
-
 			//测试，打印数据
 			r.PrintPlayerList()
 

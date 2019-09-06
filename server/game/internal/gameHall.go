@@ -3,22 +3,26 @@ package internal
 import (
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
+	"strconv"
+	"time"
 )
 
 func (gh *GameHall) Init() {
 	gh.maxPlayerInHall = 5000
 	log.Debug("GameHall Init~!!! This gameHall can hold %d player running ~", gh.maxPlayerInHall)
-	//todo 暂时创建一个房间，方便测试
-	r := gh.CreatGameRoom()
-	gh.roomList[0] = r
-	log.Debug("大厅房间数量: %d, 房间号: %v", len(gh.roomList), gh.roomList[0].RoomId)
+	////todo 暂时创建一个房间，方便测试
+	//r := gh.CreatGameRoom()
+	//gh.roomList[0] = r
+	//log.Debug("大厅房间数量: %d, 房间号: %v", len(gh.roomList), gh.roomList[0].RoomId)
 
-	//for i := 0; i < 6; i++ {
-	//	time.Sleep(time.Millisecond)
-	//	r := gh.CreatGameRoom()
-	//	gh.roomList[i] = r
-	//	log.Debug("大厅房间数量: %d,房间号: %v", i, gh.roomList[i].RoomId)
-	//}
+	for i := 0; i < 1; i++ {
+		time.Sleep(time.Millisecond)
+		r := gh.CreatGameRoom()
+		ri := i + 1
+		r.RoomId = strconv.Itoa(ri)
+		gh.roomList[i] = r
+		log.Debug("大厅房间数量: %d,房间号: %v", i, gh.roomList[i].RoomId)
+	}
 }
 
 //CreatGameRoom 创建游戏房间

@@ -23,6 +23,7 @@ enum MessageID {
     MSG_OpenCardResult_S2C = 16;
     MSG_RoomSettleData_S2C = 17;
     MSG_GameHallTime_S2C = 18;
+    MSG_GameHallData_S2C = 19;
 
 }
 
@@ -45,8 +46,7 @@ message MsgInfo_S2C {
 //--3
 message LoginInfo_C2S {
     string Id = 1;
-    string gameId = 2;
-    string serverUrl = 3;
+    string PassWord = 2;
 }
 
 message PlayerInfo {
@@ -107,7 +107,8 @@ message PlayerData {
     int32 redWinCount = 11; //Win总列表红Win的局数
     int32 blackWinCount = 12; //Win总列表黑Win的局数
     int32 luckWinCount = 13; //Win总列表幸运的局数
-    bool IsOnline = 14; //玩家是否在线
+    int32 TotalCount = 14; //总列表总局数
+    bool IsOnline = 15; //玩家是否在线
 }
 
 //游戏阶段
@@ -249,8 +250,18 @@ message HallTime {
     int32 roomTime = 3;
 }
 
-//--18  大厅时间进度条
+//--18  进入大厅时间
 message GameHallTime_S2C {
-    repeated HallTime hallTime = 1;
+    repeated HallTime hallTime = 1; //大厅时间
 }
 
+message HallData {
+    string roomId = 1;
+    repeated int32 cardTypeList = 2; //卡牌类型集合 1 单张,2 对子,3 顺子,4 金花,5 顺金,6 豹子
+    repeated int32 RedBlackList = 3; //红黑Win、Luck、比牌类型的总集合 红1 黑2
+}
+
+//--19 大厅数据更新
+message GameHallData_S2C {
+    repeated HallData hallData = 1;
+}

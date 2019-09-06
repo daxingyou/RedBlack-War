@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
 	"time"
@@ -12,6 +11,8 @@ func (r *Room) JoinGameRoom(p *Player) {
 	//寻找可用的座位号
 	//p.SeatNum = r.FindUsableSeat()
 	//r.PlayerList[p.SeatNum] = p
+
+	p.GameState = InGameRoom
 
 	//将用户添加到用户列表
 	r.PlayerList = append(r.PlayerList, p)
@@ -89,6 +90,7 @@ func (r *Room) JoinGameRoom(p *Player) {
 func (r *Room) ExitFromRoom(p *Player) {
 
 	//清空用户数据
+	p.GameState = InGameHall
 	p.DownBetMoneys = new(DownBetMoney)
 	p.TotalAmountBet = 0
 	p.IsAction = false
@@ -141,25 +143,7 @@ func (r *Room) ExitFromRoom(p *Player) {
 	p.SendMsg(leave)
 
 	//更新大厅时间
-	hall := &pb_msg.GameHallTime_S2C{}
-	ht := &pb_msg.HallTime{}
-	for _, r := range gameHall.roomList {
-		if r != nil {
-			ht.RoomId = r.RoomId
-			if r.GameStat == DownBet {
-				ht.GameStage = pb_msg.GameStage(DownBet)
-				ht.RoomTime = DownBetTime - r.counter
-				log.Debug("游戏大厅.DownBetTime : %v", ht.RoomTime)
-			} else {
-				ht.GameStage = pb_msg.GameStage(Settle)
-				ht.RoomTime = SettleTime - r.counter
-				log.Debug("游戏大厅 SettleTime : %v", ht.RoomTime)
-			}
-			hall.HallTime = append(hall.HallTime, ht)
-		}
-	}
-	fmt.Println("hall ~~~~~~~~~:", hall)
-	p.SendMsg(hall)
+	RspGameHallData(p)
 
 	log.Debug("Player Exit from the Room SUCCESS ~")
 }

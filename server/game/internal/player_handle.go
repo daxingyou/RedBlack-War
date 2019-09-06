@@ -70,7 +70,18 @@ func PlayerLoginAgain(p *Player, a gate.Agent) {
 //PlayerExitRoom 玩家退出房间
 func (p *Player) PlayerReqExit() {
 	if p.room != nil {
-		p.SyncScoreChangeToCenter("ExitRoom")   //todo
+		if p.IsRobot == false && p.IsAction == true {
+			p.LoseResultMoney = 0
+			p.LoseResultMoney -= float64(p.DownBetMoneys.RedDownBet)
+			p.LoseResultMoney -= float64(p.DownBetMoneys.BlackDownBet)
+			p.LoseResultMoney -= float64(p.DownBetMoneys.LuckDownBet)
+			timeStr := time.Now().Format("2006-01-02_15:04:05")
+			nowTime := time.Now().Unix()
+			reason := "ExitRoomResult"
+
+			//同时同步赢分和输分
+			c4c.UserSyncLoseScore(p, nowTime, timeStr, reason)
+		}
 		p.room.ExitFromRoom(p)
 	} else {
 		log.Debug("Player Exit Room, But not found Player Room ~")
@@ -148,4 +159,77 @@ func (p *Player) SetPlayerAction(m *pb_msg.PlayerAction_C2S) {
 
 	//fmt.Println("玩家:", p.Id, "行动 红、黑、Luck下注: ", p.DownBetMoneys, "玩家总下注金额: ", p.TotalAmountBet)
 	//fmt.Println("房间池红、黑、Luck总下注: ", p.room.PotMoneyCount, "续投总额:", p.ContinueVot.TotalMoneyBet)
+}
+
+//RspGameHallData 返回大厅数据
+func RspGameHallData(p *Player) {
+
+	hallTime := &pb_msg.GameHallTime_S2C{}
+
+	hallData := &pb_msg.GameHallData_S2C{}
+
+	p.HallRoomData = nil
+	for _, r := range gameHall.roomList {
+		ht := &pb_msg.HallTime{}
+		hd := &pb_msg.HallData{}
+		data := &HallDataList{}
+
+		if r != nil {
+			ht.RoomId = r.RoomId
+			log.Debug("房间ID：：：%v", r.RoomId)
+			if r.GameStat == DownBet {
+				ht.GameStage = pb_msg.GameStage(DownBet)
+				ht.RoomTime = DownBetTime - r.counter
+				log.Debug("游戏大厅.DownBetTime : %v", ht.RoomTime)
+			} else {
+				ht.GameStage = pb_msg.GameStage(Settle)
+				ht.RoomTime = SettleTime - r.counter
+				log.Debug("游戏大厅 SettleTime : %v", ht.RoomTime)
+			}
+			hallTime.HallTime = append(hallTime.HallTime, ht)
+
+			data.Rid = r.RoomId
+			//最新40局游戏数据、红黑Win顺序列表、每局Win牌局类型、红黑Luck的总数量
+			roomGCount := r.RoomGameCount()
+
+			//判断房间数据是否大于40局
+			if roomGCount > RoomCordCount {
+				//大于40局则截取最新40局数据
+				num := roomGCount - RoomCordCount
+				data.HallCardTypeList = append(data.HallCardTypeList, r.CardTypeList[num:]...)
+				for _, v := range r.RPotWinList {
+					if v.RedWin == 1 {
+						data.HallRedBlackList = append(data.HallRedBlackList, RedWin)
+					}
+					if v.BlackWin == 1 {
+						data.HallRedBlackList = append(data.HallRedBlackList, BlackWin)
+					}
+					//截取到40局游戏就退出
+					if len(data.HallRedBlackList) == RoomCordCount {
+						break
+					}
+				}
+			} else {
+				//小于40局则截取全部房间数据
+				data.HallCardTypeList = append(data.HallCardTypeList, r.CardTypeList...)
+				for _, v := range r.RPotWinList {
+					if v.RedWin == 1 {
+						data.HallRedBlackList = append(data.HallRedBlackList, RedWin)
+					}
+					if v.BlackWin == 1 {
+						data.HallRedBlackList = append(data.HallRedBlackList, BlackWin)
+					}
+				}
+			}
+			hd.RoomId = data.Rid
+			hd.CardTypeList = data.HallCardTypeList
+			hd.RedBlackList = data.HallRedBlackList
+			hallData.HallData = append(hallData.HallData, hd)
+			p.HallRoomData = append(p.HallRoomData, data)
+		}
+	}
+	log.Debug("~~~~~~~~~~~~大厅数据: %v ~~~~~~~~~~~~~~~", p.HallRoomData)
+	p.SendMsg(hallTime)
+	p.SendMsg(hallData)
+
 }

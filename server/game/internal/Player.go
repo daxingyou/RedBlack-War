@@ -11,17 +11,17 @@ func (p *Player) Init() {
 	p.uClientDelay = 0
 	p.Index = 0
 
-	p.HeadImg = "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2873269578,797009742&fm=26&gp=0.jpg"
-	p.Account = 4000
-
 	p.TotalAmountBet = 0
 	p.IsAction = false
 	p.DownBetMoneys = new(DownBetMoney)
 	p.ContinueVot = new(ContinueBet)
 	p.ContinueVot.DownBetMoneys = new(DownBetMoney)
+	p.GameState = InGameHall
 
 	p.TaxPreMoney = 0
 	p.ResultMoney = 0
+	p.WinResultMoney = 0
+	p.LoseResultMoney = 0
 
 	p.room = new(Room)
 
@@ -33,6 +33,8 @@ func (p *Player) Init() {
 	p.BlackWinCount = 0
 	p.LuckWinCount = 0
 	p.IsOnline = true
+
+	p.HallRoomData = nil
 
 	p.IsRobot = false
 }
@@ -99,6 +101,7 @@ func DeletePlayer(p *Player) {
 	}
 }
 
+//SendMsg 发送消息客户端
 func (p *Player) SendMsg(msg interface{}) {
 	if !p.IsRobot && p.ConnAgent != nil {
 		p.ConnAgent.WriteMsg(msg)

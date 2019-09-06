@@ -46,45 +46,26 @@ func handleLoginInfo(args []interface{}) {
 	p, ok := a.UserData().(*Player)
 	if ok {
 		p.Id = m.GetId()
-		p.NickName = m.GetId()
+		p.PassWord = m.GetPassWord()
 		RegisterPlayer(p)
-		//todo
-		c4c.UserLoginCenter(m.GetGameId(), func(data *UserInfo) {
-			log.Debug("ID: %v", data.ID)
-			log.Debug("Nick: %v", data.Nick)
-			log.Debug("HeadImg: %v", data.HeadImg)
-			log.Debug("Money: %v", data.Score)
+		c4c.UserLoginCenter(m.GetId(), m.GetPassWord(), func(data *UserInfo) {
+			p.Id = data.ID
+			p.NickName = data.Nick
+			p.HeadImg = data.HeadImg
+			p.Account = data.Score
+
+			msg := &pb_msg.LoginInfo_S2C{}
+			msg.PlayerInfo = new(pb_msg.PlayerInfo)
+			msg.PlayerInfo.Id = p.Id
+			msg.PlayerInfo.NickName = p.NickName
+			msg.PlayerInfo.HeadImg = p.HeadImg
+			msg.PlayerInfo.Account = p.Account
+			a.WriteMsg(msg)
 		})
 	}
 
-	msg := &pb_msg.LoginInfo_S2C{}
-	msg.PlayerInfo = new(pb_msg.PlayerInfo)
-	msg.PlayerInfo.Id = p.Id
-	msg.PlayerInfo.NickName = p.NickName
-	msg.PlayerInfo.HeadImg = p.HeadImg
-	msg.PlayerInfo.Account = p.Account
-
-	a.WriteMsg(msg)
-
-	hall := &pb_msg.GameHallTime_S2C{}
-	ht := &pb_msg.HallTime{}
-	for _, r := range gameHall.roomList {
-		if r != nil {
-			ht.RoomId = r.RoomId
-			if r.GameStat == DownBet {
-				ht.GameStage = pb_msg.GameStage(DownBet)
-				ht.RoomTime = DownBetTime - r.counter
-				log.Debug("游戏大厅.DownBetTime : %v", ht.RoomTime)
-			} else {
-				ht.GameStage = pb_msg.GameStage(Settle)
-				ht.RoomTime = SettleTime - r.counter
-				log.Debug("游戏大厅 SettleTime : %v", ht.RoomTime)
-			}
-			hall.HallTime = append(hall.HallTime, ht)
-		}
-	}
-	log.Debug("hall ~~~~~~: %v", hall)
-	p.SendMsg(hall)
+	// 返回游戏大厅数据
+	RspGameHallData(p)
 
 	//判断用户是否存在房间信息,如果有就返回
 	if userRoomMap[p.Id] != nil { //todo

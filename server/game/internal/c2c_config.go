@@ -10,25 +10,26 @@ const (
 
 //BaseMessage 基本消息结构
 type BaseMessage struct {
-	Event string      `json:"event"`  // 事件
-	Data  interface{} `json:"data"`	  // 数据
+	Event string      `json:"event"` // 事件
+	Data  interface{} `json:"data"`  // 数据
 }
 
 //ServerLogin 服务器登录
 type ServerLogin struct {
-	Host   string `json:"host"`      // 主机
-	Port   string `json:"port"`		 // 端口
-	GameId string `jsod:"game_id"`	 // 游戏Id
+	Host   string `json:"host"`    // 主机
+	Port   string `json:"port"`    // 端口
+	GameId string `json:"game_id"` // 游戏Id
 	Token  string `json:"token"`
 	DevKey string `json:"dev_key"`
 }
 
 //UserReq 用户请求，用登录登出
 type UserReq struct {
-	ID     string `json:"id"`
-	GameId string `json:"game_id"`
-	Token  string `json:"token"`
-	DevKey string `json:"dev_key"`
+	ID       string `json:"id"`
+	GameId   string `json:"game_id"`
+	PassWord string `json:"password"`
+	Token    string `json:"token"`
+	DevKey   string `json:"dev_key"`
 }
 
 //ServerLoginRsp 服务器登录返回
@@ -52,7 +53,7 @@ type UserScoreSync struct {
 	Money      float64 `json:"money"`
 	LockMoney  float64 `json:"lock_money"`
 	PreMoney   float64 `json:"pre_money"`
-	Order      string  `json:"order"`    //唯一ID,方便之后查询
+	Order      string  `json:"order"` //唯一ID,方便之后查询
 	GameId     string  `json:"game_id"`
 	RoundId    string  `json:"round_id"` //唯一ID，识别多人是否在同一局游戏
 }

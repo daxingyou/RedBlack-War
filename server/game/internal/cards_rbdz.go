@@ -3,6 +3,7 @@ package internal
 import (
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
+	"time"
 )
 
 // 红黑大战
@@ -86,59 +87,76 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 	ag := dealer.GetGroup(a)
 	bg := dealer.GetGroup(b)
 
+	var hallCard int32
+	var hallRBWin int32
+
 	//获取牌型处理
 	if ag.IsThreeKind() {
 		r.Cards.RedType = CardsType(Leopard)
+		hallCard = int32(Leopard)
 		log.Debug("Red 三同10倍")
 	}
 	if bg.IsThreeKind() {
 		r.Cards.BlackType = CardsType(Leopard)
+		hallCard = int32(Leopard)
 		log.Debug("Black 三同10倍")
 	}
 	if ag.IsStraightFlush() {
 		r.Cards.RedType = CardsType(Shunjin)
+		hallCard = int32(Shunjin)
 		log.Debug("Red 顺金5倍")
 	}
 	if bg.IsStraightFlush() {
 		r.Cards.BlackType = CardsType(Shunjin)
+		hallCard = int32(Shunjin)
 		log.Debug("Black 顺金5倍")
 	}
 	if ag.IsFlush() {
 		r.Cards.RedType = CardsType(Golden)
+		hallCard = int32(Golden)
 		log.Debug("Red 金花3倍")
 	}
 	if bg.IsFlush() {
 		r.Cards.BlackType = CardsType(Golden)
+		hallCard = int32(Golden)
 		log.Debug("Black 金花3倍")
 	}
 	if ag.IsStraight() {
 		r.Cards.RedType = CardsType(Straight)
+		hallCard = int32(Straight)
 		log.Debug("Red 顺子2倍")
 	}
 	if bg.IsStraight() {
 		r.Cards.BlackType = CardsType(Straight)
+		hallCard = int32(Straight)
 		log.Debug("Black 顺子2倍")
 	}
 	if (ag.Key.Pair() >> 8) >= 9 {
 		r.Cards.RedType = CardsType(Pair)
+		hallCard = int32(Pair)
 		log.Debug("Red 大对子(9-A)")
 	} else if ag.IsPair() {
 		r.Cards.RedType = CardsType(Pair)
+		hallCard = int32(Pair)
 		log.Debug("Red 小对子(2-8)")
 	}
 	if (bg.Key.Pair() >> 8) >= 9 {
 		r.Cards.BlackType = CardsType(Pair)
+		hallCard = int32(Pair)
 		log.Debug("Black 大对子(9-A)")
 	} else if bg.IsPair() {
 		r.Cards.BlackType = CardsType(Pair)
+		hallCard = int32(Pair)
 		log.Debug("Black 小对子(2-8)")
 	}
 	if ag.IsZilch() {
 		r.Cards.RedType = CardsType(Leaflet)
+		hallCard = int32(Leaflet)
 		log.Debug("Red 单张")
 	}
 	if bg.IsZilch() {
 		r.Cards.BlackType = CardsType(Leaflet)
+		hallCard = int32(Leaflet)
 		log.Debug("Black 单张")
 	}
 
@@ -157,6 +175,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 	if ag.Weight > bg.Weight { //redWin
 		log.Debug("Red Win ~")
 		gw.RedWin = 1
+		hallRBWin = int32(RedWin)
 		res.PotWinTypes.RedDownPot = true
 
 		if ag.IsThreeKind() {
@@ -255,7 +274,27 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						SurplusPool += tax
 						SurplusPool -= v.ResultMoney //盈余池结算减去玩家Win金额
 						v.WinTotalCount++
-					} else {
+
+						v.WinResultMoney = v.ResultMoney
+						log.Debug("玩家金额: %v,进来了Win:%v", v.Account, v.WinResultMoney)
+
+						timeStr := time.Now().Format("2006-01-02_15:04:05")
+						nowTime := time.Now().Unix()
+						reason := "ResultWinScore"
+
+						//同时同步赢分和输分
+						c4c.UserSyncWinScore(v, nowTime, timeStr, reason)
+					} else if v.ResultMoney < 0 {
+						v.LoseResultMoney = v.ResultMoney
+						log.Debug("玩家金额: %v,进来了Lose:%v", v.Account, v.LoseResultMoney)
+
+						timeStr := time.Now().Format("2006-01-02_15:04:05")
+						nowTime := time.Now().Unix()
+						reason := "ResultLoseScore"
+
+						//同时同步赢分和输分
+						c4c.UserSyncLoseScore(v, nowTime, timeStr, reason)
+
 						//将玩家输的金额添加到盈余池
 						SurplusPool -= v.ResultMoney //这个Res是负数 负负得正
 					}
@@ -304,6 +343,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 	} else if ag.Weight < bg.Weight { //blackWin
 		log.Debug("Black Win ~")
 		gw.BlackWin = 1
+		hallRBWin = int32(BlackWin)
 		res.PotWinTypes.BlackDownPot = true
 
 		if bg.IsThreeKind() {
@@ -400,7 +440,27 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						SurplusPool += tax
 						SurplusPool -= v.ResultMoney //盈余池结算减去玩家Win金额
 						v.WinTotalCount++
-					} else {
+
+						v.WinResultMoney = v.ResultMoney
+						log.Debug("玩家金额: %v,进来了Win:%v", v.Account, v.WinResultMoney)
+
+						timeStr := time.Now().Format("2006-01-02_15:04:05")
+						nowTime := time.Now().Unix()
+						reason := "ResultWinScore"
+
+						//同时同步赢分和输分
+						c4c.UserSyncWinScore(v, nowTime, timeStr, reason)
+					} else if v.ResultMoney < 0 {
+						v.LoseResultMoney = v.ResultMoney
+						log.Debug("玩家金额: %v,进来了Lose:%v", v.Account, v.LoseResultMoney)
+
+						timeStr := time.Now().Format("2006-01-02_15:04:05")
+						nowTime := time.Now().Unix()
+						reason := "ResultLoseScore"
+
+						//同时同步赢分和输分
+						c4c.UserSyncLoseScore(v, nowTime, timeStr, reason)
+
 						//将玩家输的金额添加到盈余池
 						SurplusPool -= v.ResultMoney
 					}
@@ -450,7 +510,37 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 	//广播开牌结果
 	r.BroadCastMsg(res)
 
+	//大厅用户添加列表数据
+	hallData := &pb_msg.GameHallData_S2C{}
+	for _, v := range mapUserIDPlayer {
+		if v != nil && v.GameState == InGameHall {
+			for _, data := range v.HallRoomData {
+				hd := &pb_msg.HallData{}
+				hd.RoomId = data.Rid
+				if data.Rid == r.RoomId {
+					data.HallCardTypeList = append(data.HallCardTypeList, hallCard)
+					data.HallRedBlackList = append(data.HallRedBlackList, hallRBWin)
+					hd.CardTypeList = data.HallCardTypeList
+					hd.RedBlackList = data.HallRedBlackList
+				} else {
+					hd.CardTypeList = data.HallCardTypeList
+					hd.RedBlackList = data.HallRedBlackList
+				}
+				hallData.HallData = append(hallData.HallData, hd)
+			}
+			v.SendMsg(hallData)
+		}
+	}
+
 	//追加每局红黑Win、Luck、比牌类型的总集合
 	r.RPotWinList = append(r.RPotWinList, gw)
+	log.Debug("当前房间数据长度为: %v ~", len(r.RPotWinList))
+
+	if len(r.RPotWinList) > 120 {
+		r.RPotWinList = r.RPotWinList[1:]
+	}
+	if len(r.CardTypeList) > 120 {
+		r.CardTypeList = r.CardTypeList[1:]
+	}
 	log.Debug("<-------- 更新盈余池金额为Last: %v --------->", SurplusPool)
 }

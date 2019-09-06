@@ -12,3 +12,4 @@ type GameHall struct {
 	maxPlayerInHall uint32
 	roomList        [RoomNumber]*Room
 }
+
