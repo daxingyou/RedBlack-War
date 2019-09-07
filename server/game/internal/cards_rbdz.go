@@ -265,18 +265,17 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						}
 					}
 					tax := taxMoney * taxRate
-					log.Debug("<========== 玩家下注为: %v ==========>", v.DownBetMoneys)
 					v.ResultMoney = totalWinMoney + taxMoney - tax
 					v.Account += v.ResultMoney
 					v.ResultMoney -= totalLoseMoney
 					if v.ResultMoney > 0 {
-						//将玩家的税收金额添加到盈余池   // todo 玩家是否还要减去玩家金额
+						//将玩家的税收金额添加到盈余池
 						SurplusPool += tax
 						SurplusPool -= v.ResultMoney //盈余池结算减去玩家Win金额
 						v.WinTotalCount++
 
 						v.WinResultMoney = v.ResultMoney
-						log.Debug("玩家金额: %v,进来了Win:%v", v.Account, v.WinResultMoney)
+						log.Debug("玩家金额: %v, 进来了Win: %v", v.Account, v.WinResultMoney)
 
 						timeStr := time.Now().Format("2006-01-02_15:04:05")
 						nowTime := time.Now().Unix()
@@ -286,7 +285,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						c4c.UserSyncWinScore(v, nowTime, timeStr, reason)
 					} else if v.ResultMoney < 0 {
 						v.LoseResultMoney = v.ResultMoney
-						log.Debug("玩家金额: %v,进来了Lose:%v", v.Account, v.LoseResultMoney)
+						log.Debug("玩家金额: %v, 进来了Lose: %v", v.Account, v.LoseResultMoney)
 
 						timeStr := time.Now().Format("2006-01-02_15:04:05")
 						nowTime := time.Now().Unix()
@@ -298,7 +297,8 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						//将玩家输的金额添加到盈余池
 						SurplusPool -= v.ResultMoney //这个Res是负数 负负得正
 					}
-					log.Debug("<======  最后结算为: %v ======>", v.ResultMoney)
+					log.Debug("<<===== 玩家下注: %v, 结算: %v =====>>", v.DownBetMoneys, v.ResultMoney)
+
 				} else {
 					totalWinMoney += float64(v.DownBetMoneys.RedDownBet)
 					taxMoney += float64(v.DownBetMoneys.RedDownBet)
@@ -329,14 +329,13 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						}
 					}
 					tax := taxMoney * taxRate
-					log.Debug("<========== 机器人下注为: %v ==========>", v.DownBetMoneys)
 					v.ResultMoney = totalWinMoney + taxMoney - tax
 					v.Account += v.ResultMoney
 					v.ResultMoney -= totalLoseMoney
 					if v.ResultMoney > 0 {
 						v.WinTotalCount++
 					}
-					log.Debug("<======  最后结算为: %v ======>", v.ResultMoney)
+					log.Debug("<----- 机器人下注: %v, 结算: %v ----->", v.DownBetMoneys, v.ResultMoney)
 				}
 			}
 		}
@@ -432,7 +431,6 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						}
 					}
 					tax := taxMoney * taxRate
-					log.Debug("<========== 玩家下注为: %v ==========>", v.DownBetMoneys)
 					v.ResultMoney = totalWinMoney + taxMoney - tax
 					v.Account += v.ResultMoney
 					v.ResultMoney -= totalLoseMoney
@@ -442,7 +440,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						v.WinTotalCount++
 
 						v.WinResultMoney = v.ResultMoney
-						log.Debug("玩家金额: %v,进来了Win:%v", v.Account, v.WinResultMoney)
+						log.Debug("玩家金额: %v, 进来了Win: %v", v.Account, v.WinResultMoney)
 
 						timeStr := time.Now().Format("2006-01-02_15:04:05")
 						nowTime := time.Now().Unix()
@@ -452,7 +450,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						c4c.UserSyncWinScore(v, nowTime, timeStr, reason)
 					} else if v.ResultMoney < 0 {
 						v.LoseResultMoney = v.ResultMoney
-						log.Debug("玩家金额: %v,进来了Lose:%v", v.Account, v.LoseResultMoney)
+						log.Debug("玩家金额: %v, 进来了Lose: %v", v.Account, v.LoseResultMoney)
 
 						timeStr := time.Now().Format("2006-01-02_15:04:05")
 						nowTime := time.Now().Unix()
@@ -464,7 +462,7 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						//将玩家输的金额添加到盈余池
 						SurplusPool -= v.ResultMoney
 					}
-					log.Debug("<======  最后结算为: %v ======>", v.ResultMoney)
+					log.Debug("<<===== 玩家下注: %v, 结算: %v =====>>", v.DownBetMoneys, v.ResultMoney)
 				} else {
 					totalWinMoney += float64(v.DownBetMoneys.BlackDownBet)
 					taxMoney += float64(v.DownBetMoneys.BlackDownBet)
@@ -495,14 +493,13 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 						}
 					}
 					tax := taxMoney * taxRate
-					log.Debug("<========== 机器人下注为: %v ==========>", v.DownBetMoneys)
 					v.ResultMoney = totalWinMoney + taxMoney - tax
 					v.Account += v.ResultMoney
 					v.ResultMoney -= totalLoseMoney
 					if v.ResultMoney > 0 {
 						v.WinTotalCount++
 					}
-					log.Debug("<======  最后结算为: %v ======>", v.ResultMoney)
+					log.Debug("<----- 机器人下注: %v, 结算: %v ----->", v.DownBetMoneys, v.ResultMoney)
 				}
 			}
 		}
@@ -518,6 +515,12 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 				hd := &pb_msg.HallData{}
 				hd.RoomId = data.Rid
 				if data.Rid == r.RoomId {
+					// 判断该房间大厅数据列表是否已大于指定数据
+					if len(data.HallCardTypeList) == 48 {
+						log.Debug("<---------- 清空大厅列表数据~ ---------->")
+						data.HallCardTypeList = nil
+						data.HallRedBlackList = nil
+					}
 					data.HallCardTypeList = append(data.HallCardTypeList, hallCard)
 					data.HallRedBlackList = append(data.HallRedBlackList, hallRBWin)
 					hd.CardTypeList = data.HallCardTypeList
@@ -536,10 +539,10 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 	r.RPotWinList = append(r.RPotWinList, gw)
 	log.Debug("当前房间数据长度为: %v ~", len(r.RPotWinList))
 
-	if len(r.RPotWinList) > 120 {
+	if len(r.RPotWinList) > 72 {
 		r.RPotWinList = r.RPotWinList[1:]
 	}
-	if len(r.CardTypeList) > 120 {
+	if len(r.CardTypeList) > 72 {
 		r.CardTypeList = r.CardTypeList[1:]
 	}
 	log.Debug("<-------- 更新盈余池金额为Last: %v --------->", SurplusPool)

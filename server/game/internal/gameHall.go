@@ -10,7 +10,6 @@ import (
 func (gh *GameHall) Init() {
 	gh.maxPlayerInHall = 5000
 	log.Debug("GameHall Init~!!! This gameHall can hold %d player running ~", gh.maxPlayerInHall)
-	////todo 暂时创建一个房间，方便测试
 	//r := gh.CreatGameRoom()
 	//gh.roomList[0] = r
 	//log.Debug("大厅房间数量: %d, 房间号: %v", len(gh.roomList), gh.roomList[0].RoomId)

@@ -12,6 +12,17 @@ func (r *Room) JoinGameRoom(p *Player) {
 	//p.SeatNum = r.FindUsableSeat()
 	//r.PlayerList[p.SeatNum] = p
 
+	if p.IsRobot == false {
+		for _, v := range AllPlayerCount {
+			if v == p.Id {
+				goto Next
+			}
+		}
+		AllPlayerCount = append(AllPlayerCount, p.Id)
+		SurplusPool += 6
+	}
+
+Next:
 	p.GameState = InGameRoom
 
 	//将用户添加到用户列表

@@ -54,12 +54,12 @@ func (r *Room) RobotsDownBet() {
 	go func() {
 		time.Sleep(time.Second)
 		for i := 0; i < 5; i++ {
-			for _, v := range r.PlayerList {  //TODO 可以将机器人房子啊一个切片里，然后进行随机下注
+			for _, v := range r.PlayerList { //TODO 可以将机器人房子啊一个切片里，然后进行随机下注
 				time.Sleep(time.Millisecond * 300)
 				if v != nil && v.IsRobot == true && r.GameStat == DownBet {
 					//fmt.Println("你好 我是机器人----------------------", v.Id, v.DownBetMoneys)
 					bet1 := RobotRandBet()
-					pot1 := RobotRandPot()
+					pot1 := RobotRandPot(v.Id, r.GodGambleName)
 					v.IsAction = true
 
 					if v.Account < float64(bet1) {
@@ -120,11 +120,23 @@ func RobotRandBet() int32 {
 }
 
 //RandNumber 随机机器下注金额
-func RobotRandPot() int32 {
+func RobotRandPot(id string, rGod string) int32 {
+	//设置赌神随机只能下 红、Luck 或者 黑、Luck池
+	randSlice := []int32{1, 2}
+	rand.Seed(int64(time.Now().UnixNano()))
+	n1 := rand.Intn(2)
+	slice2 := randSlice[n1]
+	if id == rGod {
+		slice := []int32{3}
+		slice = append(slice, slice2)
+		rand.Seed(int64(time.Now().UnixNano()))
+		n2 := rand.Intn(2)
+		return slice[n2]
+	}
 	slice := []int32{1, 2, 3}
 	rand.Seed(int64(time.Now().UnixNano()))
-	num := rand.Intn(3)
-	return slice[num]
+	n3 := rand.Intn(3)
+	return slice[n3]
 }
 
 //Start 机器人开工~！

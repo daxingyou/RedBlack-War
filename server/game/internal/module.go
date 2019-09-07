@@ -25,7 +25,7 @@ func (m *Module) OnInit() {
 	gRobotCenter.Init()
 	gRobotCenter.Start()
 
-	//todo
+	//中心服初始化,主动请求Token
 	c4c.Init()
 	c4c.ReqCenterToken()
 }

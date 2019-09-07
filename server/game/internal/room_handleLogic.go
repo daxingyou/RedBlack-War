@@ -430,13 +430,14 @@ func (r *Room) GameCheckout() bool {
 		}
 	}
 	settle := (totalWinMoney + taxWinMoney) - totalLoseMoney
-	log.Debug("<-------- settle %v --------->", settle)
-	log.Debug("<-------- SurplusPool %v --------->", SurplusPool*SurplusTax)
+	log.Debug("<-------- SurplusPool盈余池: %v --------->", SurplusPool)
+	log.Debug("<-------- settle  结 算 金 额: %v --------->", settle)
+	log.Debug("<-------- SurplusPool可输金额: %v --------->", SurplusPool*SurplusTax)
 
 	//playerNum := r.PlayerLength()
 	//if settle > ((SurplusPool * SurplusTax) * float64(playerNum*6)) {}
 	if settle > (SurplusPool * SurplusTax) {
-		log.Debug("<--------- 盈余池金额不足,换牌 ----------->")
+		log.Debug("<<============== 盈余池金额不足,换牌 ==============>>")
 		return false
 	}
 	aCard = a
@@ -463,8 +464,8 @@ func (r *Room) CompareSettlement() {
 	//2、如果小于就开始给各个用户结算金额
 	//3、机器人不计算在盈余池之类，但是也要根据比牌结果来对金额进行加减
 
-	//开始计算牌型盈余池,如果亏损就换牌  todo
-	for {
+	//开始计算牌型盈余池,如果亏损就换牌
+	for i := 0; i < 100; i++ {
 		b := r.GameCheckout()
 		if b == true {
 			break

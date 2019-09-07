@@ -68,7 +68,7 @@ func handleLoginInfo(args []interface{}) {
 	RspGameHallData(p)
 
 	//判断用户是否存在房间信息,如果有就返回
-	if userRoomMap[p.Id] != nil { //todo
+	if userRoomMap[p.Id] != nil {
 		PlayerLoginAgain(p, a)
 	}
 

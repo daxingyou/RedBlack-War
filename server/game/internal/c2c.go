@@ -458,7 +458,7 @@ func (c4c *Conn4Center) UserSyncWinScore(p *Player, timeUnix int64, timeStr, rea
 //UserSyncWinScore 同步输分
 func (c4c *Conn4Center) UserSyncLoseScore(p *Player, timeUnix int64, timeStr, reason string) {
 	loseOrder := p.Id + "_" + timeStr + "_lose"
-	log.Debug("<-------- GenLoseOrder -------->", loseOrder)
+	log.Debug("<-------- GenLoseOrder -------->: %v", loseOrder)
 
 	baseData := &BaseMessage{}
 	baseData.Event = msgUserLoseScore

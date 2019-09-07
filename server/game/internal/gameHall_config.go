@@ -13,3 +13,4 @@ type GameHall struct {
 	roomList        [RoomNumber]*Room
 }
 
+

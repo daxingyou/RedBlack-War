@@ -176,7 +176,6 @@ func RspGameHallData(p *Player) {
 
 		if r != nil {
 			ht.RoomId = r.RoomId
-			log.Debug("房间ID：：：%v", r.RoomId)
 			if r.GameStat == DownBet {
 				ht.GameStage = pb_msg.GameStage(DownBet)
 				ht.RoomTime = DownBetTime - r.counter
@@ -228,7 +227,6 @@ func RspGameHallData(p *Player) {
 			p.HallRoomData = append(p.HallRoomData, data)
 		}
 	}
-	log.Debug("~~~~~~~~~~~~大厅数据: %v ~~~~~~~~~~~~~~~", p.HallRoomData)
 	p.SendMsg(hallTime)
 	p.SendMsg(hallData)
 
