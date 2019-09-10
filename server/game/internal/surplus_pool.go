@@ -3,7 +3,7 @@ package internal
 import "github.com/name5566/leaf/log"
 
 const (
-	taxRate    float64 = 0.05 //税率
+	taxRate    float64 = 0.05 //税率   //todo 正式是 0.06
 	SurplusTax float64 = 0.2  //指定盈余池的百分随机数
 )
 

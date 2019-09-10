@@ -14,7 +14,7 @@ func (gh *GameHall) Init() {
 	//gh.roomList[0] = r
 	//log.Debug("大厅房间数量: %d, 房间号: %v", len(gh.roomList), gh.roomList[0].RoomId)
 
-	for i := 0; i < 1; i++ {
+	for i := 0; i < 6; i++ {
 		time.Sleep(time.Millisecond)
 		r := gh.CreatGameRoom()
 		ri := i + 1

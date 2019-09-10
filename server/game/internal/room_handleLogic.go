@@ -150,6 +150,7 @@ func (r *Room) UpdateGamesNum() {
 			v.TotalCount = 0
 
 			v.PotWinList = nil
+			v.CardTypeList = nil
 			v.RedBlackList = nil
 
 		}

@@ -113,7 +113,7 @@ func (r *Room) RobotsDownBet() {
 
 //RandNumber 随机机器下注金额
 func RobotRandBet() int32 {
-	slice := []int32{1, 10, 50, 100,1000}
+	slice := []int32{1, 10, 50, 100, 1000}
 	rand.Seed(int64(time.Now().UnixNano()))
 	num := rand.Intn(5)
 	return slice[num]
@@ -155,13 +155,15 @@ func RandomID() string {
 //生成随机机器人头像IMG
 func RandomIMG() string {
 	slice := []string{
-		"http://img1.imgtn.bdimg.com/it/u=152883880,155381385&fm=26&gp=0.jpg",
+		"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=529520628,2255285468&fm=26&gp=0.jpg",
 		"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3080153838,1785924790&fm=26&gp=0.jpg",
 		"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1088543337,3570028698&fm=26&gp=0.jpg",
 		"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBxUZlM3mpvYiIcpJ6buM8v4facsI_uaTRaEpLp4iss-CJWtlwzA",
+		"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1410521005,3523414606&fm=26&gp=0.jpg",
+		"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=928370058,3325757561&fm=26&gp=0.jpg",
 	}
 	rand.Seed(int64(time.Now().UnixNano()))
-	num := rand.Intn(4)
+	num := rand.Intn(6)
 
 	return slice[num]
 }
