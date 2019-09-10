@@ -143,16 +143,15 @@ func (r *Room) GatherRCardType() {
 func (r *Room) UpdateGamesNum() {
 	for _, v := range r.PlayerList {
 		//玩家局数达到72局，就清空一次玩家房间数据
-		if v != nil && v.GetPotWinCount() == GamesNumLimit {
+		if v != nil && v.IsRobot == false && v.GetPotWinCount() == GamesNumLimit {
 			v.RedWinCount = 0
 			v.BlackWinCount = 0
 			v.LuckWinCount = 0
+			v.TotalCount = 0
 
 			v.PotWinList = nil
 			v.RedBlackList = nil
 
-			//游戏结束玩家金额不足设为观战
-			v.PlayerMoneyHandler()
 		}
 	}
 }
@@ -474,11 +473,8 @@ func (r *Room) CompareSettlement() {
 	//开始摊牌和结算玩家金额
 	r.RBdzPk(aCard, bCard)
 
-	//处理清空玩家局数 和 玩家金额
-	r.UpdateGamesNum()
-
-	//清空玩家数据,开始下一句游戏
-	r.CleanPlayerData()
+	//测试，打印数据
+	r.PrintPlayerList()
 
 	//更新房间赌神ID
 	r.GetGodGableId()
@@ -488,21 +484,25 @@ func (r *Room) CompareSettlement() {
 	maintainList := r.PackageRoomPlayerList()
 	r.BroadCastMsg(maintainList)
 
-	//踢出房间断线玩家
-	r.KickOutPlayer()
-
 	//这里会发送前端房间数据，前端做处理
 	data := &pb_msg.RoomSettleData_S2C{}
 	data.RoomData = r.RspRoomData()
 	r.BroadCastMsg(data)
+
+	//处理清空玩家局数 和 玩家金额
+	r.UpdateGamesNum()
+
+	//清空玩家数据,开始下一句游戏
+	r.CleanPlayerData()
+
+	//踢出房间断线玩家
+	r.KickOutPlayer()
 
 	for range t.C {
 		r.counter++
 		log.Debug("settle clock : %v ", r.counter)
 		// 如果时间处理不及时,可以判断定时9秒的时候将处理这个数据然后发送给前端进行处理
 		if r.counter == SettleTime {
-			//测试，打印数据
-			r.PrintPlayerList()
 
 			//清空桌面注池
 			r.PotMoneyCount = new(PotRoomCount)
@@ -531,6 +531,10 @@ func (r *Room) CleanPlayerData() {
 		if v != nil {
 			v.DownBetMoneys = new(DownBetMoney)
 			v.IsAction = false
+			v.ResultMoney = 0
+
+			//游戏结束玩家金额不足设为观战
+			v.PlayerMoneyHandler()
 		}
 	}
 	for _, v := range r.PlayerList {
@@ -548,11 +552,12 @@ func (r *Room) CleanPlayerData() {
 //看数据用,为了打印房间玩家列表
 func (r *Room) PrintPlayerList() {
 	for _, v := range r.PlayerList {
-		if v != nil {
-			fmt.Println("玩家ID ：", v.Id, "金额 :", v.Account, "下注总金额 :", v.TotalAmountBet)
+		if v != nil && v.IsRobot == false {
+			fmt.Println("玩家ID ：", v.Id, "玩家数据:", v)
 			//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
 			//fmt.Println("房间池红、黑、Luck总下注: ", v.room.PotMoneyCount, "续投总额:", v.ContinueVot.TotalMoneyBet)
 		}
 	}
+	fmt.Println("房间数据: ", r)
 	//fmt.Println("当前玩家人数为 :", r.PlayerLength())
 }

@@ -89,7 +89,7 @@ type Player struct {
 	LuckWinCount  int32          //Win总列表幸运的局数
 	TotalCount    int32          //总列表总局数
 
-	HallRoomData []*HallDataList //玩家大厅房价数据
+	HallRoomData []*HallDataList //玩家大厅房间数据
 
 	IsOnline bool //玩家是否在线
 	//SeatNum        int32          //玩家座位号

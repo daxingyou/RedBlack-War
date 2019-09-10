@@ -37,7 +37,7 @@ func (rc *RobotsCenter) CreateRobot() *Player {
 	//生成机器人金币随机数
 	rand.Intn(int(time.Now().Unix()))
 	//money := rand.Intn(6000) + 1000
-	money := rand.Intn(500) + 1000
+	money := rand.Intn(2379) + 2379
 	r.Account = float64(money)
 
 	r.Index = RobotIndex
@@ -113,9 +113,9 @@ func (r *Room) RobotsDownBet() {
 
 //RandNumber 随机机器下注金额
 func RobotRandBet() int32 {
-	slice := []int32{1, 10, 50, 100}
+	slice := []int32{1, 10, 50, 100,1000}
 	rand.Seed(int64(time.Now().UnixNano()))
-	num := rand.Intn(4)
+	num := rand.Intn(5)
 	return slice[num]
 }
 
@@ -142,7 +142,7 @@ func RobotRandPot(id string, rGod string) int32 {
 //Start 机器人开工~！
 func (rc *RobotsCenter) Start() {
 	rand.Seed(int64(time.Now().UnixNano()))
-	num := rand.Intn(5) + 4
+	num := rand.Intn(5) + 6
 	gameHall.LoadHallRobots(num)
 }
 

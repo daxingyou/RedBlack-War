@@ -49,6 +49,7 @@ func handleLoginInfo(args []interface{}) {
 		p.PassWord = m.GetPassWord()
 		RegisterPlayer(p)
 		c4c.UserLoginCenter(m.GetId(), m.GetPassWord(), func(data *UserInfo) {
+			log.Debug("Login用户登录信息: %v ", data)
 			p.Id = data.ID
 			p.NickName = data.Nick
 			p.HeadImg = data.HeadImg
@@ -63,6 +64,13 @@ func handleLoginInfo(args []interface{}) {
 			a.WriteMsg(msg)
 		})
 	}
+	//msg := &pb_msg.LoginInfo_S2C{}
+	//msg.PlayerInfo = new(pb_msg.PlayerInfo)
+	//msg.PlayerInfo.Id = "tomas"
+	//msg.PlayerInfo.NickName = "nice"
+	//msg.PlayerInfo.HeadImg = "24.png"
+	//msg.PlayerInfo.Account = 10000
+	//a.WriteMsg(msg)
 
 	// 返回游戏大厅数据
 	RspGameHallData(p)

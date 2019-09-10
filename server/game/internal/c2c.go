@@ -307,7 +307,7 @@ func (c4c *Conn4Center) onUserWinScore(msgBody interface{}) {
 			jsonScore := userInfo["final_pay"]
 			score, err := jsonScore.(json.Number).Float64()
 
-			log.Debug("final win score: %v", score)
+			log.Debug("<--------- final win score: %v", score)
 
 			if err != nil {
 				log.Error(err.Error())

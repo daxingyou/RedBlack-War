@@ -54,14 +54,14 @@ Next:
 		msgInfo := &pb_msg.MsgInfo_S2C{}
 		msgInfo.Msg = recodeText[RECODE_PEOPLENOTFULL]
 		p.SendMsg(msgInfo)
-		log.Debug("房间当前人数不足，无法开始游戏~")
+		log.Debug("房间当前人数不足，无法开始游戏 ~")
 
 		//返回前端房间信息
 		msg := &pb_msg.JoinRoom_S2C{}
 		roomData := p.room.RspRoomData()
 		msg.RoomData = roomData
 		p.SendMsg(msg)
-		log.Debug("返回客户端房间信息 JoinRoom_S2C~")
+		log.Debug("返回客户端房间信息 JoinRoom_S2C ~")
 
 		return
 	}
@@ -81,7 +81,7 @@ Next:
 		log.Debug("加入房间 SettleTime GameTime: %v", msg.GameTime)
 	}
 	p.SendMsg(msg)
-	log.Debug("返回客户端房间信息 JoinRoom_S2C~")
+	log.Debug("返回客户端房间信息 JoinRoom_S2C ~")
 
 	if r.RoomStat != RoomStatusRun {
 		// None和Over状态都直接开始运行游戏
@@ -92,7 +92,7 @@ Next:
 			msg.Msg = recodeText[RECODE_SELLTENOTDOWNBET]
 			p.SendMsg(msg)
 
-			log.Debug("当前结算阶段,不能进行操作~")
+			log.Debug("当前结算阶段, 不能进行操作 ~")
 		}
 	}
 }
@@ -111,6 +111,7 @@ func (r *Room) ExitFromRoom(p *Player) {
 	p.PotWinList = nil
 	p.CardTypeList = nil
 	p.RedBlackList = nil
+	p.HallRoomData = nil
 	p.RedWinCount = 0
 	p.BlackWinCount = 0
 	p.LuckWinCount = 0
