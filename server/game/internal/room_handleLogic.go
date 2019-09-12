@@ -483,6 +483,7 @@ func (r *Room) CompareSettlement() {
 	//更新房间列表
 	r.UpdatePlayerList()
 	maintainList := r.PackageRoomPlayerList()
+	//log.Debug("玩家列表信息数据: %v", maintainList)
 	r.BroadCastMsg(maintainList)
 
 	//这里会发送前端房间数据，前端做处理
@@ -554,11 +555,11 @@ func (r *Room) CleanPlayerData() {
 func (r *Room) PrintPlayerList() {
 	for _, v := range r.PlayerList {
 		if v != nil && v.IsRobot == false {
-			fmt.Println("玩家ID ：", v.Id, "玩家数据:", v)
+			fmt.Println("玩家ID ：", v.Id, "下注金额：", v.DownBetMoneys, "结算：", v.ResultMoney)
 			//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
 			//fmt.Println("房间池红、黑、Luck总下注: ", v.room.PotMoneyCount, "续投总额:", v.ContinueVot.TotalMoneyBet)
 		}
 	}
-	fmt.Println("房间数据: ", r)
+	//fmt.Println("房间数据: ", r)
 	//fmt.Println("当前玩家人数为 :", r.PlayerLength())
 }

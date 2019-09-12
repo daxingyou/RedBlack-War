@@ -354,6 +354,15 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 					if v.ResultMoney > 0 {
 						v.WinTotalCount++
 					}
+
+					if v.TotalAmountBet > 30000 {
+						v.TotalAmountBet = 0
+						v.WinTotalCount = 0
+					}
+					if v.WinTotalCount > 20 {
+						v.TotalAmountBet = 0
+						v.WinTotalCount = 0
+					}
 					log.Debug("<----- 机器人下注: %v, 结算: %v ----->", v.DownBetMoneys, v.ResultMoney)
 				}
 			}
@@ -523,6 +532,16 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 					if v.ResultMoney > 0 {
 						v.WinTotalCount++
 					}
+
+					if v.TotalAmountBet > 30000 {
+						v.TotalAmountBet = 0
+						v.WinTotalCount = 0
+					}
+					if v.WinTotalCount > 20 {
+						v.TotalAmountBet = 0
+						v.WinTotalCount = 0
+					}
+
 					log.Debug("<----- 机器人下注: %v, 结算: %v ----->", v.DownBetMoneys, v.ResultMoney)
 				}
 			}

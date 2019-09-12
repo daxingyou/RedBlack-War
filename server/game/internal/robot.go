@@ -50,62 +50,75 @@ func (rc *RobotsCenter) CreateRobot() *Player {
 
 //RobotsDownBet 机器人进行下注
 func (r *Room) RobotsDownBet() {
+	var robotSlice []*Player
+	for _, v := range r.PlayerList {
+		if v != nil && v.IsRobot == true {
+			robotSlice = append(robotSlice, v)
+		}
+	}
 	// 线程下注
 	go func() {
 		time.Sleep(time.Second)
-		for i := 0; i < 5; i++ {
-			for _, v := range r.PlayerList { //TODO 可以将机器人房子啊一个切片里，然后进行随机下注
-				time.Sleep(time.Millisecond * 300)
-				if v != nil && v.IsRobot == true && r.GameStat == DownBet {
-					//fmt.Println("你好 我是机器人----------------------", v.Id, v.DownBetMoneys)
-					bet1 := RobotRandBet()
-					pot1 := RobotRandPot(v.Id, r.GodGambleName)
-					v.IsAction = true
+		for i := 0; i < 50; i++ {
 
-					if v.Account < float64(bet1) {
-						log.Debug("机器人:%v 下注金额小于身上筹码,下注失败~", v.Id)
-						continue
-					}
+			rand.Seed(int64(time.Now().UnixNano()))
+			num1 := rand.Intn(len(robotSlice))
+			v := robotSlice[num1]
 
-					//记录玩家在该房间总下注 和 房间注池的总金额
-					if pb_msg.PotType(pot1) == pb_msg.PotType_RedPot {
-						v.Account -= float64(bet1)
-						v.DownBetMoneys.RedDownBet += bet1
-						v.TotalAmountBet += bet1
-						r.PotMoneyCount.RedMoneyCount += bet1
-					}
-					if pb_msg.PotType(pot1) == pb_msg.PotType_BlackPot {
-						v.Account -= float64(bet1)
-						v.DownBetMoneys.BlackDownBet += bet1
-						v.TotalAmountBet += bet1
-						r.PotMoneyCount.BlackMoneyCount += bet1
+			timerSlice := []int32{50, 150, 300, 800, 500}
+			rand.Seed(int64(time.Now().UnixNano()))
+			num2 := rand.Intn(len(timerSlice))
+			time.Sleep(time.Millisecond * time.Duration(timerSlice[num2]))
 
-					}
-					if pb_msg.PotType(pot1) == pb_msg.PotType_LuckPot {
-						v.Account -= float64(bet1)
-						v.DownBetMoneys.LuckDownBet += bet1
-						v.TotalAmountBet += bet1
-						r.PotMoneyCount.LuckMoneyCount += bet1
-					}
-					//返回前端玩家行动,更新玩家最新金额
-					action := &pb_msg.PlayerAction_S2C{}
-					action.Id = v.Id
-					action.DownBet = bet1
-					action.DownPot = pb_msg.PotType(pot1)
-					action.IsAction = v.IsAction
-					action.Account = v.Account
-					r.BroadCastMsg(action)
+			if r.GameStat == DownBet {
+				//fmt.Println("你好 我是机器人----------------------", v.Id, v.DownBetMoneys)
+				bet1 := RobotRandBet()
+				pot1 := RobotRandPot(v.Id, r.GodGambleName)
+				v.IsAction = true
 
-					//广播玩家注池金额
-					pot := &pb_msg.PotTotalMoney_S2C{}
-					pot.PotMoneyCount = new(pb_msg.PotMoneyCount)
-					pot.PotMoneyCount.RedMoneyCount = r.PotMoneyCount.RedMoneyCount
-					pot.PotMoneyCount.BlackMoneyCount = r.PotMoneyCount.BlackMoneyCount
-					pot.PotMoneyCount.LuckMoneyCount = r.PotMoneyCount.LuckMoneyCount
-					r.BroadCastMsg(pot)
-
-					//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
+				if v.Account < float64(bet1) {
+					log.Debug("机器人:%v 下注金额小于身上筹码,下注失败~", v.Id)
+					continue
 				}
+
+				//记录玩家在该房间总下注 和 房间注池的总金额
+				if pb_msg.PotType(pot1) == pb_msg.PotType_RedPot {
+					v.Account -= float64(bet1)
+					v.DownBetMoneys.RedDownBet += bet1
+					v.TotalAmountBet += bet1
+					r.PotMoneyCount.RedMoneyCount += bet1
+				}
+				if pb_msg.PotType(pot1) == pb_msg.PotType_BlackPot {
+					v.Account -= float64(bet1)
+					v.DownBetMoneys.BlackDownBet += bet1
+					v.TotalAmountBet += bet1
+					r.PotMoneyCount.BlackMoneyCount += bet1
+
+				}
+				if pb_msg.PotType(pot1) == pb_msg.PotType_LuckPot {
+					v.Account -= float64(bet1)
+					v.DownBetMoneys.LuckDownBet += bet1
+					v.TotalAmountBet += bet1
+					r.PotMoneyCount.LuckMoneyCount += bet1
+				}
+				//返回前端玩家行动,更新玩家最新金额
+				action := &pb_msg.PlayerAction_S2C{}
+				action.Id = v.Id
+				action.DownBet = bet1
+				action.DownPot = pb_msg.PotType(pot1)
+				action.IsAction = v.IsAction
+				action.Account = v.Account
+				r.BroadCastMsg(action)
+
+				//广播玩家注池金额
+				pot := &pb_msg.PotTotalMoney_S2C{}
+				pot.PotMoneyCount = new(pb_msg.PotMoneyCount)
+				pot.PotMoneyCount.RedMoneyCount = r.PotMoneyCount.RedMoneyCount
+				pot.PotMoneyCount.BlackMoneyCount = r.PotMoneyCount.BlackMoneyCount
+				pot.PotMoneyCount.LuckMoneyCount = r.PotMoneyCount.LuckMoneyCount
+				r.BroadCastMsg(pot)
+
+				//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
 			}
 		}
 	}()

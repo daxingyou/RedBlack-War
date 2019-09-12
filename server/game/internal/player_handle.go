@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"github.com/name5566/leaf/gate"
 	"github.com/name5566/leaf/log"
 	pb_msg "server/msg/Protocal"
@@ -35,7 +34,7 @@ func (p *Player) GetUserRoomInfo() *Player {
 
 //PlayerLoginAgain 用户重新登陆
 func PlayerLoginAgain(p *Player, a gate.Agent) {
-	fmt.Println("进来了呀~~~")
+	log.Debug("<------- 用户重新登陆: %v ------->", p.Id)
 	p.room = userRoomMap[p.Id]
 	for _, v := range p.room.PlayerList {
 		if v.Id == p.Id {
@@ -71,16 +70,19 @@ func PlayerLoginAgain(p *Player, a gate.Agent) {
 func (p *Player) PlayerReqExit() {
 	if p.room != nil {
 		if p.IsRobot == false && p.IsAction == true {
-			p.LoseResultMoney = 0
-			p.LoseResultMoney -= float64(p.DownBetMoneys.RedDownBet)
-			p.LoseResultMoney -= float64(p.DownBetMoneys.BlackDownBet)
-			p.LoseResultMoney -= float64(p.DownBetMoneys.LuckDownBet)
-			timeStr := time.Now().Format("2006-01-02_15:04:05")
-			nowTime := time.Now().Unix()
-			reason := "ExitRoomResult"
+			if p.ResultMoney == 0 {
+				p.LoseResultMoney = 0
+				p.LoseResultMoney -= float64(p.DownBetMoneys.RedDownBet)
+				p.LoseResultMoney -= float64(p.DownBetMoneys.BlackDownBet)
+				p.LoseResultMoney -= float64(p.DownBetMoneys.LuckDownBet)
+				timeStr := time.Now().Format("2006-01-02_15:04:05")
+				nowTime := time.Now().Unix()
+				reason := "ExitRoomResult"
 
-			//同时同步赢分和输分
-			c4c.UserSyncLoseScore(p, nowTime, timeStr, reason)
+				SurplusPool -= p.LoseResultMoney
+				//同时同步赢分和输分
+				c4c.UserSyncLoseScore(p, nowTime, timeStr, reason)
+			}
 		}
 		p.room.ExitFromRoom(p)
 	} else {

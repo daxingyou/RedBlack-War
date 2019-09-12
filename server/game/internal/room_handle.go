@@ -20,6 +20,7 @@ func (r *Room) JoinGameRoom(p *Player) {
 		}
 		AllPlayerCount = append(AllPlayerCount, p.Id)
 		SurplusPool += 6
+		log.Debug("<<===== 新用户进入房间, 更新盈余池: %v =====>>", SurplusPool)
 	}
 
 Next:
