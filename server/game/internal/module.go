@@ -19,9 +19,12 @@ type Module struct {
 func (m *Module) OnInit() {
 	m.Skeleton = skeleton
 
+	initMongoDB()
+
 	gameHall.Init()
 	InitMapPlayer()
 
+	//机器人初始化并开始
 	gRobotCenter.Init()
 	gRobotCenter.Start()
 

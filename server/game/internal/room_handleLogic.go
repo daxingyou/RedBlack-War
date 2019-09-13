@@ -491,6 +491,9 @@ func (r *Room) CompareSettlement() {
 	data.RoomData = r.RspRoomData()
 	r.BroadCastMsg(data)
 
+	//插入房间数据到数据库
+	InsertRoomData(r)
+
 	//处理清空玩家局数 和 玩家金额
 	r.UpdateGamesNum()
 
@@ -544,7 +547,7 @@ func (r *Room) CleanPlayerData() {
 			if v.Account < RoomLimitMoney {
 				//退出一个机器人就在创建一个机器人
 				log.Debug("删除机器人！~~~~~~~~~~~~~~~~~~~~~: %v", v.Id)
-				v.PlayerReqExit()
+				v.room.ExitFromRoom(v)
 
 			}
 		}

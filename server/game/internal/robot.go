@@ -37,7 +37,7 @@ func (rc *RobotsCenter) CreateRobot() *Player {
 	//生成机器人金币随机数
 	rand.Intn(int(time.Now().Unix()))
 	//money := rand.Intn(6000) + 1000
-	money := rand.Intn(2379) + 2379
+	money := rand.Intn(2779) + 2779
 	r.Account = float64(money)
 
 	r.Index = RobotIndex

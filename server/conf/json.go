@@ -17,6 +17,11 @@ var Server struct {
 	ConsolePort int
 	ProfilePath string
 
+	MongoDBAddr string
+	MongoDBAuth string
+	MongoDBUser string
+	MongoDBPwd  string
+
 	TokenServer      string
 	CenterServer     string
 	CenterServerPort string
