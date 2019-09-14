@@ -24,7 +24,6 @@ enum MessageID {
     MSG_RoomSettleData_S2C = 17;
     MSG_GameHallTime_S2C = 18;
     MSG_GameHallData_S2C = 19;
-
 }
 
 //--0

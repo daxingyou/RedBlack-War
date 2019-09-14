@@ -150,7 +150,7 @@ func (r *Room) UpdateGamesNum() {
 			v.TotalCount = 0
 
 			v.PotWinList = nil
-			v.CardTypeList = nil
+			//v.CardTypeList = nil
 			v.RedBlackList = nil
 
 		}
@@ -557,8 +557,15 @@ func (r *Room) CleanPlayerData() {
 //看数据用,为了打印房间玩家列表
 func (r *Room) PrintPlayerList() {
 	for _, v := range r.PlayerList {
-		if v != nil && v.IsRobot == false {
-			fmt.Println("玩家ID ：", v.Id, "下注金额：", v.DownBetMoneys, "结算：", v.ResultMoney)
+		if v != nil { // && v.IsRobot == false
+			if v.IsRobot == true {
+				fmt.Println("机器人ID ：", v.Id, " 金额：", v.Account)
+
+			} else {
+				fmt.Println("玩家ID ：", v.Id, " 金额：", v.Account)
+				fmt.Println("玩家类型长度 ：", len(v.CardTypeList), " 玩家Win长度：", len(v.RedBlackList))
+			}
+			//fmt.Println("玩家ID ：", v.Id, "下注金额：", v.DownBetMoneys, "结算：", v.ResultMoney)
 			//fmt.Println("玩家:", v.Id, "行动 红、黑、Luck下注: ", v.DownBetMoneys, "玩家总下注金额: ", v.TotalAmountBet)
 			//fmt.Println("房间池红、黑、Luck总下注: ", v.room.PotMoneyCount, "续投总额:", v.ContinueVot.TotalMoneyBet)
 		}

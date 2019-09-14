@@ -252,6 +252,10 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			v.CardTypeList = append(v.CardTypeList, int32(gw.CardTypes))
 			v.RedBlackList = append(v.RedBlackList, RedWin)
 
+			if len(v.CardTypeList) > 72 {
+				v.CardTypeList = v.CardTypeList[1:]
+			}
+
 			if v != nil && v.IsAction == true {
 				if v.IsRobot == false {
 					totalWinMoney += float64(v.DownBetMoneys.RedDownBet)
@@ -431,6 +435,10 @@ func (r *Room) RBdzPk(a []byte, b []byte) {
 			v.PotWinList = append(v.PotWinList, gw)
 			v.CardTypeList = append(v.CardTypeList, int32(gw.CardTypes))
 			v.RedBlackList = append(v.RedBlackList, BlackWin)
+
+			if len(v.CardTypeList) > 72 {
+				v.CardTypeList = v.CardTypeList[1:]
+			}
 
 			if v != nil && v.IsAction == true {
 				if v.IsRobot == false {

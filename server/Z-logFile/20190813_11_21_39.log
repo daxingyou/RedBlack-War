@@ -1,7 +1,0 @@
-2019/08/13 11:21:39 [release] Leaf 1.1.3 starting up
-2019/08/13 11:21:39 [debug  ] GameHall Init~!!! This gameHall can hold 5000 player running ~
-2019/08/13 11:22:11 [debug  ] 用户登陆成功 : 1
-2019/08/13 11:22:11 [debug  ] 用户登陆成功2 : 
-2019/08/13 11:22:11 [debug  ] read message: read tcp 10.63.90.45:8889->10.63.90.45:51431: wsarecv: An existing connection was forcibly closed by the remote host.
-2019/08/13 11:22:11 [debug  ] DeletePlayer SUCCESS ~
-2019/08/13 11:25:12 [release] Leaf closing down (signal: interrupt)

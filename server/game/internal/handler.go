@@ -102,7 +102,7 @@ func handleJoinRoom(args []interface{}) {
 
 	p, ok := a.UserData().(*Player)
 	log.Debug("handleJoinRoom 玩家加入房间~ : %v", p.Id)
-	log.Debug("<<<=+++++++++++++++++++++++++=========++++++++加入房间~ : %v", p.Id)
+	log.Debug("<<<+++++++++++++++++++++++++++++++++加入房间~ : %v", p.Id)
 
 	if ok {
 		gameHall.PlayerJoinRoom(m.RoomId, p)

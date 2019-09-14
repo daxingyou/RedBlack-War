@@ -13,8 +13,8 @@ var (
 )
 
 const (
-	dbName = "IM"
-	userDB = "user_info"
+	dbName = "HONGHEIDAZHAN-Game"
+	userDB = "room_data"
 )
 
 // 连接数据库集合的函数 传入集合 默认连接IM数据库
@@ -31,9 +31,9 @@ func initMongoDB() {
 	var err error
 	session, err = mgo.DialWithInfo(mongoDBDialInfo)
 	if err != nil {
-		log.Fatal("数据库连接失败: %v ", err)
+		log.Fatal("Connect DataBase 数据库连接失败: %v ", err)
 	}
-	log.Debug("数据库连接成功~")
+	log.Debug("Connect DataBase 数据库连接成功~")
 
 	//打开数据库
 	session.SetMode(mgo.Monotonic, true)
@@ -53,6 +53,8 @@ func InsertRoomData(r *Room) {
 
 	err := c.Insert(r)
 	if err != nil {
-		log.Debug("数据库插入房间数据失败 ~")
+		log.Error("<----- 数据库插入房间数据失败 ~ ----->")
+		return
 	}
+	log.Debug("<----- 数据库插入房间数据成功 ~ ----->")
 }
