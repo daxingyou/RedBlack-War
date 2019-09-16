@@ -13,7 +13,7 @@ var (
 )
 
 const (
-	dbName = "HONGHEIDAZHAN-Game"  //HONGHEIDAZHAN-Game
+	dbName = "tomas"  //HONGHEIDAZHAN-Game  //tomas
 	userDB = "room_data"
 )
 

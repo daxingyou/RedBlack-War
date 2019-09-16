@@ -5,9 +5,9 @@
   "TCPAddr": "0.0.0.0:8888",
   "MaxConnNum": 20000,
 
-  "MongoDBAddr": "127.0.0.1:27017",
+  "MongoDBAddr": "10.63.90.104:27017",
   "MongoDBAuth": "",
-  "MongoDBUser": "root",
+  "MongoDBUser": "fido",
   "MongoDBPwd": "123456",
 
   "TokenServer": "http://swoole.0717996.com/Token/getToken",

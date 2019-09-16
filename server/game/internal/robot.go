@@ -135,7 +135,7 @@ func RobotRandBet() int32 {
 //RandNumber 随机机器下注金额
 func RobotRandPot(id string, rGod string) int32 {
 	//设置赌神随机只能下 红、Luck 或者 黑、Luck池
-	randSlice := []int32{1, 2}
+	randSlice := []int32{2,1}
 	rand.Seed(int64(time.Now().UnixNano()))
 	n1 := rand.Intn(2)
 	slice2 := randSlice[n1]
